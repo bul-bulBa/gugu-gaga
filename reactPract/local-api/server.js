@@ -53,12 +53,34 @@ app.get('/profile', (req, res) => {
   res.json(data);
 })
 
+const opts = {
+  // httpOnly: true,
+  // secure: true,
+  // sameSite: 'lax',
+  path: '/',
+  maxAge: 1000 * 60 * 60 * 24
+}
+app.post('/login', (req, res) => {
+  const requestCookiesName = decodeURIComponent(req.cookies.name);
+  const requestCookiesPassword = decodeURIComponent(req.cookies.password);
+
+  if(req.body.name && req.body.password) {
+    const user = globalUsersArr.find(u => u.fullName == req.body.name && u.password == req.body.password)
+    !user ? res.status(401).json({error: 'такого користувача не існує'}) : null
+    const userArr = {id: user.id, avatar: user.avatar, followed: user.followed}
+    res.cookie('name', encodeURIComponent(req.body.name), opts)
+    res.cookie('password', encodeURIComponent(req.body.password), opts)
+    return res.json(userArr)
+  } else if(requestCookiesName && requestCookiesPassword) {
+    const user = globalUsersArr.find(u => u.fullName == requestCookiesName && u.password == requestCookiesPassword)
+    const userArr = {id: user.id, avatar: user.avatar, followed: user.followed}
+    return res.json(userArr)
+  }
+})
+
 app.post('/profile', (req, res) => {
   const {name, password, location} = req.body
-  console.log(name);
-  
   const validateName = globalUsersArr.find(u => u.fullName === name)
-  console.log(validateName);
   
   if(validateName) {
     return res.status(409).json({message: "Користувач з таким іменем вже існує"})
@@ -79,38 +101,14 @@ app.post('/profile', (req, res) => {
   }
   globalUsersArr.push(newUser)
 
-  res.json('New user')
-})
-
-const opts = {
-  // httpOnly: true,
-  // secure: true,
-  // sameSite: 'lax',
-  path: '/',
-  maxAge: 1000 * 60 * 60 * 24
-}
-app.post('/login', (req, res) => {
-  const requestCookiesName = decodeURIComponent(req.cookies.name);
-  const requestCookiesPassword = decodeURIComponent(req.cookies.password);
-  
-  if(req.body.name && req.body.password) {
-    const userId = globalUsersArr.find(u => u.fullName == req.body.name && u.password == req.body.password)
-    const userArr = {id: userId.id, avatar: userId.avatar, followed: userId.followed}
-    res.cookie('name', encodeURIComponent(req.body.name), opts)
-    res.cookie('password', encodeURIComponent(req.body.password), opts)
+  const userArr = {id: newUser.id, avatar: newUser.avatar, followed: newUser.followed}
+    res.cookie('name', encodeURIComponent(name), opts)
+    res.cookie('password', encodeURIComponent(password), opts)
     return res.json(userArr)
-  } else if(requestCookiesName && requestCookiesPassword) {
-    const userId = globalUsersArr.find(u => u.fullName == requestCookiesName && u.password == requestCookiesPassword)
-    const userArr = {id: userId.id, avatar: userId.avatar, followed: userId.followed}
-    return res.json(userArr)
-  } else {
-    return res.status(401).json({error: 'invalid data'})
-  }
 })
 
 app.post('/toggleFollowing', (req, res) => {
   const authUser = globalUsersArr.find(u => u.id === req.body.authUserId)
-  
   if(authUser.followed.it.includes(req.body.id)) {
     const index = authUser.followed.it.indexOf(req.body.id)
     authUser.followed.it.splice(index, 1);
@@ -134,14 +132,3 @@ app.post('/toggleFollowing', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Локальний API: http://localhost:${PORT}`);
 })
-
-
-
-
-
-
-
-
-
-
-

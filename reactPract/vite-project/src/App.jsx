@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import {useSelector} from 'react-redux'
 import './App.css'
 import Header from "./components/Header"
 import Navbar from './components/Navbar'
@@ -11,16 +12,18 @@ import Setting from './components/SettingPage/Setting'
 import {useNavigate, Routes, Route} from 'react-router-dom'
 import DialogItems from './components/DialogsPage/DialogItems'
 import authRecuest from './commonComponents/authRequest'
+import {loginThunk} from './store/reducers/authInfoSlice'
 import {useDispatch} from 'react-redux'
 import AuthModalWindow from './commonComponents/AuthModalWindow'
 
 function App(props) {
-  const dispatch = useDispatch()
+  const isAuth = useSelector(state => state.auth.isAuth)
+  const dispatch = useDispatch() 
   const navigate = useNavigate()
 
   useEffect(() => {
-    authRecuest(undefined, undefined, dispatch, navigate);
-  }, [])
+    isAuth === false ? dispatch(loginThunk()) : navigate('/profile')
+  }, [isAuth])
 
   return (
       <div className='grid grid-cols-[130px_1fr] grid-rows-[70px_minmax(80vh,_auto)] w-[1200px] gap-[10px]'>

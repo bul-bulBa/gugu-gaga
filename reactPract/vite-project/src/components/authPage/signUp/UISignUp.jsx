@@ -6,6 +6,10 @@ function UISignIn(props) {
             <div className="flex flex-col gap-3 p-3">
                 <h1>SignIn</h1>
 
+                {props.error == 'Request failed with status code 409'
+                ? <div>Користувач з таким ім'ям вже існує</div>
+                : <span></span>
+                }
                 <div>
                     <input value={props.form.name} type="text" placeholder={props.form.namePlaceholder} onChange={e => props.updateForm('name', e.target.value)}/>
                 </div>

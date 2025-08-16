@@ -1,18 +1,34 @@
-import {createSlice} from '@reduxjs/toolkit'
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
+import axios from 'axios'
+import {getUsers} from '../../api/api'
 
+// start Thunks ;)
+export const setProfileThunk = createAsyncThunk(
+    'profile/setProfileThunk',
+    async (id) => {
+        return await getUsers.getProfile(id)
+        // axios.get(`http://localhost:3000/profile?user=${+id}`)
+        
+    }
+)
+
+// start Slice :>
 const profilePageSlice = createSlice({
     name: 'profile',
     initialState: {
-        id: null,
-        fullName: '',
-        avatar: '',
-        profilePhoto: '',
-        about: '',
-        posts: [],
-        location: {
-            city: '',
-            country: ''
-        }
+        user: {
+            id: null,
+            fullName: '',
+            avatar: '',
+            profilePhoto: '',
+            about: '',
+            posts: [],
+            location: {
+                city: '',
+                country: ''
+            }
+        },
+        isFetching: false
     },
     reducers: {
         addPost(state) {
@@ -37,17 +53,32 @@ const profilePageSlice = createSlice({
             state.posts = []
             state.location = {city: '', country: ''}
         }
+    },
+    extraReducers: (builder) => {
+      builder
+        // setProfile
+        .addCase(setProfileThunk.pending, (state) => {state.isFetching = true})
+        .addCase(setProfileThunk.fulfilled, (state, action) => {
+            state.user.id = action.payload.id
+            state.user.fullName = action.payload.fullName
+            state.user.avatar = action.payload.avatar
+            state.user.profilePhoto = action.payload.profilePhoto
+            state.user.about = action.payload.about
+            state.user.posts = action.payload.posts
+            state.user.location = action.payload.location
+            state.isFetching = false
+        })
     }
 })
 
 export const setStateAC = (data) => ({
-    id: data.data.id,
-    fullName: data.data.fullName, 
-    avatar: data.data.avatar, 
-    profilePhoto: data.data.profilePhoto, 
-    about: data.data.about, 
-    posts: data.data.posts,
-    location: data.data.location
+    id: data.id,
+    fullName: data.fullName, 
+    avatar: data.avatar, 
+    profilePhoto: data.profilePhoto, 
+    about: data.about, 
+    posts: data.posts,
+    location: data.location
 })
 
 export default profilePageSlice.reducer

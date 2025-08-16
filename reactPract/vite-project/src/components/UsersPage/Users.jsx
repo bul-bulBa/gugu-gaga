@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
-import {setUsers, isFetchingToggle} from '../../store/reducers/usersPageSlice'
-import {toggleFollow} from '../../store/reducers/authInfoSlice'
+import {setUsers, isFetchingToggle, getUsersCardThunk} from '../../store/reducers/usersPageSlice'
+import {toggleFollow, toggleFollowingThunk} from '../../store/reducers/authInfoSlice'
 import LoadingComponent from '../../commonComponents/LoadingComponent'
 import User from './User'
-import axios from 'axios'
+import {getUsers} from '../../api/api'
 
 function Users() {
     const state = useSelector(state => state.users)
@@ -13,24 +13,18 @@ function Users() {
     const limit = 4
 
     const followedUsersArr = authUser.user.followed.it
-    
+
     // functions
     const followToggleFunc = (id => {
-        dispatch(isFetchingToggle(true))
-        axios.post('http://localhost:3000/toggleFollowing', {id, authUserId: authUser.user.id, page: state.currentPage})
-        .then(data => dispatch(toggleFollow(data.data)))
-        .finally(() => dispatch(isFetchingToggle(false)))
+        dispatch(toggleFollowingThunk({authUserId: authUser.user.id, id, page: state.currentPage}))
     })
-    const getUsers = (currentPage) => {
-        dispatch(isFetchingToggle(true))
-        axios.get(`http://localhost:3000/users?page=${currentPage}&limit=${limit}`)
-        .then(data => dispatch(setUsers({users: data.data.users, allUsers: data.data.allUsers, currentPage: currentPage})))
-        .finally(() => dispatch(isFetchingToggle(false)))
+    const getUsersFunc = (currentPage) => {
+        dispatch(getUsersCardThunk({currentPage, limit: 4}))
     }
     const allPages =  Math.ceil(state.allUsers / limit)
 
     useEffect(() => {
-        getUsers(1)
+        getUsersFunc(1)
     }, []);
 
     
@@ -44,7 +38,7 @@ function Users() {
             allPages={allPages} 
             currentPage={state.currentPage} 
             followFunc={followToggleFunc} 
-            getFunc={getUsers}/>}
+            getFunc={getUsersFunc}/>}
         </div>
     )
 }

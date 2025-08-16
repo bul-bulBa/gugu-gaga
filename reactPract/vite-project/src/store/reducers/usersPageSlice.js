@@ -1,4 +1,14 @@
-import {createSlice} from '@reduxjs/toolkit'
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
+// import axios from 'axios'
+import {getUsers} from '../../api/api'
+
+// start Thunks ;)
+export const getUsersCardThunk = createAsyncThunk(
+    'users/getUsersCardThunk',
+    async (action = {}) => {
+        return await getUsers.getUsersCard(action.currentPage, action.limit)
+    }
+)
 
 const usersPageSlice = createSlice({
     name: 'users',
@@ -17,6 +27,17 @@ const usersPageSlice = createSlice({
         isFetchingToggle(state, action) {
             state.isFetching = action.payload
         }
+    },
+    extraReducers: (builder) => {
+      builder
+    //   getUsersCard
+        .addCase(getUsersCardThunk.pending, (state) => { state.isFetching = true })
+        .addCase(getUsersCardThunk.fulfilled, (state, action) => {
+            state.users = action.payload.users,
+            state.allUsers = action.payload.allUsers,
+            state.currentPage = action.payload.currentPage
+            state.isFetching = false
+        })
     }
 })
 
