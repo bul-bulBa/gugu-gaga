@@ -30,7 +30,20 @@ const getUsers = (PAGE, LIMIT, res) => {
       allUsers
     }
     res.json(data);
-    }
+}
+
+const getProfile = (user) => {
+  return data = {
+    id: user.id,
+    fullName: user.fullName,
+    about: user.about,
+    avatar: user.avatar,
+    profilePhoto: user.profilePhoto,
+    location: user.location,
+    posts: user.posts,
+    status: user.status
+  }
+}
 
 // 🔹 Маршрути
 app.get('/users', (req, res) => {
@@ -47,7 +60,8 @@ app.get('/profile', (req, res) => {
     avatar: preData.avatar,
     profilePhoto: preData.profilePhoto,
     location: preData.location,
-    posts: preData.posts
+    posts: preData.posts,
+    status: preData.status
   }
 
   res.json(data);
@@ -97,7 +111,8 @@ app.post('/profile', (req, res) => {
     posts: [
       { id: '$1061', likesCount: 0, message: `Hello my name is ${name} and I'm a new gugu gaga user ;)` }
     ],
-    followed: { it: [], they: [] }
+    followed: { it: [], they: [] },
+    status: ''
   }
   globalUsersArr.push(newUser)
 
@@ -107,16 +122,28 @@ app.post('/profile', (req, res) => {
     return res.json(userArr)
 })
 
-app.post('/toggleFollowing', (req, res) => {
-  const authUser = globalUsersArr.find(u => u.id === req.body.authUserId)
-  if(authUser.followed.it.includes(req.body.id)) {
-    const index = authUser.followed.it.indexOf(req.body.id)
-    authUser.followed.it.splice(index, 1);
-  } else {
-    authUser.followed.it.push(req.body.id)
-  }
+app.put('/toggleFollowing/:id', (req, res) => {
+  const id = +req.params.id
+  const name = decodeURIComponent(req.cookies.name)
+  const me = globalUsersArr.find(u => u.fullName == name);
+  if(!me) res.status(401)
 
-  res.json(authUser.followed.it)
+  if(me.followed.it.includes(id)) {
+    const index = me.followed.it.indexOf(id)
+    me.followed.it.splice(index, 1);
+  } else {
+    me.followed.it.push(id)
+  }
+  
+  res.json(me.followed.it)
+})
+
+app.put('/changeStatus', (req, res) => {
+  const user = globalUsersArr.find(u => u.fullName === decodeURIComponent(req.cookies.name))
+  if(!user) res.status(401)
+  user.status = req.body.message
+
+  res.json(user.status)
 })
 
 // app.get('/messages', (_, res) => {

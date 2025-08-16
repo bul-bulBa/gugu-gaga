@@ -29,8 +29,15 @@ export const getUsers = {
         return request.get(`/profile?user=${+id}`)
         .then(res => res.data)
     },
-    toggleFollowing(id, authUserId, page) {
-        return request.post('/toggleFollowing', {authUserId, id, page})
+    toggleFollowing(id,) {
+        return request.put(`/toggleFollowing/${id}`)
+        .then(res => res.data)
+    }
+}
+
+export const changeProfile = {
+    changeStatus(value) {
+        return request.put('/changeStatus', {message: value})
         .then(res => res.data)
     }
 }

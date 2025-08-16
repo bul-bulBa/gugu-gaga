@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
-import {setUsers, isFetchingToggle, getUsersCardThunk} from '../../store/reducers/usersPageSlice'
+import {getUsersCardThunk, setPage} from '../../store/reducers/usersPageSlice'
 import {toggleFollow, toggleFollowingThunk} from '../../store/reducers/authInfoSlice'
 import LoadingComponent from '../../commonComponents/LoadingComponent'
 import User from './User'
@@ -11,14 +11,14 @@ function Users() {
     const authUser = useSelector(state => state.auth)
     const dispatch = useDispatch();
     const limit = 4
-
     const followedUsersArr = authUser.user.followed.it
 
     // functions
     const followToggleFunc = (id => {
-        dispatch(toggleFollowingThunk({authUserId: authUser.user.id, id, page: state.currentPage}))
+        dispatch(toggleFollowingThunk(id))
     })
     const getUsersFunc = (currentPage) => {
+        dispatch(setPage(currentPage))
         dispatch(getUsersCardThunk({currentPage, limit: 4}))
     }
     const allPages =  Math.ceil(state.allUsers / limit)

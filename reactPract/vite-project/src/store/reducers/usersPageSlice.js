@@ -26,6 +26,9 @@ const usersPageSlice = createSlice({
         },
         isFetchingToggle(state, action) {
             state.isFetching = action.payload
+        },
+        setPage(state, action) {
+            state.currentPage = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -35,11 +38,10 @@ const usersPageSlice = createSlice({
         .addCase(getUsersCardThunk.fulfilled, (state, action) => {
             state.users = action.payload.users,
             state.allUsers = action.payload.allUsers,
-            state.currentPage = action.payload.currentPage
             state.isFetching = false
         })
     }
 })
 
 export default usersPageSlice.reducer
-export const {setUsers, toggleFollow, isFetchingToggle} = usersPageSlice.actions 
+export const {setUsers, toggleFollow, isFetchingToggle, setPage} = usersPageSlice.actions 

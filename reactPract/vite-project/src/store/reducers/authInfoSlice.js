@@ -31,8 +31,8 @@ export const signUpThunk = createAsyncThunk(
 
 export const toggleFollowingThunk = createAsyncThunk(
     'auth/toggleFollowingThunk',
-    async (action) => {
-        const res = await getUsers.toggleFollowing(action.id, action.authUserId,  action.page)
+    async (id) => {
+        const res = await getUsers.toggleFollowing(id)
         // axios.post('http://localhost:3000/toggleFollowing', {authUserId: action.authUserId, id: action.id, page: action.page})
         return res
     }

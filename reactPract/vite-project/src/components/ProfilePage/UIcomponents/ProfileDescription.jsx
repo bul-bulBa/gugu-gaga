@@ -1,9 +1,28 @@
 import defaultAvatar from '../../../assets/userPhoto.webp'
+import {useState} from 'react'
+
+let statusSpan
 
 function ProfileDescription(props) {
+    const [showInput, setShowInput] = useState(false)
+    const [status, setStatuts] = useState(props.status)
+
+    function changeStatus() {
+      props.changeStatus(status)
+      setShowInput(false)
+    } 
+
+    if(props.itIsMe) {
+      statusSpan = showInput 
+            ? ( <input value={status} onChange={(e) => setStatuts(e.target.value)} onBlur={() => changeStatus()} autoFocus type="text" />)
+            : (<span  onDoubleClick={() => setShowInput(true)}>{props.status || 'set status'}</span>)   
+          
+    } else {
+      statusSpan = <span>{props.status}</span>
+    }
 
     return (
-        <div>
+      <div>
         <div>
           <img className="h-[200px] w-[100%]" 
           src={props.profilePhoto == '' 
@@ -33,6 +52,10 @@ function ProfileDescription(props) {
         <div className='flex flex-col gap-1 items-start'>
           <span>Country:{props.country}</span>
           <span>City:{props.city}</span>
+        </div>
+
+        <div>
+          {statusSpan}
         </div>
     </div>
     )
