@@ -92,6 +92,12 @@ app.post('/login', (req, res) => {
   }
 })
 
+app.post('/logout', (req, res) => {
+  res.clearCookie('name', {path: '/'})
+  res.clearCookie('password',  {path: '/', maxAge: 0})
+  res.sendStatus(200)
+})
+
 app.post('/profile', (req, res) => {
   const {name, password, location} = req.body
   const validateName = globalUsersArr.find(u => u.fullName === name)

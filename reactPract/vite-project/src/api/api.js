@@ -10,6 +10,9 @@ export const authorize = {
         return request.post('/login', {name, password})
         .then(res => res.data)
     }, 
+    logout() {
+        return request.post('/logout')
+    },
     signUp(name, password, country, city) {
         return request.post('/profile', {
             name, 

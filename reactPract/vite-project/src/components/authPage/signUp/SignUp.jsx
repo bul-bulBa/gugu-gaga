@@ -1,58 +1,59 @@
 import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import UISignUp from './UISignUp'
 import {setProfile} from '../../../store/reducers/authInfoSlice'
 import {authorize} from '../../../api/api'
-import {signUpThunk, setError} from '../../../store/reducers/authInfoSlice'
+import {signUpThunk, selectError, selectIsAuth} from '../../../store/reducers/authInfoSlice'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
 
 function SignUp() {
-    const ERROR = useSelector(state => state.auth.error)
+    const ERROR = useSelector(selectError)
+    const isAuth = useSelector(selectIsAuth)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    console.log(ERROR)
-    const [form, setForm] = useState({
-        name: '',
-        namePlaceholder: 'Genius name',
-        password: '',
-        passwordPlaceholder: 'Strong password',
-        country: '',
-        countryPlaceholder: 'Your city',
-        city: '',
-        cityPlaceholder: 'Your country'
-    })
 
-    const updateForm = (field, value) => {
-        setForm(prev => ({...prev, [field]: value})) 
-    }
-
-    const validations = [
-        [!form.name, () => setForm(prev => ({...prev, namePlaceholder: 'invalid name'}))],
-        [!form.password, () => setForm(prev => ({...prev, passwordPlaceholder: 'invalid Password'}))],
-        [!form.city, () => setForm(prev => ({...prev, countryPlaceholder: 'invalid city(joke)'}))],
-        [!form.country, () => setForm(prev => ({...prev, cityPlaceholder: 'invalid country(joke)'}))]
-    ]
-
-    // validation 
-    let hasErr = false
-    
-    const authorizeFunc = () => {
-        
-        for(const [condition, action] of validations) {
-            if(condition) {
-                action()
-                hasErr = true
-            }
-        }
-
-        if(hasErr) return;
-        dispatch(signUpThunk({name: form.name, password: form.password, country: form.country, city: form.city}))
-    }
-
+    useEffect(() => {
+        if(isAuth) navigate('/profile')
+    }, [isAuth])
     return (
-        <>
-            <UISignUp error={ERROR} form={form} updateForm={updateForm} authorize={authorizeFunc} />
-        </>
+        <Formik
+            initialValues={{name: '', password: '', country: '', city: ''}}
+            validate={values => {
+                const errors = {}
+                const valuesArr = Object.entries(values) 
+                valuesArr.forEach(([key, value]) => {
+                    if(!value) errors[key] = 'required'
+                });
+                return errors
+            }}
+            onSubmit={async (values, {setSubmitting}) => {
+                await dispatch(signUpThunk(values))
+                setSubmitting(false)
+            }}
+            >
+                {({isSubmitting}) => (
+                    <Form className='border rounded p-3 flex flex-col gap-2'>
+                    <Field type='text' name='name' placeholder='name' />
+                    <ErrorMessage name='name' component='div' className='text-red-200'/>
+
+                    <Field type='password' name='password' placeholder='password' />
+                    <ErrorMessage name='password' component='div' className='text-red-200' />
+
+                    <Field type='text' name='country' placeholder='your country' />
+                    <ErrorMessage name='country' component='div' className='text-red-200'/>
+
+                    <Field type='text' name='city' placeholder='your city' />
+                    <ErrorMessage name='city' component='div' className='text-red-200'/>
+                    
+                    <button type='submit' disabled={isSubmitting}>
+                        Submit
+                    </button>
+
+                    {ERROR && <div className='text-red-300'>{ERROR}</div>}
+                </Form>
+                )}
+        </Formik>
     )
 }
 

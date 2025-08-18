@@ -3,16 +3,17 @@ import OnePost from "./UIcomponents/OnePost";
 import ProfileDescription from "./UIcomponents/ProfileDescription";
 import LoadingComponent from '../../commonComponents/LoadingComponent'
 import {useSelector, useDispatch} from 'react-redux'
-import {addPost, profileWillUnmount, setProfileThunk, changeStatusThunk, setItIsMe} from '../../store/reducers/profilePageSlice'
+import {addPost, profileWillUnmount, setProfileThunk, changeStatusThunk, setItIsMe, selectUser, selectItIsMe, selectFetching} from '../../store/reducers/profilePageSlice'
 import { useEffect, useState } from 'react';
 import {useParams, useNavigate} from 'react-router-dom'
+import {selectAuth} from '../../store/reducers/authInfoSlice'
 
 function Profile() {
   // get some info
-  const state = useSelector(state => state.profile.user)
-  const isFetching = useSelector(state => state.profile.isFetching)
-  const itIsMe = useSelector(state => state.profile.itIsMe)
-  const authId = useSelector(state => state.auth)
+  const state = useSelector(selectUser)
+  const isFetching = useSelector(selectFetching)
+  const itIsMe = useSelector(selectItIsMe)
+  const auth = useSelector(selectAuth)
   const dispatch = useDispatch()
   let {id} = useParams()
   const [draft, setDraft] = useState('');
@@ -26,10 +27,12 @@ function Profile() {
   // ComponentDidMount/Unmount
   useEffect(() => {
     if(!id) {
-        if(authId.isAuth == true) {
+        if(auth.isAuth == true) {
           dispatch(setItIsMe(true))
-          dispatch(setProfileThunk(authId.user.id))
-        } else {navigate('/auth')}
+          dispatch(setProfileThunk(auth.user.id))
+        } else {
+          navigate('/auth')
+        }
     } else {
       dispatch(setItIsMe(false))
       dispatch(setProfileThunk(id))
@@ -37,7 +40,7 @@ function Profile() {
     return () => {
       profileWillUnmount();
     }
-  }, [id, authId.isAuth]);
+  }, [id, auth.isAuth]);
 
   // Validation
   // let isValid = draft !== '' && draft.length <= 400;  

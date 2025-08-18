@@ -43,5 +43,7 @@ const usersPageSlice = createSlice({
     }
 })
 
+export const selectUsers = state => state.users
+
 export default usersPageSlice.reducer
 export const {setUsers, toggleFollow, isFetchingToggle, setPage} = usersPageSlice.actions 

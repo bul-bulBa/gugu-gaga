@@ -13,9 +13,8 @@ const dialogsPageSlice = createSlice({
     reducers: {
         addMessage(state, action) {
             state.forEach(u => {
-                if(u.id === action.payload) {
-                    u.mes.push(u.draft)
-                    u.draft = ''
+                if(u.id === action.payload.id) {
+                    u.mes.push(action.payload.message)
                 }
             })
         },
@@ -26,6 +25,8 @@ const dialogsPageSlice = createSlice({
         }
     }
 })
+
+export const selectDialogs = state => state.dialogs
 
 export default dialogsPageSlice.reducer
 export const {addMessage, changeMessageDraft} = dialogsPageSlice.actions

@@ -14,5 +14,5 @@ import { BrowserRouter } from 'react-router-dom'
         <App />
       </Provider>
     </BrowserRouter>
-  </StrictMode>,
+  </StrictMode>
 )

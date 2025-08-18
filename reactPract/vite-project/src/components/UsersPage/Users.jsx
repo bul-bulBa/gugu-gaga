@@ -1,14 +1,13 @@
 import {useEffect, useState} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
-import {getUsersCardThunk, setPage} from '../../store/reducers/usersPageSlice'
-import {toggleFollow, toggleFollowingThunk} from '../../store/reducers/authInfoSlice'
+import {getUsersCardThunk, setPage, selectUsers} from '../../store/reducers/usersPageSlice'
+import {toggleFollow, toggleFollowingThunk, selectAuth} from '../../store/reducers/authInfoSlice'
 import LoadingComponent from '../../commonComponents/LoadingComponent'
 import User from './User'
-import {getUsers} from '../../api/api'
 
 function Users() {
-    const state = useSelector(state => state.users)
-    const authUser = useSelector(state => state.auth)
+    const state = useSelector(selectUsers)
+    const authUser = useSelector(selectAuth) 
     const dispatch = useDispatch();
     const limit = 4
     const followedUsersArr = authUser.user.followed.it

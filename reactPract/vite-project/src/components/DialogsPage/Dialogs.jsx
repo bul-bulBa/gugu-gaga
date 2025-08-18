@@ -4,11 +4,11 @@ import Discussion from './UIcomponents/Discussion'
 import AddMessage from './UIcomponents/AddMessage'
 import {useParams} from 'react-router-dom'
 import {useSelector, useDispatch} from 'react-redux'
-import {addMessage, changeMessageDraft} from '../../store/reducers/dialogsPageSlice'
+import {addMessage, changeMessageDraft, selectDialogs} from '../../store/reducers/dialogsPageSlice'
 
 
 function Dialogs(props) {
-    const state = useSelector(store => store.dialogs)
+    const state = useSelector(selectDialogs)
     const dispatch = useDispatch();
     const {id} = useParams();
 
@@ -16,7 +16,7 @@ function Dialogs(props) {
     
     
     const change = (text) => dispatch(changeMessageDraft({id: +id, message: text}))
-    const add = () => dispatch(addMessage(+id))
+    const add = (message) => dispatch(addMessage({id: +id, message}))
 
     return (
         <div className='flex gap-[15%] p-10'>

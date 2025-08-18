@@ -110,6 +110,10 @@ const profilePageSlice = createSlice({
     }
 })
 
+export const selectUser = state => state.profile.user
+export const selectItIsMe = state => state.profile.itIsMe
+export const selectFetching  = state => state.profile.isFetching
+
 export const setStateAC = (data) => ({
     id: data.id,
     fullName: data.fullName, 

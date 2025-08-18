@@ -12,24 +12,37 @@ import Setting from './components/SettingPage/Setting'
 import {useNavigate, Routes, Route} from 'react-router-dom'
 import DialogItems from './components/DialogsPage/DialogItems'
 import authRecuest from './commonComponents/authRequest'
-import {loginThunk} from './store/reducers/authInfoSlice'
+import {loginThunk, selectIsAuth, selectIsFirstLoad} from './store/reducers/authInfoSlice'
 import {useDispatch} from 'react-redux'
 import AuthModalWindow from './commonComponents/AuthModalWindow'
+import LoadingComponent from './commonComponents/LoadingComponent'
 
 function App(props) {
-  const isAuth = useSelector(state => state.auth.isAuth)
+  const isAuth = useSelector(selectIsAuth)
+  const firstLoad = useSelector(selectIsFirstLoad)
   const dispatch = useDispatch() 
   const navigate = useNavigate()
 
   useEffect(() => {
-    isAuth === false ? dispatch(loginThunk()) : navigate('/profile')
+    dispatch(loginThunk())
+  }, [])
+
+  useEffect(() => {
+    if(isAuth === false ) {
+      navigate('/auth')
+    } else {
+      navigate('/profile')
+    }
   }, [isAuth])
 
+  if(firstLoad) {
+    return <LoadingComponent />
+  }
   return (
       <div className='grid grid-cols-[130px_1fr] grid-rows-[70px_minmax(80vh,_auto)] w-[1200px] gap-[10px]'>
         <Header />
         <Navbar />
-
+        
         <Routes>
           <Route path='/profile/:id?/*' element={<Profile/>} />
           <Route path='/dialogs/*' element={<DialogItems />} > 
@@ -42,7 +55,6 @@ function App(props) {
 
           <Route path='/auth' element={<AuthModalWindow/>}/>
         </Routes>
-      
         </div>
   )
 }

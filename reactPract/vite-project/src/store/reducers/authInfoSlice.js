@@ -15,6 +15,13 @@ export const loginThunk = createAsyncThunk(
     }
 )
 
+export const logoutThunk = createAsyncThunk(
+    'auth/logout',
+    () => {
+        authorize.logout()
+    }
+)
+
 export const signUpThunk = createAsyncThunk(
     'auth/signUpThunk',
     async ({name, password, country, city}) => {
@@ -51,8 +58,9 @@ const authInfoSlice = createSlice({
             id: null,
         },
         isAuth: false,
-        isFetching: false,
-        error: null
+        isFetching: true,
+        error: null,
+        firstLoad: true
     },
     reducers: {
         setProfile(state, action) {
@@ -74,19 +82,50 @@ const authInfoSlice = createSlice({
     extraReducers: (builder) => {
       builder
         // login
-        .addCase(loginThunk.pending, (state) => {
-            state.isFetching = true
-            state.error = null
-        })
+        .addCase(loginThunk.pending, (state) => { state.isFetching = true })
         .addCase(loginThunk.fulfilled, (state, action) => {
             state.isFetching = false
+            state.error= null
             state.user = action.payload
             state.isAuth = true
+            state.firstLoad = false
         })
         .addCase(loginThunk.rejected, (state, action) => {
             state.isFetching = false
-            if (action.payload?.status === 401) {
-                state.error = 401
+            if (action.error.message === 'Request failed with status code 401') {
+                state.error = 'Неправильне ім`я або пароль'
+            } else {
+                state.error = action.error.message
+            }
+        })
+
+        // logout
+        .addCase(logoutThunk.pending, (state) => {
+        state.user = {
+            avatar: '',
+            followed: {
+                it: [],
+                they: []
+            },
+            id: null,
+        },
+        state.isAuth = false,
+        state.isFetching = false,
+        state.error = null
+        })
+
+        // signUp
+        .addCase(signUpThunk.pending, (state) => { state.isFetching = true })
+        .addCase(signUpThunk.fulfilled, (state, action) => {
+            state.isFetching = false
+            state.user = action.payload
+            state.error = null
+            state.isAuth = true
+        })
+        .addCase(signUpThunk.rejected, (state, action) => {
+            state.isFetching = false
+            if (action.error.message === 'Request failed with status code 409') {
+                state.error = "Користувач з таким ім'ям вже існує"
             } else {
                 state.error = action.error.message
             }
@@ -107,27 +146,14 @@ const authInfoSlice = createSlice({
             state.isFetching = false
             state.error = action.error.message
         })
-
-        // signUp
-        .addCase(signUpThunk.pending, (state) => {
-            state.isFetching = true
-            state.error = null
-        })
-        .addCase(signUpThunk.fulfilled, (state, action) => {
-            state.isFetching = false
-            state.user = action.payload
-            state.isAuth = true
-        })
-        .addCase(signUpThunk.rejected, (state, action) => {
-            state.isFetching = false
-            if (action.payload?.status === 409) {
-                state.error = "Користувач з таким ім'ям вже існує"
-            } else {
-                state.error = action.error.message
-            }
-        })
     }
 })
+
+export const selectIsAuth = state => state.auth.isAuth
+export const selectIsFirstLoad = state => state.auth.firstLoad
+export const selectAuthId = state => state.auth.user.id
+export const selectError = state => state.auth.error
+export const selectAuth = state => state.auth
 
 export const setProfileAC = (data) => ({id: data.data.id, avatar: data.data.avatar, followed: data.data.followed})
 
