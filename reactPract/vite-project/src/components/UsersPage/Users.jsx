@@ -4,6 +4,7 @@ import {getUsersCardThunk, setPage, selectUsers} from '../../store/reducers/user
 import {toggleFollow, toggleFollowingThunk, selectAuth} from '../../store/reducers/authInfoSlice'
 import LoadingComponent from '../../commonComponents/LoadingComponent'
 import User from './User'
+import Pagination from '../../commonComponents/pagination'
 
 function Users() {
     const state = useSelector(selectUsers)
@@ -22,22 +23,36 @@ function Users() {
     }
     const allPages =  Math.ceil(state.allUsers / limit)
 
-    useEffect(() => {
+    useEffect(() => { 
         getUsersFunc(1)
     }, []);
 
-    
     return (
-        <div>
+        <div >
             {state.isFetching 
             ? <LoadingComponent /> 
-            : <User 
-            followeUsersArr={followedUsersArr}
-            users={state.users}
-            allPages={allPages} 
-            currentPage={state.currentPage} 
-            followFunc={followToggleFunc} 
-            getFunc={getUsersFunc}/>}
+            : (
+
+                <div className='flex flex-col justify-between items-center h-full'>
+                    <div>
+                        {state.users.map(e => {
+                        const followed = followedUsersArr.includes(e.id)
+                        return (
+                            <User
+                            key={e.id} 
+                            followFunc={followToggleFunc}
+                            followed={followed}
+                            user={e}/>
+                        )
+                    })}
+                    </div>
+                
+                    <Pagination Func={getUsersFunc} currentPage={state.currentPage} allPages={allPages} />
+                </div>
+
+            )}
+            
+            
         </div>
     )
 }

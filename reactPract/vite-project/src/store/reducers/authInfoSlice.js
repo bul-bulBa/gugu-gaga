@@ -92,10 +92,11 @@ const authInfoSlice = createSlice({
         })
         .addCase(loginThunk.rejected, (state, action) => {
             state.isFetching = false
+            state.firstLoad = false
             if (action.error.message === 'Request failed with status code 401') {
                 state.error = 'Неправильне ім`я або пароль'
-            } else {
-                state.error = action.error.message
+            } else if(action.error.message === 'Request failed with status code 500') {
+                state.error  = null
             }
         })
 

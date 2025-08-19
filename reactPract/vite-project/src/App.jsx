@@ -1,21 +1,27 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import {useSelector} from 'react-redux'
 import './App.css'
 import Header from "./components/Header"
 import Navbar from './components/Navbar'
 import Profile from './components/ProfilePage/Profile'
-import Dialogs from './components/DialogsPage/Dialogs'
+// import Dialogs from './components/DialogsPage/Dialogs'
 import Users from './components/UsersPage/Users'
-import News from './components/NewsPage/News'
-import Music from './components/MusicPage/Music'
-import Setting from './components/SettingPage/Setting'
+// import News from './components/NewsPage/News'
+// import Music from './components/MusicPage/Music'
+// import Setting from './components/SettingPage/Setting'
 import {useNavigate, Routes, Route} from 'react-router-dom'
-import DialogItems from './components/DialogsPage/DialogItems'
+// import DialogItems from './components/DialogsPage/DialogItems'
 import authRecuest from './commonComponents/authRequest'
 import {loginThunk, selectIsAuth, selectIsFirstLoad} from './store/reducers/authInfoSlice'
 import {useDispatch} from 'react-redux'
 import AuthModalWindow from './commonComponents/AuthModalWindow'
 import LoadingComponent from './commonComponents/LoadingComponent'
+
+const News = lazy(() => import('./components/NewsPage/News'))
+const Music = lazy(() => import('./components/MusicPage/Music'))
+const Setting = lazy(() => import('./components/SettingPage/Setting'))
+const Dialogs = lazy(() => import('./components/DialogsPage/Dialogs'))
+const DialogItems = lazy(() => import('./components/DialogsPage/DialogItems'))
 
 function App(props) {
   const isAuth = useSelector(selectIsAuth)
@@ -27,14 +33,6 @@ function App(props) {
     dispatch(loginThunk())
   }, [])
 
-  useEffect(() => {
-    if(isAuth === false ) {
-      navigate('/auth')
-    } else {
-      navigate('/profile')
-    }
-  }, [isAuth])
-
   if(firstLoad) {
     return <LoadingComponent />
   }
@@ -43,6 +41,7 @@ function App(props) {
         <Header />
         <Navbar />
         
+        <Suspense fallback={<LoadingComponent />}>
         <Routes>
           <Route path='/profile/:id?/*' element={<Profile/>} />
           <Route path='/dialogs/*' element={<DialogItems />} > 
@@ -55,6 +54,7 @@ function App(props) {
 
           <Route path='/auth' element={<AuthModalWindow/>}/>
         </Routes>
+        </Suspense>
         </div>
   )
 }
