@@ -1,0 +1,1 @@
+import{r as t,a as n,j as a}from"./index-BCJxw8uD.js";function c(i){const[e,r]=t.useState([]);t.useEffect(()=>{n.get("http://localhost:3000/users").then(s=>r(s.data.users))},[]);const o=e.map(s=>a.jsx("div",{children:s.fullName},s.id));return a.jsx("div",{children:o})}export{c as default};
