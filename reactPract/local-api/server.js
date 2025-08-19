@@ -161,6 +161,7 @@ app.put('/changeStatus', (req, res) => {
 //   messages.push(newMsg);
 //   res.status(201).json(newMsg);
 // });
+// 123
 
 app.listen(PORT, () => {
   console.log(`Локальний API: http://localhost:${PORT}`);
