@@ -4,15 +4,15 @@ import App from './App.jsx'
 import { StateComponent } from './globalState/StateContex.jsx'
 import {Provider} from 'react-redux'
 import store from './store/StoreConfig.js'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 
 
  createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <Provider store={store} >
         <App />
       </Provider>
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>
 )
