@@ -14,7 +14,7 @@ function Profile() {
   const isFetching = useSelector(selectFetching)
   const itIsMe = useSelector(selectItIsMe)
   const auth = useSelector(selectAuth)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch() 
   let {id} = useParams()
   const [draft, setDraft] = useState('');
   const navigate = useNavigate()
@@ -23,8 +23,8 @@ function Profile() {
   const changeInput = (text) => setDraft(text)
   const addPosts = () => dispatch(addPost())
   const changeStatus = (text) => dispatch(changeStatusThunk(text))
+  const changeAvatar = file => dispatch(changeAvatarThunk(file))
   
-  // ComponentDidMount/Unmount
   useEffect(() => {
     if(!id) {
         if(auth.isAuth == true) {
@@ -42,8 +42,6 @@ function Profile() {
     }
   }, [id, auth.isAuth]);
 
-  // Validation
-  // let isValid = draft !== '' && draft.length <= 400;  
   
     return (
           <div className='col-start-2 row-start-2 bg-yellow-200 p-3'>
@@ -51,7 +49,7 @@ function Profile() {
             <ProfileDescription itIsMe={itIsMe} name={state.fullName} about={state.about} 
               avatar={state.avatar} profilePhoto={state.profilePhoto} status={state.status} 
               country={state.location.country} city={state.location.city} 
-              changeStatus={changeStatus}/>
+              changeStatus={changeStatus} changeAvatar={changeAvatar}/>
             {/* <MyPosts state={draft} changeInput={changeInput} addPosts={addPosts} isValid={isValid}/> */}
             <OnePost state={state.posts} />
             

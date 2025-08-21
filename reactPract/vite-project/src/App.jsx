@@ -4,13 +4,8 @@ import './App.css'
 import Header from "./components/Header"
 import Navbar from './components/Navbar'
 import Profile from './components/ProfilePage/Profile'
-// import Dialogs from './components/DialogsPage/Dialogs'
 import Users from './components/UsersPage/Users'
-// import News from './components/NewsPage/News'
-// import Music from './components/MusicPage/Music'
-// import Setting from './components/SettingPage/Setting'
 import {useNavigate, Routes, Route} from 'react-router-dom'
-// import DialogItems from './components/DialogsPage/DialogItems'
 import authRecuest from './commonComponents/authRequest'
 import {loginThunk, selectIsAuth, selectIsFirstLoad} from './store/reducers/authInfoSlice'
 import {useDispatch} from 'react-redux'
@@ -22,6 +17,7 @@ const Music = lazy(() => import('./components/MusicPage/Music'))
 const Setting = lazy(() => import('./components/SettingPage/Setting'))
 const Dialogs = lazy(() => import('./components/DialogsPage/Dialogs'))
 const DialogItems = lazy(() => import('./components/DialogsPage/DialogItems'))
+const EditProfile = lazy(() => import('./components/ProfilePage/EditProfile'))
 
 function App(props) {
   const isAuth = useSelector(selectIsAuth)
@@ -51,6 +47,7 @@ function App(props) {
           <Route path='/news' element={<News />} />
           <Route path='/music' element={<Music />} />
           <Route path='/setting' element={<Setting />} />
+          <Route path='/edit' element={<EditProfile />} />
 
           <Route path='/auth' element={<AuthModalWindow/>}/>
         </Routes>

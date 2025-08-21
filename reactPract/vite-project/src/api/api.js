@@ -6,18 +6,19 @@ const request = axios.create({
 })
 
 export const authorize = {
-    login(name, password) {
-        return request.post('/login', {name, password})
+    login(name, password, captcha) {
+        return request.post('/login', {name, password, captcha})
         .then(res => res.data)
     }, 
     logout() {
         return request.post('/logout')
     },
-    signUp(name, password, country, city) {
+    signUp(name, password, country, city, captcha) {
         return request.post('/profile', {
             name, 
             password, 
-            location: {country, city}
+            location: {country, city},
+            captcha
         })
         .then(res => res.data)
     }
@@ -41,6 +42,15 @@ export const getUsers = {
 export const changeProfile = {
     changeStatus(value) {
         return request.put('/changeStatus', {message: value})
+        .then(res => res.data)
+    },
+    edit(values) {
+        const formData = new FormData()
+        formData.append('avatar', values.avatar)
+        formData.append('profilePhoto', values.profilePhoto)
+        formData.append('about', values.about)
+
+        return request.post('/edit', formData)
         .then(res => res.data)
     }
 }

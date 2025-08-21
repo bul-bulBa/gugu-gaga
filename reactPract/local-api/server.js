@@ -2,16 +2,21 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser')
 const globalUsersArr = require('./users.cjs')
+const multer = require('multer')
+const mongoose = require('mongoose')
 
 const app = express();
+const upload = multer({dest: 'uploads/'})
 app.use(express.json());
 app.use(cookieParser())
 app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true,
 }));
+app.use('/uploads', express.static('uploads'));
 
 const PORT = 3000;
+const secretKey = '6LeErq0rAAAAAHaW9uz9V-N2f66lgKj3lZxK-Wdt'
 
 const getUsers = (PAGE, LIMIT, res) => {
     const page = (parseInt(PAGE) || 1) - 1;
@@ -78,15 +83,27 @@ app.post('/login', (req, res) => {
   const requestCookiesName = decodeURIComponent(req.cookies.name);
   const requestCookiesPassword = decodeURIComponent(req.cookies.password);
 
-  if(req.body.name && req.body.password) {
+  if(req.body.name && req.body.password && req.body.captcha) {
+    const verifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${req.body.captcha}`
+
+    fetch(verifyURL, {method: 'POST'})
+    .then(res => res.json())
+    .then(data => {
+      if(!data.success) {
+        return res.status(400).json({message: 'invalid captcha'})
+      }
+    })
+
     const user = globalUsersArr.find(u => u.fullName == req.body.name && u.password == req.body.password)
-    !user ? res.status(401).json({error: 'такого користувача не існує'}) : null
+    if(!user) return res.status(401).json({error: 'такого користувача не існує'})
     const userArr = {id: user.id, avatar: user.avatar, followed: user.followed}
     res.cookie('name', encodeURIComponent(req.body.name), opts)
     res.cookie('password', encodeURIComponent(req.body.password), opts)
     return res.json(userArr)
+
   } else if(requestCookiesName && requestCookiesPassword) {
     const user = globalUsersArr.find(u => u.fullName == requestCookiesName && u.password == requestCookiesPassword)
+    if(!user) { return res.status(401).json({message: 'invalid cookies'})}
     const userArr = {id: user.id, avatar: user.avatar, followed: user.followed}
     return res.json(userArr)
   }
@@ -98,10 +115,18 @@ app.post('/logout', (req, res) => {
   res.sendStatus(200)
 })
 
-app.post('/profile', (req, res) => {
-  const {name, password, location} = req.body
+app.post('/profile', async (req, res) => {
+  const {name, password, location, captcha} = req.body
   const validateName = globalUsersArr.find(u => u.fullName === name)
+  const verifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captcha}`
   
+  const validateCaptcha = await fetch(verifyURL, {method: 'POST'}).then(res => res.json())
+  if(!validateCaptcha.success) {
+    console.log(validateCaptcha.success)
+    return res.status(400).json({message: 'invalid captcha'})
+  }
+    
+
   if(validateName) {
     return res.status(409).json({message: "Користувач з таким іменем вже існує"})
   }
@@ -152,6 +177,17 @@ app.put('/changeStatus', (req, res) => {
   res.json(user.status)
 })
 
+app.post('/edit', upload.fields([{name: 'avatar'}, {name: 'profilePhoto'}]), (req, res) => {
+  const user = globalUsersArr.find(u => u.fullName === decodeURIComponent(req.cookies.name))
+  if(!user) res.status(401)
+  if(req.files.avatar) {
+    user.avatar = `http://localhost:3000/uploads/${req.files.avatar[0].filename}`
+  } else if(req.files.profilePhoto) {
+     user.profilePhoto = `http://localhost:3000/uploads/${req.files.profilePhoto[0].filename}`
+  }
+  user.about = req.body.about
+  res.status(200).json({message: 'profile edited'})
+})
 // app.get('/messages', (_, res) => {
 //   res.json(messages);
 // });

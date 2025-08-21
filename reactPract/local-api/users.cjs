@@ -19,7 +19,7 @@ const users = [
     password: 12345,
     fullName: 'Lucas Müller',
     about: 'Frontend developer',
-    avatar: '',
+    avatar: 'https://i.pinimg.com/736x/2a/b0/57/2ab057f4c2b62828c0ad110f77d02628.jpg',
     profilePhoto: '',
     location: { country: 'Germany', city: 'Berlin' },
     posts: [

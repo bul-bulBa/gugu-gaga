@@ -5,12 +5,7 @@ import {authorize, getUsers} from '../../api/api'
 export const loginThunk = createAsyncThunk(
     'auth/loginThunk',
     async (action = {}) => {
-        const res = await authorize.login(action.name, action.password)
-        // axios.post('http://localhost:3000/login', {
-        //     name: action.name, 
-        //     password: action.password
-        // }, {withCredentials: true})
-        // if(res.response) throw new Error(res.respoonse.status)
+        const res = await authorize.login(action.name, action.password, action.captcha)
         return res
     }
 )
@@ -24,14 +19,8 @@ export const logoutThunk = createAsyncThunk(
 
 export const signUpThunk = createAsyncThunk(
     'auth/signUpThunk',
-    async ({name, password, country, city}) => {
-        const res = await authorize.signUp(name, password, country, city)
-        // axios.post('http://localhost:3000/profile', {
-            // name, 
-            // password, 
-            // location: {country, city}
-        // }, {withCredentials: true})
-        //  throw new Error(err.response.status)
+    async ({name, password, country, city, captcha}) => {
+        const res = await authorize.signUp(name, password, country, city, captcha)
         return res
     }
 )
@@ -40,7 +29,6 @@ export const toggleFollowingThunk = createAsyncThunk(
     'auth/toggleFollowingThunk',
     async (id) => {
         const res = await getUsers.toggleFollowing(id)
-        // axios.post('http://localhost:3000/toggleFollowing', {authUserId: action.authUserId, id: action.id, page: action.page})
         return res
     }
 )

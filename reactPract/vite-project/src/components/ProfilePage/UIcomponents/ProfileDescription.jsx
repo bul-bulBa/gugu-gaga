@@ -1,9 +1,12 @@
 import defaultAvatar from '../../../assets/userPhoto.webp'
 import {useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 
 let statusSpan
+let avatarImg
 
 function ProfileDescription(props) {
+    const navigate = useNavigate()
     const [showInput, setShowInput] = useState(false)
     const [status, setStatuts] = useState(props.status)
 
@@ -41,6 +44,7 @@ function ProfileDescription(props) {
                 : props.avatar
               }
               alt="Nema Fotochki" />
+              {avatarImg}
             </span>
             <div className='flex flex-col justify-end items-start gap-2'>
               <span>{props.name}</span>
@@ -56,6 +60,12 @@ function ProfileDescription(props) {
 
         <div>
           {statusSpan}
+        </div>
+        <div className='fixed bottom-5 right-5 z-2'>
+          {props.itIsMe
+            ? <button onClick={() => navigate('/edit')}>Edit</button>
+            : <span></span>
+          }
         </div>
     </div>
     )

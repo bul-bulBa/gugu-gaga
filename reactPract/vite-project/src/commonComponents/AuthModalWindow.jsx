@@ -1,6 +1,6 @@
 import {useState} from 'react'
-import Login from '../components/authPage/login/Login'
-import SignUp from '../components/authPage/signUp/SignUp'
+import Login from '../components/authPage/Login'
+import SignUp from '../components/authPage/SignUp'
 
 function AuthModalWindow() {
 

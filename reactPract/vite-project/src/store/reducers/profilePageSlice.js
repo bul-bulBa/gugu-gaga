@@ -7,8 +7,6 @@ export const setProfileThunk = createAsyncThunk(
     'profile/setProfileThunk',
     async (id) => {
         return await getUsers.getProfile(id)
-        // axios.get(`http://localhost:3000/profile?user=${+id}`)
-        
     }
 )
 
@@ -16,6 +14,13 @@ export const changeStatusThunk = createAsyncThunk(
     'profile/changeStatusThunk',
     async(message) => {
         return await changeProfile.changeStatus(message)
+    }
+)
+
+export const editThunk = createAsyncThunk(
+    'profile/editThunk',
+    async(value) => {
+        return await changeProfile.edit(value)
     }
 )
 
@@ -40,19 +45,6 @@ const profilePageSlice = createSlice({
         itIsMe: false
     },
     reducers: {
-        // addPost(state) {
-        //     state.posts.push({message: state.myPostsArrDraft, likes: 0, id: state.posts.length + 1}),
-        //     state.myPostsArrDraft = ''
-        // },
-        // setState(state, action) {
-        //     state.id = action.payload.id
-        //     state.fullName = action.payload.fullName
-        //     state.avatar = action.payload.avatar
-        //     state.profilePhoto = action.payload.profilePhoto
-        //     state.about = action.payload.about
-        //     state.posts = action.payload.posts
-        //     state.location = action.payload.location
-        // },
         profileWillUnmount(state, action) {
             state.user.id = null
             state.user.fullName = ''
@@ -68,24 +60,6 @@ const profilePageSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        // ВИКОРИСТАТИ, КОЛИ БУДУ РЕАЛІЗОВУВАТИ ЗМІНУ КОНТЕНТУ В ПРОФІЛІ
-        // const handlePending = (state) => {state.isFetching = true}
-        // const handleFulfilled = (state, action) => {
-        //     state.user.id = action.payload.id
-        //     state.user.fullName = action.payload.fullName
-        //     state.user.avatar = action.payload.avatar
-        //     state.user.profilePhoto = action.payload.profilePhoto
-        //     state.user.about = action.payload.about
-        //     state.user.posts = action.payload.posts
-        //     state.user.location = action.payload.location
-        //     state.user.status = action.payload.status
-        //     state.isFetching = false
-        // }
-
-        // [setProfileThunk, changeStatusThunk].forEach(thunk => {
-        //     builder.addCase(thunk.pending, handlePending)
-        //     builder.addCase(thunk.fulfilled, handleFulfilled)
-        // });
         builder 
 
     // set profile
@@ -106,6 +80,12 @@ const profilePageSlice = createSlice({
         .addCase(changeStatusThunk.fulfilled, (state, action) => {
             state.user.status = action.payload
             state.isFetching = false
+        })
+    // edit profile
+        .addCase(editThunk.pending, (state) => {state.isFetching = true})
+        .addCase(editThunk.fulfilled, (state, action) => {
+            state.isFetching = false
+            console.log(action)
         })
     }
 })
