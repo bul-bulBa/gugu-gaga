@@ -10,7 +10,9 @@ const rootReducer = combineReducers({
     users: usersPageReducer,
     auth: authInfoReducer,
 })
+export type stateType = ReturnType<typeof rootReducer>
 
 const store = configureStore({ reducer:rootReducer })
+
 
 export default store

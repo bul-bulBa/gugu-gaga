@@ -1,11 +1,20 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import {authorize, getUsers} from '../../api/api'
+import {stateType} from '../StoreConfig'
+
+// LOGIN THUNK TYPES
+    type followedType = {it: Array<number>, they: Array<number>}
+    type actionLoginType = {name: string | undefined, password: string | undefined, captcha: string | undefined}
+// SIGNUP THUNK TYPES
+    type actionSingUpType = {name: string, password: string, country: string, city: string, captcha: string}
+// STATE TYPE
+    type stateUserType = { id: number, avatar: string,followed: followedType}
 
 // start Thunks :)
 export const loginThunk = createAsyncThunk(
     'auth/loginThunk',
-    async (action = {}) => {
-        const res = await authorize.login(action.name, action.password, action.captcha)
+    async (action: actionLoginType = {name: '', password: '', captcha: ''} ) => {
+        const res: stateUserType = await authorize.login(action.name, action.password, action.captcha)
         return res
     }
 )
@@ -19,16 +28,16 @@ export const logoutThunk = createAsyncThunk(
 
 export const signUpThunk = createAsyncThunk(
     'auth/signUpThunk',
-    async ({name, password, country, city, captcha}) => {
-        const res = await authorize.signUp(name, password, country, city, captcha)
+    async ({name, password, country, city, captcha}: actionSingUpType) => {
+        const res: stateUserType = await authorize.signUp(name, password, country, city, captcha)
         return res
     }
 )
 
 export const toggleFollowingThunk = createAsyncThunk(
     'auth/toggleFollowingThunk',
-    async (id) => {
-        const res = await getUsers.toggleFollowing(id)
+    async (id: number) => {
+        const res: Array<number> = await getUsers.toggleFollowing(id)
         return res
     }
 )
@@ -37,31 +46,21 @@ export const toggleFollowingThunk = createAsyncThunk(
 const authInfoSlice = createSlice({
     name: 'auth',
     initialState: {
-        user: {
-            avatar: '',
-            followed: {
-                it: [],
-                they: []
-            },
-            id: null,
-        },
+        user: null as stateUserType | null,
         isAuth: false,
         isFetching: true,
-        error: null,
+        error: null as string | null | undefined,
         firstLoad: true
     },
     reducers: {
         setProfile(state, action) {
-            state.user.id = action.payload.id
-            state.user.avatar = action.payload.avatar
-            state.user.followed = action.payload.followed
+            state.user = action.payload
             state.isAuth = true;
         },
         toggleFollow(state, action) {
-            state.user.followed.it = action.payload
+            // state.user.followed.it = action.payload
 
-            console.log(state.user.followed.it);
-            
+            // console.log(state.user.followed.it);
         },
         setError(state, action) {
             state.error = action.payload
@@ -90,14 +89,7 @@ const authInfoSlice = createSlice({
 
         // logout
         .addCase(logoutThunk.pending, (state) => {
-        state.user = {
-            avatar: '',
-            followed: {
-                it: [],
-                they: []
-            },
-            id: null,
-        },
+        state.user = null,
         state.isAuth = false,
         state.isFetching = false,
         state.error = null
@@ -138,13 +130,15 @@ const authInfoSlice = createSlice({
     }
 })
 
-export const selectIsAuth = state => state.auth.isAuth
-export const selectIsFirstLoad = state => state.auth.firstLoad
-export const selectAuthId = state => state.auth.user.id
-export const selectError = state => state.auth.error
-export const selectAuth = state => state.auth
+export type authInfoType = ReturnType<typeof authInfoSlice.reducer>
 
-export const setProfileAC = (data) => ({id: data.data.id, avatar: data.data.avatar, followed: data.data.followed})
+export const selectIsAuth = (state: stateType) => state.auth.isAuth
+export const selectIsFirstLoad = (state: stateType) => state.auth.firstLoad
+export const selectAuthId = (state: stateType) => state.auth.user?.id ?? null
+export const selectError = (state: stateType) => state.auth.error
+export const selectAuth = (state: stateType) => state.auth
+
+// export const setProfileAC = (data) => ({id: data.data.id, avatar: data.data.avatar, followed: data.data.followed})
 
 export default authInfoSlice.reducer
 export const {setProfile, toggleFollow, setError} = authInfoSlice.actions 

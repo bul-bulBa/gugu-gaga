@@ -10,7 +10,7 @@ function AddMessage(props) {
             <Formik
             initialValues={{message: ''}}
             validate={values => {
-                const error=''
+                let error=''
                 if(values.message > 100) error = 'Досягнений ліміт символів'
                 return error
             }}

@@ -1,4 +1,7 @@
-import {createSlice} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {stateType} from '../StoreConfig'
+
+type addMessageType = { id: number, message: string}
 
 const dialogsPageSlice = createSlice({
     name: 'dialogs',
@@ -11,14 +14,14 @@ const dialogsPageSlice = createSlice({
         {id: 6, name: 'Nachalnik', draft: '', mes:['dengi', 'dengi', 'Groshi']}
     ],
     reducers: {
-        addMessage(state, action) {
+        addMessage(state, action: PayloadAction<addMessageType>) {
             state.forEach(u => {
                 if(u.id === action.payload.id) {
                     u.mes.push(action.payload.message)
                 }
             })
         },
-        changeMessageDraft(state, action) {
+        changeMessageDraft(state, action: PayloadAction<addMessageType>) {
             state.forEach(u => 
                 u.id === action.payload.id ? u.draft = action.payload.message : u
             )
@@ -26,7 +29,9 @@ const dialogsPageSlice = createSlice({
     }
 })
 
-export const selectDialogs = state => state.dialogs
+export type dialogsStateType = ReturnType<typeof dialogsPageSlice.reducer>
+
+export const selectDialogs = (state: stateType): dialogsStateType => state.dialogs
 
 export default dialogsPageSlice.reducer
 export const {addMessage, changeMessageDraft} = dialogsPageSlice.actions

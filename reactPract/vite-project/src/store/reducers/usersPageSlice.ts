@@ -1,19 +1,33 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
-// import axios from 'axios'
 import {getUsers} from '../../api/api'
+import {stateType} from '../StoreConfig'
+
+// STATE TYPES
+    type userType = {
+      id: number,
+      fullName: string,
+      about: string,
+      avatar: string,
+      location: {country: string, city: string}
+    }
+    type usersType = Array<userType>
+// GET USERS THUNK TYPE
+    type getUsersType = {currentPage: number, limit: number}
+    type resultUsersType = {users: usersType, allUsers: number}
 
 // start Thunks ;)
 export const getUsersCardThunk = createAsyncThunk(
     'users/getUsersCardThunk',
-    async (action = {}) => {
-        return await getUsers.getUsersCard(action.currentPage, action.limit)
+    async (action: getUsersType) => {
+        const res: resultUsersType = await getUsers.getUsersCard(action.currentPage, action.limit)
+        return res
     }
 )
 
 const usersPageSlice = createSlice({
     name: 'users',
     initialState: {
-        users: [],
+        users: [] as usersType,
         allUsers: 0,
         currentPage: 1,
         isFetching: false
@@ -27,7 +41,7 @@ const usersPageSlice = createSlice({
         isFetchingToggle(state, action) {
             state.isFetching = action.payload
         },
-        setPage(state, action) {
+        setPage(state, action: {payload: number}) {
             state.currentPage = action.payload
         }
     },
@@ -43,7 +57,9 @@ const usersPageSlice = createSlice({
     }
 })
 
-export const selectUsers = state => state.users
+export type usersStateType = ReturnType<typeof usersPageSlice.reducer>
+
+export const selectUsers = (state: stateType) => state.users
 
 export default usersPageSlice.reducer
-export const {setUsers, toggleFollow, isFetchingToggle, setPage} = usersPageSlice.actions 
+export const {setUsers, isFetchingToggle, setPage} = usersPageSlice.actions 

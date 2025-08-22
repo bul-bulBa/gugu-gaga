@@ -1,6 +1,22 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import axios from 'axios'
 import {getUsers, changeProfile} from '../../api/api'
+import {stateType} from '../StoreConfig'
+
+// STATE TYPE (only user)
+    type userType = {
+            id: number,
+            fullName: string,
+            avatar: string,
+            profilePhoto: string,
+            about: string,
+            posts: [],
+            location: {
+                city: string,
+                country: string
+            },
+            status: string
+    }
 
 // start Thunks ;)
 export const setProfileThunk = createAsyncThunk(
@@ -29,7 +45,7 @@ const profilePageSlice = createSlice({
     name: 'profile',
     initialState: {
         user: {
-            id: null,
+            id: 0,
             fullName: '',
             avatar: '',
             profilePhoto: '',
@@ -46,14 +62,19 @@ const profilePageSlice = createSlice({
     },
     reducers: {
         profileWillUnmount(state, action) {
-            state.user.id = null
-            state.user.fullName = ''
-            state.user.avatar = ''
-            state.user.profilePhoto = ''
-            state.user.about = ''
-            state.user.posts = []
-            state.user.location = {city: '', country: ''}
-            state.user.status = ''
+            state.user = {
+                id: 0,
+                fullName: '',
+                avatar: '',
+                profilePhoto: '',
+                about: '',
+                posts: [],
+                location: {
+                    city: '',
+                    country: ''
+                },
+                status: ''
+            }
         },
         setItIsMe(state, action) {
             state.itIsMe = action.payload
@@ -65,14 +86,7 @@ const profilePageSlice = createSlice({
     // set profile
         .addCase(setProfileThunk.pending, (state) => {state.isFetching = true})
         .addCase(setProfileThunk.fulfilled, (state, action) => {
-            state.user.id = action.payload.id
-            state.user.fullName = action.payload.fullName
-            state.user.avatar = action.payload.avatar
-            state.user.profilePhoto = action.payload.profilePhoto
-            state.user.about = action.payload.about
-            state.user.posts = action.payload.posts
-            state.user.location = action.payload.location
-            state.user.status = action.payload.status
+            state.user = action.payload
             state.isFetching = false
         })
     // set status
@@ -90,19 +104,21 @@ const profilePageSlice = createSlice({
     }
 })
 
-export const selectUser = state => state.profile.user
-export const selectItIsMe = state => state.profile.itIsMe
-export const selectFetching  = state => state.profile.isFetching
+export type profileStateType = ReturnType<typeof profilePageSlice.reducer>
 
-export const setStateAC = (data) => ({
-    id: data.id,
-    fullName: data.fullName, 
-    avatar: data.avatar, 
-    profilePhoto: data.profilePhoto, 
-    about: data.about, 
-    posts: data.posts,
-    location: data.location
-})
+export const selectUser = (state: stateType) => state.profile.user
+export const selectItIsMe = (state: stateType) => state.profile.itIsMe
+export const selectFetching  = (state: stateType) => state.profile.isFetching
+
+// export const setStateAC = (data) => ({
+//     id: data.id,
+//     fullName: data.fullName, 
+//     avatar: data.avatar, 
+//     profilePhoto: data.profilePhoto, 
+//     about: data.about, 
+//     posts: data.posts,
+//     location: data.location
+// })
 
 export default profilePageSlice.reducer
-export const {addPost, setState, profileWillUnmount, setItIsMe} = profilePageSlice.actions 
+export const {profileWillUnmount, setItIsMe} = profilePageSlice.actions 

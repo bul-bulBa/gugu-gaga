@@ -3,7 +3,9 @@ import OnePost from "./UIcomponents/OnePost";
 import ProfileDescription from "./UIcomponents/ProfileDescription";
 import LoadingComponent from '../../commonComponents/LoadingComponent'
 import {useSelector, useDispatch} from 'react-redux'
-import {addPost, profileWillUnmount, setProfileThunk, changeStatusThunk, setItIsMe, selectUser, selectItIsMe, selectFetching} from '../../store/reducers/profilePageSlice'
+import {profileWillUnmount, setProfileThunk, 
+  changeStatusThunk, setItIsMe, selectUser, 
+  selectItIsMe, selectFetching} from '../../store/reducers/profilePageSlice'
 import { useEffect, useState } from 'react';
 import {useParams, useNavigate} from 'react-router-dom'
 import {selectAuth} from '../../store/reducers/authInfoSlice'
