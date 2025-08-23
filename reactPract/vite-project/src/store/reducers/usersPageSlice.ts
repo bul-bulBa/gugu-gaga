@@ -13,7 +13,7 @@ import {stateType} from '../StoreConfig'
     type usersType = Array<userType>
 // GET USERS THUNK TYPE
     export type getUsersType = {currentPage: number, limit: number}
-    type resultUsersType = {users: usersType, allUsers: number}
+    export type resultUsersType = {users: usersType, allUsers: number}
 
 // start Thunks ;)
 export const getUsersCardThunk = createAsyncThunk(

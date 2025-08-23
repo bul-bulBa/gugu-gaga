@@ -37,10 +37,10 @@ const ProfileDescription: React.FC<propsType> = (props) => {
     }
 
     return (
-      <div>
+      <div className='relative'>
         <div>
           <img className="h-[200px] w-[100%]" 
-          src={props.profilePhoto == '' 
+          src={!props.profilePhoto
           ? "https://euc.yorku.ca/wp-content/uploads/2020/08/main-1.jpg" 
           : props.profilePhoto
           }
@@ -73,11 +73,7 @@ const ProfileDescription: React.FC<propsType> = (props) => {
         <div>
           {statusSpan}
         </div>
-        <div className='fixed bottom-5 right-5 z-2'>
-          {props.itIsMe
-            ? <button onClick={() => navigate('/edit')}>Edit</button>
-            : <span></span>
-          }
+        <div className='sticky bottom-1 right-1 z-2'>
         </div>
     </div>
     )

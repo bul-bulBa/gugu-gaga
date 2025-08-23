@@ -13,35 +13,39 @@ import {stateType} from '../StoreConfig'
 // start Thunks :)
 export const loginThunk = createAsyncThunk(
     'auth/loginThunk',
-    async (action: actionLoginType ) => {
-        const res: stateUserType = await authorize.login({
+    async (action: actionLoginType ): Promise<stateUserType> => {
+        return await authorize.login({
             name: action.name ?? '', 
             password: action.password ?? '', 
             captcha: action.captcha ?? ''})
-        return res
     }
 )
 
 export const logoutThunk = createAsyncThunk(
     'auth/logout',
-    () => {
+    (): void => {
         authorize.logout()
     }
 )
 
 export const signUpThunk = createAsyncThunk(
     'auth/signUpThunk',
-    async ({name, password, country, city, captcha}: actionSingUpType) => {
-        const res: stateUserType = await authorize.signUp({name, password, country, city, captcha})
-        return res
+    async ({name, password, country, city, captcha}: actionSingUpType): Promise<stateUserType> => {
+        return await authorize.signUp({name, password, country, city, captcha})
+    }
+)
+
+export const deleteThunk = createAsyncThunk(
+    'auth/deleteThunk',
+    (): void => {
+        authorize.delete()
     }
 )
 
 export const toggleFollowingThunk = createAsyncThunk(
     'auth/toggleFollowingThunk',
-    async (id: number) => {
-        const res: Array<number> = await getUsers.toggleFollowing(id)
-        return res
+    async (id: number): Promise<Array<number>> => {
+        return await getUsers.toggleFollowing(id)
     }
 )
 
@@ -59,11 +63,6 @@ const authInfoSlice = createSlice({
         setProfile(state, action) {
             state.user = action.payload
             state.isAuth = true;
-        },
-        toggleFollow(state, action) {
-            // state.user.followed.it = action.payload
-
-            // console.log(state.user.followed.it);
         },
         setError(state, action: PayloadAction<string>) {
             state.error = action.payload
@@ -115,6 +114,14 @@ const authInfoSlice = createSlice({
             }
         })
 
+        // delete
+        .addCase(deleteThunk.pending, (state) => {
+            state.user = {id: 0, avatar: '', followed: {it:[], they:[]}},
+            state.isAuth = false,
+            state.isFetching = false,
+            state.error = null
+        })
+
         // toggleFollowing
         .addCase(toggleFollowingThunk.pending, (state) => {
             state.isFetching = true
@@ -141,7 +148,5 @@ export const selectAuthId = (state: stateType) => state.auth.user?.id ?? null
 export const selectError = (state: stateType) => state.auth.error
 export const selectAuth = (state: stateType) => state.auth
 
-// export const setProfileAC = (data) => ({id: data.data.id, avatar: data.data.avatar, followed: data.data.followed})
-
 export default authInfoSlice.reducer
-export const {setProfile, toggleFollow, setError} = authInfoSlice.actions 
+export const {setProfile, setError} = authInfoSlice.actions 

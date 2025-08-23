@@ -24,21 +24,21 @@ import {stateType} from '../StoreConfig'
 // start Thunks ;)
 export const setProfileThunk = createAsyncThunk(
     'profile/setProfileThunk',
-    async (id: number) => {
+    async (id: number): Promise<userType> => {
         return await getUsers.getProfile(id)
     }
 )
 
 export const changeStatusThunk = createAsyncThunk(
     'profile/changeStatusThunk',
-    async(message: string) => {
+    async(message: string): Promise<string> => {
         return await changeProfile.changeStatus(message)
     }
 )
 
 export const editThunk = createAsyncThunk(
     'profile/editThunk',
-    async(value: editProfileType) => {
+    async(value: editProfileType): Promise<void> => {
         return await changeProfile.edit(value)
     }
 )
@@ -100,9 +100,8 @@ const profilePageSlice = createSlice({
         })
     // edit profile
         .addCase(editThunk.pending, (state) => {state.isFetching = true})
-        .addCase(editThunk.fulfilled, (state, action) => {
+        .addCase(editThunk.fulfilled, (state) => {
             state.isFetching = false
-            console.log(action)
         })
     }
 })

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {actionLoginType, stateUserType, actionSingUpType} from '../store/reducers/authInfoSlice'
-import {getUsersType} from '../store/reducers/usersPageSlice'
-import {editProfileType} from '../store/reducers/profilePageSlice'
+import {getUsersType, resultUsersType} from '../store/reducers/usersPageSlice'
+import {editProfileType, userType} from '../store/reducers/profilePageSlice'
 
 const request = axios.create({
     baseURL: 'http://localhost:3000',
@@ -24,28 +24,31 @@ export const authorize = {
             captcha
         })
         .then((res): stateUserType => res.data)
+    },
+    delete() {
+        return request.delete('/profile')
     }
 }
 
 export const getUsers = {
     getUsersCard({currentPage, limit}: getUsersType) {
         return request.get(`/users?page=${currentPage}&limit=${limit}`)
-        .then(res => res.data)
+        .then((res): resultUsersType => res.data)
     },
     getProfile(id: number) {
         return request.get(`/profile?user=${+id}`)
-        .then(res => res.data)
+        .then((res): userType => res.data)
     },
     toggleFollowing(id: number) {
         return request.put(`/toggleFollowing/${id}`)
-        .then(res => res.data)
+        .then((res): Array<number> => res.data)
     }
 }
 
 export const changeProfile = {
     changeStatus(status: string) {
         return request.put('/changeStatus', {message: status})
-        .then(res => res.data)
+        .then((res): string => res.data)
     },
     edit(values: editProfileType) {
         const formData = new FormData()
@@ -54,6 +57,6 @@ export const changeProfile = {
         formData.append('about', values.about)
 
         return request.post('/edit', formData)
-        .then(res => res.data)
+        .then((res): void => res.data)
     }
 }

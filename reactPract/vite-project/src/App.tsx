@@ -48,6 +48,8 @@ function App() {
           <Route path='/edit' element={<EditProfile />} />
 
           <Route path='/auth' element={<AuthModalWindow/>}/>
+
+          <Route path='*' element={<div>404 PAGE NOT FOUND</div>} />
         </Routes>
         </Suspense>
         </div>

@@ -2,6 +2,7 @@ import { Formik, Form, Field } from "formik";
 import {selectUser, editThunk, userType} from '../../store/reducers/profilePageSlice'
 import {useNavigate} from 'react-router-dom'
 import {useAppState, useAppDispatch} from '../../store/StoreConfig'
+import {deleteThunk} from '../../store/reducers/authInfoSlice'
 
 type initialValuesType = {
     avatar: File | null,
@@ -9,7 +10,7 @@ type initialValuesType = {
     about: string
 }
 
-const EditProfile: React.FC<{}> = () => {
+const EditProfile = () => {
     const state: userType = useAppState(selectUser)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
@@ -21,7 +22,7 @@ const EditProfile: React.FC<{}> = () => {
     }
 
     return (
-        <div>
+        <div className="flex flex-col justify-between items-center">
 
             <Formik
             initialValues={initialValues}
@@ -50,6 +51,11 @@ const EditProfile: React.FC<{}> = () => {
                 )}
             </Formik>
 
+
+            <button onClick={() => {
+                dispatch(deleteThunk())
+                navigate('/profile')
+            }}>DELETE ACCOUNT</button>
         </div>
     )
 }

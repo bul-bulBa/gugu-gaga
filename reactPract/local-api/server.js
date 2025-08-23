@@ -153,6 +153,22 @@ app.post('/profile', async (req, res) => {
     return res.json(userArr)
 })
 
+app.delete('/profile', (req, res) => {
+  const requestCookiesName = decodeURIComponent(req.cookies.name);
+  const requestCookiesPassword = decodeURIComponent(req.cookies.password);
+
+  if(requestCookiesName && requestCookiesPassword) {
+    const user = globalUsersArr.findIndex(u => u.fullName === requestCookiesName)
+    globalUsersArr.splice(user, 1)
+
+  res.clearCookie('name', {path: '/', maxAge: 0})
+  res.clearCookie('password',  {path: '/', maxAge: 0})
+  res.sendStatus(200)
+  } else {
+    res.status(401)
+  }
+})
+
 app.put('/toggleFollowing/:id', (req, res) => {
   const id = +req.params.id
   const name = decodeURIComponent(req.cookies.name)
