@@ -2,6 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {stateType} from '../StoreConfig'
 
 type addMessageType = { id: number, message: string}
+export type dialogsUserType = {id: number, name: string, draft: string, mes: Array<string>}
 
 const dialogsPageSlice = createSlice({
     name: 'dialogs',
@@ -12,7 +13,7 @@ const dialogsPageSlice = createSlice({
         {id: 4, name: "Masha", draft: '', mes: ['masha', 'pasha', 'dzhopa']},
         {id: 5, name: "Akakiy", draft: '', mes: ['akakiy', 'kaka', 'pisya']},
         {id: 6, name: 'Nachalnik', draft: '', mes:['dengi', 'dengi', 'Groshi']}
-    ],
+    ] as Array<dialogsUserType>,
     reducers: {
         addMessage(state, action: PayloadAction<addMessageType>) {
             state.forEach(u => {

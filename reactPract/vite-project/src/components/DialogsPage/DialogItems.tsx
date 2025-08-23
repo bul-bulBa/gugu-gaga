@@ -1,9 +1,10 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import {useSelector} from 'react-redux'
+import {selectDialogs, dialogsStateType} from '../../store/reducers/dialogsPageSlice'
+import {useAppState} from '../../store/StoreConfig'
 
 
-function DialogItems(props) {
-    const state = useSelector(store => store.dialogs)
+function DialogItems() {
+    const state: dialogsStateType = useAppState(selectDialogs)
     
 
     return (

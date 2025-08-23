@@ -1,16 +1,19 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
-import axios from 'axios'
 import {getUsers, changeProfile} from '../../api/api'
 import {stateType} from '../StoreConfig'
 
+// EDIT PROFILE TYPE
+    export type editProfileType = {avatar: File | null, profilePhoto: File | null, about: string}
+
 // STATE TYPE (only user)
-    type userType = {
+    export type postType = {id: string, likesCount: number, message: string}    
+    export type userType = {
             id: number,
             fullName: string,
             avatar: string,
             profilePhoto: string,
             about: string,
-            posts: [],
+            posts: Array<postType>, 
             location: {
                 city: string,
                 country: string
@@ -21,21 +24,21 @@ import {stateType} from '../StoreConfig'
 // start Thunks ;)
 export const setProfileThunk = createAsyncThunk(
     'profile/setProfileThunk',
-    async (id) => {
+    async (id: number) => {
         return await getUsers.getProfile(id)
     }
 )
 
 export const changeStatusThunk = createAsyncThunk(
     'profile/changeStatusThunk',
-    async(message) => {
+    async(message: string) => {
         return await changeProfile.changeStatus(message)
     }
 )
 
 export const editThunk = createAsyncThunk(
     'profile/editThunk',
-    async(value) => {
+    async(value: editProfileType) => {
         return await changeProfile.edit(value)
     }
 )
@@ -56,12 +59,12 @@ const profilePageSlice = createSlice({
                 country: ''
             },
             status: ''
-        },
+        } as userType,
         isFetching: false,
         itIsMe: false
     },
     reducers: {
-        profileWillUnmount(state, action) {
+        profileWillUnmount(state) {
             state.user = {
                 id: 0,
                 fullName: '',

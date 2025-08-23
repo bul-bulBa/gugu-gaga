@@ -1,20 +1,23 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
+import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit'
 import {authorize, getUsers} from '../../api/api'
 import {stateType} from '../StoreConfig'
 
 // LOGIN THUNK TYPES
     type followedType = {it: Array<number>, they: Array<number>}
-    type actionLoginType = {name: string | undefined, password: string | undefined, captcha: string | undefined}
+    export type actionLoginType = {name?: string, password?: string, captcha?: string}
 // SIGNUP THUNK TYPES
-    type actionSingUpType = {name: string, password: string, country: string, city: string, captcha: string}
+    export type actionSingUpType = {name: string, password: string, country: string, city: string, captcha: string}
 // STATE TYPE
-    type stateUserType = { id: number, avatar: string,followed: followedType}
+    export type stateUserType = { id: number, avatar: string,followed: followedType}
 
 // start Thunks :)
 export const loginThunk = createAsyncThunk(
     'auth/loginThunk',
-    async (action: actionLoginType = {name: '', password: '', captcha: ''} ) => {
-        const res: stateUserType = await authorize.login(action.name, action.password, action.captcha)
+    async (action: actionLoginType ) => {
+        const res: stateUserType = await authorize.login({
+            name: action.name ?? '', 
+            password: action.password ?? '', 
+            captcha: action.captcha ?? ''})
         return res
     }
 )
@@ -29,7 +32,7 @@ export const logoutThunk = createAsyncThunk(
 export const signUpThunk = createAsyncThunk(
     'auth/signUpThunk',
     async ({name, password, country, city, captcha}: actionSingUpType) => {
-        const res: stateUserType = await authorize.signUp(name, password, country, city, captcha)
+        const res: stateUserType = await authorize.signUp({name, password, country, city, captcha})
         return res
     }
 )
@@ -46,11 +49,11 @@ export const toggleFollowingThunk = createAsyncThunk(
 const authInfoSlice = createSlice({
     name: 'auth',
     initialState: {
-        user: null as stateUserType | null,
+        user: {} as stateUserType,
         isAuth: false,
         isFetching: true,
         error: null as string | null | undefined,
-        firstLoad: true
+        firstLoad: true 
     },
     reducers: {
         setProfile(state, action) {
@@ -62,7 +65,7 @@ const authInfoSlice = createSlice({
 
             // console.log(state.user.followed.it);
         },
-        setError(state, action) {
+        setError(state, action: PayloadAction<string>) {
             state.error = action.payload
         }
     },
@@ -89,7 +92,7 @@ const authInfoSlice = createSlice({
 
         // logout
         .addCase(logoutThunk.pending, (state) => {
-        state.user = null,
+        state.user = {id: 0, avatar: '', followed: {it:[], they:[]}},
         state.isAuth = false,
         state.isFetching = false,
         state.error = null

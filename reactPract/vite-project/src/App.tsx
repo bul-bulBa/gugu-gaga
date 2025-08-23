@@ -1,5 +1,4 @@
 import { useState, useEffect, lazy, Suspense } from 'react'
-import {useSelector} from 'react-redux'
 import './App.css'
 import Header from "./components/Header"
 import Navbar from './components/Navbar'
@@ -7,9 +6,9 @@ import Profile from './components/ProfilePage/Profile'
 import Users from './components/UsersPage/Users'
 import {useNavigate, Routes, Route} from 'react-router-dom'
 import {loginThunk, selectIsAuth, selectIsFirstLoad} from './store/reducers/authInfoSlice'
-import {useDispatch} from 'react-redux'
 import AuthModalWindow from './commonComponents/AuthModalWindow'
 import LoadingComponent from './commonComponents/LoadingComponent'
+import {useAppState, useAppDispatch} from './store/StoreConfig' 
 
 const News = lazy(() => import('./components/NewsPage/News'))
 const Music = lazy(() => import('./components/MusicPage/Music'))
@@ -18,14 +17,14 @@ const Dialogs = lazy(() => import('./components/DialogsPage/Dialogs'))
 const DialogItems = lazy(() => import('./components/DialogsPage/DialogItems'))
 const EditProfile = lazy(() => import('./components/ProfilePage/EditProfile'))
 
-function App(props) {
-  const isAuth = useSelector(selectIsAuth)
-  const firstLoad = useSelector(selectIsFirstLoad)
-  const dispatch = useDispatch() 
+function App() {
+  const isAuth: boolean = useAppState(selectIsAuth)
+  const firstLoad: boolean = useAppState(selectIsFirstLoad)
+  const dispatch = useAppDispatch() 
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(loginThunk())
+    dispatch(loginThunk({}))
   }, [])
 
   if(firstLoad) {

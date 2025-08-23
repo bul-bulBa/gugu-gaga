@@ -1,27 +1,24 @@
-import {useDispatch, useSelector} from 'react-redux'
-import {useNavigate} from 'react-router-dom'
 import {useState, useEffect} from 'react'
-import {signUpThunk, selectError, selectIsAuth} from '../../store/reducers/authInfoSlice'
+import {signUpThunk, selectError} from '../../store/reducers/authInfoSlice'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import ReCAPTCHA from 'react-google-recaptcha'
+import {useAppState, useAppDispatch} from '../../store/StoreConfig'
+
+type initialValuesType = {name: string, password: string, country: string, city: string, captcha: string}
 
 function SignUp() {
-    const ERROR = useSelector(selectError)
-    const isAuth = useSelector(selectIsAuth)
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const ERROR: string | null | undefined = useAppState(selectError)
+    const dispatch = useAppDispatch()
+    const initialValues: initialValuesType = {name: '', password: '', country: '', city: '', captcha: ''}
 
-    useEffect(() => {
-        if(isAuth) navigate('/profile')
-    }, [isAuth])
     return (
         <Formik
-            initialValues={{name: '', password: '', country: '', city: '', captcha: ''}}
+            initialValues={initialValues}
             validate={values => {
-                let errors = {}
-                const valuesArr = Object.entries(values) 
-                valuesArr.forEach(([key, value]) => {
-                    if(!value) errors[key] = 'required'
+                let errors: Record<string, string> = {};
+
+                Object.entries(values) .forEach(([key, value]) => {
+                    if(!value) errors[key] = `${[key]} is required`
                 });
                 return errors
             }}
@@ -47,6 +44,7 @@ function SignUp() {
                     <ReCAPTCHA 
                         sitekey='6LeErq0rAAAAAJX6b5rNGoY__g9t8nlhLPpIjYtU'
                         onChange={value => setFieldValue('captcha', value)}/>
+                    <ErrorMessage name='captcha' component='div' className='text-red-200' />
 
                     <button type='submit' disabled={isSubmitting}>
                         Submit

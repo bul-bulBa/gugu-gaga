@@ -1,18 +1,22 @@
 import {Formik, Form, Field, ErrorMessage} from 'formik'
 
-function AddMessage(props) {
+type propsType = {
+    add: (message: string) => void | object
+}
+type messageType = {message: string}
+
+const AddMessage: React.FC<propsType> = (props) => {
+    let initialValues: messageType = {message: ''}
     return (
         <div>
-
             {/* <input value={props.state} type="text" onChange={e => props.change(e.target.value)} className='border rounded'/> 
             <button onClick={ () => props.add() }>Send</button> */}
-
             <Formik
-            initialValues={{message: ''}}
+            initialValues={initialValues}
             validate={values => {
-                let error=''
-                if(values.message > 100) error = 'Досягнений ліміт символів'
-                return error
+                values.message.length > 100
+                ? {message: 'Досягнений ліміт символів'}
+                : {}
             }}
             onSubmit={(values, {resetForm}) => {
                 props.add(values.message)
@@ -20,7 +24,7 @@ function AddMessage(props) {
             }}
             >
                 {({values}) => (
-                    <Form>
+                <Form>
                     <Field name='message' placeholder='message'/>
                     <ErrorMessage name='message' component='div' className='text-red-200' />
 

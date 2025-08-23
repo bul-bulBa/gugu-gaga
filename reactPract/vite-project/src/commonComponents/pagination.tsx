@@ -1,16 +1,24 @@
 import { useEffect } from "react"
-function Pagination({currentPage, allPages, Func}) {
-    const newBtn = (i) => {
+
+type propsType = {
+    currentPage: number,
+    allPages: number,
+    Func: (page: number) => void
+}
+
+const  Pagination: React.FC<propsType> = ({currentPage, allPages, Func}) => {
+
+    const newBtn = (i: number): React.ReactElement => {
         return (
         <button 
             key={i} 
             className={i == currentPage ? "activePaginationButton" : ''}
-            onClick={i == currentPage ? undefined : e => Func(+e.target.textContent)}>{i}
+            onClick={i == currentPage ? undefined : (a) => Func(i)}>{i}
         </button>
         )
     }
 
-    let arr = []
+    let arr: Array<React.ReactElement> = []
 
     const firstBtn = Math.max(1, currentPage - 1)
     const lastBtn = Math.min(allPages, currentPage + 2)

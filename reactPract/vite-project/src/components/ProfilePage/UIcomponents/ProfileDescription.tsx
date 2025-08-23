@@ -2,15 +2,27 @@ import defaultAvatar from '../../../assets/userPhoto.webp'
 import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 
-let statusSpan
+type propsType = {
+  itIsMe: boolean,
+  name: string,
+  about: string,
+  avatar: string,
+  profilePhoto: string,
+  status: string,
+  country: string,
+  city: string,
+  changeStatus: (text: string) => void
+}
+
+let statusSpan: React.ReactElement
 let avatarImg
 
-function ProfileDescription(props) {
+const ProfileDescription: React.FC<propsType> = (props) => {
     const navigate = useNavigate()
-    const [showInput, setShowInput] = useState(false)
-    const [status, setStatuts] = useState(props.status)
+    const [showInput, setShowInput] = useState<boolean>(false)
+    const [status, setStatuts] = useState<string>(props.status)
 
-    function changeStatus() {
+    function changeStatus(): void {
       props.changeStatus(status)
       setShowInput(false)
     } 

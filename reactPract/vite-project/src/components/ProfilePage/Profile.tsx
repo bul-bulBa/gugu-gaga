@@ -2,30 +2,30 @@ import MyPosts from './UIcomponents/MyPosts';
 import OnePost from "./UIcomponents/OnePost";
 import ProfileDescription from "./UIcomponents/ProfileDescription";
 import LoadingComponent from '../../commonComponents/LoadingComponent'
-import {useSelector, useDispatch} from 'react-redux'
 import {profileWillUnmount, setProfileThunk, 
   changeStatusThunk, setItIsMe, selectUser, 
-  selectItIsMe, selectFetching} from '../../store/reducers/profilePageSlice'
+  selectItIsMe, selectFetching, userType} from '../../store/reducers/profilePageSlice'
 import { useEffect, useState } from 'react';
 import {useParams, useNavigate} from 'react-router-dom'
-import {selectAuth} from '../../store/reducers/authInfoSlice'
+import {selectAuth, authInfoType} from '../../store/reducers/authInfoSlice'
+import {useAppState, useAppDispatch} from '../../store/StoreConfig'
 
 function Profile() {
   // get some info
-  const state = useSelector(selectUser)
-  const isFetching = useSelector(selectFetching)
-  const itIsMe = useSelector(selectItIsMe)
-  const auth = useSelector(selectAuth)
-  const dispatch = useDispatch() 
-  let {id} = useParams()
-  const [draft, setDraft] = useState('');
+  const state: userType = useAppState(selectUser)
+  const isFetching: boolean = useAppState(selectFetching)
+  const itIsMe: boolean = useAppState(selectItIsMe)
+  const auth: authInfoType = useAppState(selectAuth)
+  const dispatch = useAppDispatch() 
+  let {id: stringId} = useParams()
+  const id: number | undefined = stringId ? +stringId : undefined
+  const [draft, setDraft] = useState<string>('');
   const navigate = useNavigate()
-  console.log(state)
 
-  const changeInput = (text) => setDraft(text)
-  const addPosts = () => dispatch(addPost())
-  const changeStatus = (text) => dispatch(changeStatusThunk(text))
-  const changeAvatar = file => dispatch(changeAvatarThunk(file))
+  const changeInput = (text: string): void => setDraft(text)
+  // const addPosts = (): void => dispatch(addPost())
+  const changeStatus = (text: string) => dispatch(changeStatusThunk(text))
+  // const changeAvatar = (file: File) => dispatch(changeAvatarThunk(file))
   
   useEffect(() => {
     if(!id) {
@@ -51,9 +51,9 @@ function Profile() {
             <ProfileDescription itIsMe={itIsMe} name={state.fullName} about={state.about} 
               avatar={state.avatar} profilePhoto={state.profilePhoto} status={state.status} 
               country={state.location.country} city={state.location.city} 
-              changeStatus={changeStatus} changeAvatar={changeAvatar}/>
+              changeStatus={changeStatus}/>
             {/* <MyPosts state={draft} changeInput={changeInput} addPosts={addPosts} isValid={isValid}/> */}
-            <OnePost state={state.posts} />
+            <OnePost posts={state.posts} />
             
           </div>
     )

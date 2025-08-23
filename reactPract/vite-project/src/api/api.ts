@@ -1,4 +1,7 @@
 import axios from 'axios'
+import {actionLoginType, stateUserType, actionSingUpType} from '../store/reducers/authInfoSlice'
+import {getUsersType} from '../store/reducers/usersPageSlice'
+import {editProfileType} from '../store/reducers/profilePageSlice'
 
 const request = axios.create({
     baseURL: 'http://localhost:3000',
@@ -6,48 +9,48 @@ const request = axios.create({
 })
 
 export const authorize = {
-    login(name, password, captcha) {
+    login({name, password, captcha}: actionLoginType) {
         return request.post('/login', {name, password, captcha})
-        .then(res => res.data)
+        .then((res): stateUserType => res.data)
     }, 
     logout() {
         return request.post('/logout')
     },
-    signUp(name, password, country, city, captcha) {
+    signUp({name, password, country, city, captcha}: actionSingUpType) {
         return request.post('/profile', {
             name, 
             password, 
             location: {country, city},
             captcha
         })
-        .then(res => res.data)
+        .then((res): stateUserType => res.data)
     }
 }
 
 export const getUsers = {
-    getUsersCard(currentPage = 1, limit = 4) {
+    getUsersCard({currentPage, limit}: getUsersType) {
         return request.get(`/users?page=${currentPage}&limit=${limit}`)
         .then(res => res.data)
     },
-    getProfile(id) {
+    getProfile(id: number) {
         return request.get(`/profile?user=${+id}`)
         .then(res => res.data)
     },
-    toggleFollowing(id,) {
+    toggleFollowing(id: number) {
         return request.put(`/toggleFollowing/${id}`)
         .then(res => res.data)
     }
 }
 
 export const changeProfile = {
-    changeStatus(value) {
-        return request.put('/changeStatus', {message: value})
+    changeStatus(status: string) {
+        return request.put('/changeStatus', {message: status})
         .then(res => res.data)
     },
-    edit(values) {
+    edit(values: editProfileType) {
         const formData = new FormData()
-        formData.append('avatar', values.avatar)
-        formData.append('profilePhoto', values.profilePhoto)
+        if(values.avatar) formData.append('avatar', values.avatar)
+        if(values.profilePhoto) formData.append('profilePhoto', values.profilePhoto)
         formData.append('about', values.about)
 
         return request.post('/edit', formData)

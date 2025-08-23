@@ -1,30 +1,26 @@
-import {useDispatch, useSelector} from 'react-redux'
 import {loginThunk} from '../../store/reducers/authInfoSlice'
 import { useState, useEffect } from 'react'
-import {useNavigate} from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import {selectError, selectIsAuth} from '../../store/reducers/authInfoSlice'
 import ReCAPTCHA from 'react-google-recaptcha'
+import {useAppState, useAppDispatch} from '../../store/StoreConfig'
+
+type initialValuesType = {name: string, password: string, captcha: string}
 
 function Login() {
-    const ERROR = useSelector(selectError)
-    const isAuth = useSelector(selectIsAuth)
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        if(isAuth) navigate('/profile')
-    }, [isAuth])
+    const ERROR: string | null | undefined = useAppState(selectError)
+    const dispatch = useAppDispatch()
+    const initialValues: initialValuesType = {name: '', password:'', captcha: ''}
 
     return (
         <div>
             <Formik
-            initialValues={{name: '', password:'', captcha: ''}}
+            initialValues={initialValues}
             validate={values => {
-                let errors = {}
-                if(!values.name) {errors.name = 'required'}
-                if(!values.password) {errors.password = 'required'}
-                if(!values.captcha) {errors.captcha = 'required'}
+                let errors: Record<string, string> = {};
+                Object.entries(values).forEach(([key, value]) => {
+                    if(!value) {errors[key] = `${key} is required`}
+                })
                 return errors
             }}
             onSubmit={async (values, {setSubmitting}) => {

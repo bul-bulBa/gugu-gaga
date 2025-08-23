@@ -3,7 +3,7 @@ import {getUsers} from '../../api/api'
 import {stateType} from '../StoreConfig'
 
 // STATE TYPES
-    type userType = {
+    export type userType = {
       id: number,
       fullName: string,
       about: string,
@@ -12,17 +12,17 @@ import {stateType} from '../StoreConfig'
     }
     type usersType = Array<userType>
 // GET USERS THUNK TYPE
-    type getUsersType = {currentPage: number, limit: number}
+    export type getUsersType = {currentPage: number, limit: number}
     type resultUsersType = {users: usersType, allUsers: number}
 
 // start Thunks ;)
 export const getUsersCardThunk = createAsyncThunk(
     'users/getUsersCardThunk',
-    async (action: getUsersType) => {
-        const res: resultUsersType = await getUsers.getUsersCard(action.currentPage, action.limit)
+    async ({currentPage, limit}: getUsersType) => {
+        const res: resultUsersType = await getUsers.getUsersCard({currentPage, limit})
         return res
     }
-)
+) 
 
 const usersPageSlice = createSlice({
     name: 'users',

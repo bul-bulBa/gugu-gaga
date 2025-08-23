@@ -1,12 +1,19 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import Login from '../components/authPage/Login'
 import SignUp from '../components/authPage/SignUp'
+import { useNavigate } from 'react-router-dom'
+import {selectIsAuth} from '../store/reducers/authInfoSlice'
+import {useAppState} from '../store/StoreConfig'
 
 function AuthModalWindow() {
+    const isAuth: boolean = useAppState(selectIsAuth)
+    const navigate = useNavigate()
+    const [login, setLogin] = useState<boolean>(false) 
+    const [signIn, setSignIn] = useState<boolean>(false)
 
-    const [login, setLogin] = useState(false) 
-    const [signIn, setSignIn] = useState(false)
-
+    useEffect(() => {
+        if(isAuth) navigate('/profile')
+    }, [isAuth]) 
 
      return (
         <div className='flex justify-center items-center'>
