@@ -6,12 +6,12 @@ import {stateType} from '../StoreConfig'
     type followedType = {it: Array<number>, they: Array<number>}
     export type actionLoginType = {name?: string, password?: string, captcha?: string}
 // SIGNUP THUNK TYPES
-    export type actionSingUpType = {name: string, password: string, country: string, city: string, captcha: string}
+    export type actionSignUpType = {name: string, password: string, country: string, city: string, captcha: string}
 // STATE TYPE
     export type stateUserType = { id: number, avatar: string,followed: followedType}
 
 // start Thunks :)
-export const loginThunk = createAsyncThunk(
+export const loginThunk = createAsyncThunk<stateUserType, actionLoginType>(
     'auth/loginThunk',
     async (action: actionLoginType ): Promise<stateUserType> => {
         return await authorize.login({
@@ -21,16 +21,16 @@ export const loginThunk = createAsyncThunk(
     }
 )
 
-export const logoutThunk = createAsyncThunk(
+export const logoutThunk = createAsyncThunk<void, void>(
     'auth/logout',
     (): void => {
         authorize.logout()
     }
 )
 
-export const signUpThunk = createAsyncThunk(
+export const signUpThunk = createAsyncThunk<stateUserType, actionSignUpType>(
     'auth/signUpThunk',
-    async ({name, password, country, city, captcha}: actionSingUpType): Promise<stateUserType> => {
+    async ({name, password, country, city, captcha}: actionSignUpType): Promise<stateUserType> => {
         return await authorize.signUp({name, password, country, city, captcha})
     }
 )
@@ -42,7 +42,7 @@ export const deleteThunk = createAsyncThunk(
     }
 )
 
-export const toggleFollowingThunk = createAsyncThunk(
+export const toggleFollowingThunk = createAsyncThunk<number[], number>(
     'auth/toggleFollowingThunk',
     async (id: number): Promise<Array<number>> => {
         return await getUsers.toggleFollowing(id)

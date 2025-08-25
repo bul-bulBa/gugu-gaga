@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {actionLoginType, stateUserType, actionSingUpType} from '../store/reducers/authInfoSlice'
+import {actionLoginType, stateUserType, actionSignUpType} from '../store/reducers/authInfoSlice'
 import {getUsersType, resultUsersType} from '../store/reducers/usersPageSlice'
 import {editProfileType, userType} from '../store/reducers/profilePageSlice'
 
@@ -16,7 +16,7 @@ export const authorize = {
     logout() {
         return request.post('/logout')
     },
-    signUp({name, password, country, city, captcha}: actionSingUpType) {
+    signUp({name, password, country, city, captcha}: actionSignUpType) {
         return request.post('/profile', {
             name, 
             password, 
@@ -31,9 +31,14 @@ export const authorize = {
 }
 
 export const getUsers = {
-    getUsersCard({currentPage, limit}: getUsersType) {
-        return request.get(`/users?page=${currentPage}&limit=${limit}`)
+    getUsersCard({currentPage, limit, term, friends}: getUsersType) {
+        console.log(term)
+        return request.get(`/users?page=${currentPage}&limit=${limit}&term=${term}&friends=${friends}`)
         .then((res): resultUsersType => res.data)
+    },
+    getAutoCompNames(value: string) {
+        return request.get(`/usersAutocomplete?term=${value}`)
+        .then((res): string[] => res.data)
     },
     getProfile(id: number) {
         return request.get(`/profile?user=${+id}`)

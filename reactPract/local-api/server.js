@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 const globalUsersArr = require('./users.cjs')
 const multer = require('multer')
 const mongoose = require('mongoose')
+const Fuse = require('fuse.js')
 
 const app = express();
 const upload = multer({dest: 'uploads/'})
@@ -17,43 +18,60 @@ app.use('/uploads', express.static('uploads'));
 
 const PORT = 3000;
 const secretKey = '6LeErq0rAAAAAHaW9uz9V-N2f66lgKj3lZxK-Wdt'
+const autocompleteUsersName = new Fuse(globalUsersArr, {keys: ['fullName']})
+const mapOfUsers = new Map(globalUsersArr.map(user => [user.id, user]))
 
-const getUsers = (PAGE, LIMIT, res) => {
-    const page = (parseInt(PAGE) || 1) - 1;
-    const limit = parseInt(LIMIT) || 4;
+function searchUsers(fuse, allItems, term) {
+  if(!term.trim || term === 'null') {
+    return allItems
+  } 
+  return fuse.search(term).map(u => u.item)
+}
+
+// 🔹 Маршрути
+app.get('/users', (req, res) => {
+    const requestCookiesName = decodeURIComponent(req.cookies.name);
+    const page = (Number(req.query.page) || 1) - 1;
+    const limit = Number(req.query.limit) || 4;
+    const term = req.query.term
+    const friends = req.query.friends
     const offset = (page * limit);
-    const allUsers = globalUsersArr.length
-    const preData = globalUsersArr.slice(offset, offset + limit).map(u => ({
+
+    let filteredUsers = []
+    if(friends === 'true') {
+      const me = globalUsersArr.find(u => u.fullName === requestCookiesName)
+      if(!me) return res.status(401)
+// filter(Boolean) - потрібний для того, щоб якщо .get не знайде користувача з таким id, то тоді в масив myFriends 
+// він додасть undefined значення. І щоб цього не сталось - цей filter відсіює всі не валідні значення 
+// це потрібно в випадку, якщо користувач буде видалений а його id залишиться в іншого користувача або подібні ситуації
+      
+      const myFriends = me.followed.it.map(id => mapOfUsers.get(id)).filter(Boolean)
+      filteredUsers = searchUsers(autocompleteUsersName, myFriends, term)
+    } else {
+      filteredUsers = searchUsers(autocompleteUsersName, globalUsersArr, term)
+    }
+
+    const allUsers = filteredUsers.length
+    const preData = filteredUsers.slice(offset, offset + limit).map(u => ({
       id: u.id,
       fullName: u.fullName,
       about: u.about,
       avatar: u.avatar,
       location: u.location
     }))
-    data = {
+    const data = {
       users: preData,
       allUsers
     }
     res.json(data);
-}
-
-const getProfile = (user) => {
-  return data = {
-    id: user.id,
-    fullName: user.fullName,
-    about: user.about,
-    avatar: user.avatar,
-    profilePhoto: user.profilePhoto,
-    location: user.location,
-    posts: user.posts,
-    status: user.status
-  }
-}
-
-// 🔹 Маршрути
-app.get('/users', (req, res) => {
-    getUsers(req.query.page, req.query.limit, res)
 });
+
+app.get('/usersAutocomplete', (req, res) => {
+  const users = autocompleteUsersName.search(req.query.term).slice(0, 5)
+  const result = users.map(u => u.item.fullName)
+
+  res.json(result)
+})
 
 app.get('/profile', (req, res) => {
   const user = req.query.user || 1
