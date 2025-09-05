@@ -20,7 +20,7 @@ class changeController {
         try{
             const {token} = req.cookies
             const {text} = req.body
-            // console.log('TEXT ', text)
+
             const result = await changeService.changeStatus(text, token)
             
             res.json(result)
@@ -33,7 +33,6 @@ class changeController {
         try{
             const {token} = req.cookies
             let updatedUser
-            console.log("REQ   ", req.body)
             if(req.body.about) updatedUser = await changeService.changeAboutMe(token, req.body.about)
             if(req.files.avatar) updatedUser = await changeService.changePhoto(token, req.files.avatar[0], 'avatar')
             if(req.files.profilePhoto) updatedUser = await changeService.changePhoto(token, req.files.profilePhoto[0], 'profilePhoto')

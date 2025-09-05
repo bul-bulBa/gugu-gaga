@@ -3,16 +3,21 @@ const imageModel = require('../models/image-model')
 const ApiError = require('../exceptions/api-error')
 const filterService = require('../service/filter-service')
 const tokenService = require('../service/token-service')
+const authorizeService = require('../service/authorize-service')
 
 class usersController {
     async getUsers(req, res, next) {
         try{
             const {page, limit, term, friends} = req.query
+            const {token} = req.cookies
 
-            const result = await userService.getUsers({page, limit, term, heFollowed: friends.heFollowed})
-            const allUsers = await userService.getAllUsersLength()
+            // гавнокод
+            const user = await authorizeService.autoLogin(token)
+            const heFollowed = user.followed.he
 
-            // console.log("RESULT ", result)
+            const result = await userService.getUsers({page, limit, term, friends, heFollowed: heFollowed})
+            const allUsers = await userService.getAllUsersLength() // працює коректно тільки якщо немає фільтрації(тре переробити)
+
             res.json({users: result, allUsers: allUsers})
         }catch(e) {
             next(e)
@@ -48,8 +53,7 @@ class usersController {
 
     async autoComplete(req, res, next) {
         try{
-            const filteredNames = filterService.autoComplete(req.params.name)
-
+            const filteredNames = await filterService.autoComplete(req.params.user)
             res.json(filteredNames)
         }catch(e) {
             next(e)

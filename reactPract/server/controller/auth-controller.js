@@ -23,7 +23,6 @@ class authController {
             const {email, password, captcha} = req.body
 
             const {token, user} = await authorizeService.login(email, password, captcha)
-            console.log("NEW TOKEN ", token)
             res.cookie('token', token, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             res.json(user)
         } catch (e) {

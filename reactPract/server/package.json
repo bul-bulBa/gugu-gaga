@@ -17,6 +17,7 @@
     "express": "^5.1.0",
     "express-validator": "^7.2.1",
     "fuse": "^0.12.1",
+    "fuse.js": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.19.0",
     "mongoose": "^8.18.0",

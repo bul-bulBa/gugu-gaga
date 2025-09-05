@@ -14,7 +14,7 @@ class authorizeService {
         await reCaptchaService.verify(captcha)
 
         const hashPassword = await bcrypt.hash(password, 3)
-        console.log("EMAIL ", email)
+
         const user = await userModel.create({email, password: hashPassword, location: location, name})
 
         const userDto = new AuthDto(user)

@@ -19,7 +19,7 @@ const User: React.FC<propsType> = ({followed, followFunc, user}) => {
         </NavLink>
 
         <div className="w-[300px] p-2 m-3 grid grid-cols-[250px-50px] grid-rows-[1fr-1fr] gap-[10px] border-2 rounded-xl border-gray-300 ">
-            <span className="text-left row-start-1 col-start-1">{user.fullName}</span>
+            <span className="text-left row-start-1 col-start-1">{user.name}</span>
             <span className="text-left row-start-2 col-start-1">{user.about}</span>
             <span className="text-right row-start-1 col-start-2">{user.location.country}</span>
             <span className="text-right row-start-2 col-start-2">{user.location.city}</span>

@@ -11,7 +11,7 @@ import {stateType} from '../StoreConfig'
       location: {country: string, city: string}
     }
     type usersType = Array<userType>
-    export type autoComplType = {value: string}
+    export type autoComplType = {name: string, _id: string}
 // GET USERS THUNK TYPE
     export type getUsersType = {currentPage: number, limit: number, term: string | null, friends: string | null}
     export type resultUsersType = {users: usersType, allUsers: number}
@@ -26,7 +26,7 @@ export const getUsersCardThunk = createAsyncThunk(
 
 export const getAutoCompNamesThunk = createAsyncThunk(
     'users/getAutoCompNamesThunk',
-    async (value: string): Promise<string[]> => {
+    async (value: string): Promise<autoComplType[]> => {
         return await getUsers.getAutoCompNames(value)
     }
 )
@@ -66,7 +66,8 @@ const usersPageSlice = createSlice({
 
     // getAutoCompNames
         .addCase(getAutoCompNamesThunk.fulfilled, (state, action) => {
-            state.usersAutocomplete = action.payload
+            console.log("ACTIONPAYLOAD ", action.payload)
+            state.usersAutocomplete = action.payload.map(u => u.name)
         })
     }
 })
@@ -74,15 +75,15 @@ const usersPageSlice = createSlice({
 export type usersStateType = ReturnType<typeof usersPageSlice.reducer>
 
 export const selectUsers = (state: stateType) => state.users
-const selectAutoCompUsers = (state: stateType) => state.users.usersAutocomplete
-export const memoSelectAutoCompNames = createSelector(
-    [selectAutoCompUsers],
-    (users) => {
-        const arr: autoComplType[] = []
-        users.map(u => arr.push({value: u}))
-        return arr
-    }
-)
+export const selectAutoCompUsers = (state: stateType) => state.users.usersAutocomplete
+// export const memoSelectAutoCompNames = createSelector(
+//     [selectAutoCompUsers],
+//     (users) => {
+//         const arr: string[] = []
+//         usersAutocomplete.map(u => arr.push(u.name))
+//         return arr
+//     }
+// )
 
 export default usersPageSlice.reducer
 export const {setUsers, isFetchingToggle, setPage} = usersPageSlice.actions 

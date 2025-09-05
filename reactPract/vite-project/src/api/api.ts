@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {actionLoginType, stateUserType, actionSignUpType} from '../store/reducers/authInfoSlice'
-import {getUsersType, resultUsersType} from '../store/reducers/usersPageSlice'
+import {getUsersType, resultUsersType, autoComplType} from '../store/reducers/usersPageSlice'
 import {editProfileType, userType} from '../store/reducers/profilePageSlice'
 
 export const PORT = 'http://localhost:5000/api'
@@ -44,7 +44,7 @@ export const getUsers = {
     },
     getAutoCompNames(value: string) {
         return request.get(`/usersAutocomplete/${value}`)
-        .then((res): string[] => res.data)
+        .then((res): autoComplType[] => res.data)
     },
     getProfile(id: string) {
         return request.get(`/profile/${id}`)

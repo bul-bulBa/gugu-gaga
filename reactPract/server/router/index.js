@@ -23,8 +23,8 @@ router.put('/changeStatus', authMiddleware, changeController.changeStatus)
 router.put('/edit', upload.fields([{name: 'avatar'}, {name: 'profilePhoto'}]), changeController.editProfile)
 
 // get user endpoints
-router.get('/usersAutocomplete/:user', usersController.autoComplete) // not working
-router.get('/users', authMiddleware, usersController.getUsers) // filter users in not working
+router.get('/usersAutocomplete/:user', usersController.autoComplete) 
+router.get('/users', authMiddleware, usersController.getUsers) // працює на божому слові, мені страшно там шось фіксити
 router.get('/image/:id', usersController.getImage)
 router.get('/profile/:id', usersController.getProfile)
 

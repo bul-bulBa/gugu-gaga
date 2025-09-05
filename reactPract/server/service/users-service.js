@@ -6,16 +6,15 @@ const UsersCardDto = require('../dto/userCard-dto')
 
 class userService {
     async getUsers(payload) {
-        if(payload.term && payload.term !== 'null') {
-            const result = await filterService.filterUsers(payload)
-            const resultDto = result.map(u => new UsersCardDto(u))
-            return resultDto
+        if(payload.friends === 'true') {
+            const result = await filterService.filterFriends(payload)
+
+            return result.map(u => new UsersCardDto(u))
         }
-        const result = await userModel.find({})
-            .skip((payload.page - 1) * payload.limit)
-            .limit(payload.limit);
+        const result = await filterService.filterUsers(payload)
         const resultDto = result.map(u => new UsersCardDto(u))
         return resultDto
+
     }
 
     async getAllUsersLength() {
@@ -26,7 +25,7 @@ class userService {
     async getProfile(id) {
         const user = await userModel.findOne({_id: id})
         const userDto = new UserDto(user)
-        // console.log(userDto)
+
         return userDto
     }
 }

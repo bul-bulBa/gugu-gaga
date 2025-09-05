@@ -31,7 +31,7 @@ const Users: React.FC = () => {
     useEffect(() => { 
         getUsersFunc(1)
     }, [queryParam]);
-    console.log("FOLLOWED ", followedUsersArr)
+
     return (
         <div className='col-start-2 row-start-2'>
             {state.isFetching && <LoadingComponent/> }

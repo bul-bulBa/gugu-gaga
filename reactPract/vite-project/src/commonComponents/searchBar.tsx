@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { memoSelectAutoCompNames, autoComplType, getAutoCompNamesThunk } from '../store/reducers/usersPageSlice'
+import { selectAutoCompUsers, autoComplType, getAutoCompNamesThunk } from '../store/reducers/usersPageSlice'
 import { useAppState, useAppDispatch } from '../store/StoreConfig'
 import { AutoComplete, Button, Select } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
@@ -21,7 +21,7 @@ function debounce(func: funcType, delay: number) {
 }
 
 const SearchBar = () => {
-    const namesArr: autoComplType[] = useAppState(memoSelectAutoCompNames)
+    const namesArr: string[] = useAppState(selectAutoCompUsers)
     const dispatch = useAppDispatch()
     const [queryParam, setQueryParam] = useSearchParams()
     const [termValue, setTermValue] = useState('')
@@ -31,13 +31,16 @@ const SearchBar = () => {
         dispatch(getAutoCompNamesThunk(value))
     }, 300)
 
+    
     return (
         <div className='w-full grid grid-cols-3'>
 
             <div className='col-start-2 flex justify-center items-center'>
                 <AutoComplete
                     style={{ width: 200 }}
-                    options={namesArr}
+                    options={
+                        namesArr.map(e => ({value: e, label: e}) )
+                    }
                     placeholder="find users"
                     onChange={(value: string) => { 
                         setTermValue(value)
