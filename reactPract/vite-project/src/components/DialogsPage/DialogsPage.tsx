@@ -1,7 +1,7 @@
 import Dialogs from "./Dialogs"
 import DialogItems from "./DialogItems"
 
-const ws = new WebSocket('ws://localhost:3000')
+const ws = new WebSocket('ws://localhost:5000')
 ws.onmessage = message => console.log(message)
 
 const DialogsPage = () => {
