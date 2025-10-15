@@ -11,9 +11,9 @@ import {stateType} from '../StoreConfig'
     export type stateUserType = {avatar: string,followed: followedType, id: string}
 
 // start Thunks :)
-export const loginThunk = createAsyncThunk<stateUserType, actionLoginType>(
+export const loginThunk = createAsyncThunk<string, actionLoginType>(
     'auth/loginThunk',
-    async (action: actionLoginType ): Promise<stateUserType> => {
+    async (action: actionLoginType ): Promise<string> => {
         return await authorize.login({
             email: action.email ?? '', 
             password: action.password ?? '', 
@@ -35,9 +35,9 @@ export const logoutThunk = createAsyncThunk<void, void>(
     }
 )
 
-export const signUpThunk = createAsyncThunk<stateUserType, actionSignUpType>(
+export const signUpThunk = createAsyncThunk<string, actionSignUpType>(
     'auth/signUpThunk',
-    async ({email, name, password, country, city, captcha}: actionSignUpType): Promise<stateUserType> => {
+    async ({email, name, password, country, city, captcha}: actionSignUpType): Promise<string> => {
         return await authorize.signUp({email, name, password, country, city, captcha})
     }
 )
@@ -46,6 +46,20 @@ export const deleteThunk = createAsyncThunk(
     'auth/deleteThunk',
     (): void => {
         authorize.delete()
+    }
+)
+
+export const getCodeThunk = createAsyncThunk(
+    'auth/getCode',
+    async (email: string): Promise<void> => {
+        await authorize.getCode(email)
+    }
+)
+
+export const verifyCodeThunk = createAsyncThunk(
+    'auth/verifyCodeThunk',
+    async (values: {email: string, code: string}): Promise<stateUserType> => {
+        return await authorize.verifyCode(values)
     }
 )
 
@@ -68,6 +82,7 @@ const authInfoSlice = createSlice({
             },
             id: ''
         } as stateUserType,
+        email: '',
         isAuth: false,
         isFetching: true,
         error: null as string | null | undefined,
@@ -87,19 +102,14 @@ const authInfoSlice = createSlice({
         // login
         .addCase(loginThunk.pending, (state) => { state.isFetching = true })
         .addCase(loginThunk.fulfilled, (state, action) => {
+            state.email = action.payload
             state.isFetching = false
             state.error= null
-            state.user = action.payload
-            state.isAuth = true
         })
         .addCase(loginThunk.rejected, (state, action) => {
             state.isFetching = false
             state.firstLoad = false
-            if (action.error.message === 'Request failed with status code 401') {
-                state.error = 'Неправильне ім`я або пароль'
-            } else if(action.error.message === 'Request failed with status code 500') {
-                state.error  = null
-            }
+            state.error = action.error.message
         })
 
         // autoLogin
@@ -128,18 +138,13 @@ const authInfoSlice = createSlice({
         // signUp
         .addCase(signUpThunk.pending, (state) => { state.isFetching = true })
         .addCase(signUpThunk.fulfilled, (state, action) => {
+            state.email = action.payload
             state.isFetching = false
-            state.user = action.payload
-            state.error = null
-            state.isAuth = true
+            state.error= null
         })
         .addCase(signUpThunk.rejected, (state, action) => {
             state.isFetching = false
-            if (action.error.message === 'Request failed with status code 409') {
-                state.error = "Користувач з таким ім'ям вже існує"
-            } else {
-                state.error = action.error.message
-            }
+            state.error = action.error.message
         })
 
         // delete
@@ -148,6 +153,19 @@ const authInfoSlice = createSlice({
             state.isAuth = false,
             state.isFetching = false,
             state.error = null
+        })
+
+        // verifyCode
+        .addCase(verifyCodeThunk.fulfilled, (state, action) => {
+            state.user = action.payload
+            state.isFetching = false
+            state.error = null
+            state.isAuth = true
+            state.email = ''
+        })
+        .addCase(verifyCodeThunk.rejected, (state, action) => {
+            state.isFetching = false
+            state.error = action.error.message
         })
 
         // toggleFollowing

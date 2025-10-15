@@ -20,13 +20,13 @@ app.use(cors({
 app.use('/api', router)
 app.use(errorMiddleware)
 
-const server = http.createServer(app)  
+// const server = http.createServer(app)  
 // const wss = initWebSocket(server)
 
 const start = async () => {
     try {
         await mongoose.connect(process.env.DB_URI)
-        server.listen(PORT, () => console.log(`server started on: http://localhost:${PORT}`))
+        app.listen(PORT, () => console.log(`server started on: http://localhost:${PORT}`))
     } catch(e) {
         console.log("SERVER ERROR", e, " END SERVER ERROR")
     }

@@ -1,10 +1,12 @@
 const bcrypt = require('bcrypt')
+const uuid = require('uuid')
 const userModel = require('../models/user-model')
 const tokenService = require('./token-service')
 const UserDto = require('../dto/user-dto')
 const AuthDto = require('../dto/auth-dto')
 const ApiError = require('../exceptions/api-error')
 const reCaptchaService = require('./reCaptcha-service')
+const MailService = require('./mail-service')
 
 class authorizeService {
     async createAccount(email, password, location, name, captcha) {
@@ -50,6 +52,38 @@ class authorizeService {
         const user = await userModel.findOne({_id: id})
         const userDto = new AuthDto(user)
         return userDto
+    }
+
+    async verifyAccount(email) {
+        const account = await userModel.findOne({email}) 
+        if(!account) throw ApiError.BadRequest('Користувача з таким email нема')
+        
+        const code = Math.floor(100000 + Math.random() * 900000).toString()
+        const hashedCode = await bcrypt.hash(code, 3)
+        account.verificationCode = hashedCode
+        account.verificationExpires = new Date(Date.now() + 5 * 60 * 1000)
+        await account.save()
+            // console.log("       WORK ")
+        await MailService.sendVerificationCode(email, code)
+        return {message: 'ok'}
+    }
+
+    async confirmVerification(email, code) {
+        const account = await userModel.findOne({email})
+        if(!account) throw ApiError.BadRequest('Користувача з таким email нема')
+
+        if(!account.verificationExpires || account.verificationExpires < new Date()) throw ApiError.BadRequest('Просрочений код')
+        const valid = await bcrypt.compare(code, account.verificationCode)
+        if(!valid) throw ApiError.BadRequest('Не вірний код')
+        
+        account.verificationCode = ''
+        account.verificationExpires = null 
+        account.save()
+
+        const userDto = new AuthDto(account)
+        const token = tokenService.generate(account._id)
+
+        return {token, user: userDto}
     }
 }
 

@@ -12,9 +12,8 @@ const request = axios.create({
 
 export const authorize = {
     login({email, password, captcha}: actionLoginType) {
-        console.log(email)
         return request.post('/login', {email, password, captcha})
-        .then((res): stateUserType => res.data)
+        .then((res): string => res.data)
     },
     autoLogin() {
         return request.post('/autoLogin').then((res): stateUserType => res.data)
@@ -30,10 +29,17 @@ export const authorize = {
             location: {country, city},
             captcha
         })
-        .then((res): stateUserType => res.data)
+        .then((res): string => res.data)
     },
     delete() {
         return request.delete('/registration')
+    },
+    getCode(email: string) {
+        return request.post('/verifyAccount', {email})
+    },
+    verifyCode({email, code}: {email: string, code: string}) {
+        return request.post('/confirmVerification', {email, code})
+        .then((res): stateUserType => res.data)
     }
 }
 

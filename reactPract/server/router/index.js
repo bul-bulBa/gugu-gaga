@@ -17,6 +17,10 @@ router.delete('/registration', authController.deleteAccount)
 router.post('/login', authController.login)
 router.delete('/login', authController.logout)
 
+// verification endpoints
+router.post('/verifyAccount', authController.verifyAccount)
+router.post('/confirmVerification', authController.confirmVerification)
+
 // edit profile endpoints
 router.put('/toggleFollowing/:id', authMiddleware, changeController.toggleFollowing)
 router.put('/changeStatus', authMiddleware, changeController.changeStatus)

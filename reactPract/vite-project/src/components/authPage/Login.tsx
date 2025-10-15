@@ -8,7 +8,7 @@ import {useAppState, useAppDispatch} from '../../store/StoreConfig'
 type initialValuesType = {password: string, email: string, captcha: string}
 
 function Login() {
-    const ERROR: string | null | undefined = useAppState(selectError)
+    const ERROR = useAppState(selectError)
     const dispatch = useAppDispatch()
     const initialValues: initialValuesType = {password:'', email:'', captcha: ''}
 

@@ -4,6 +4,7 @@ import Header from "./components/Header"
 import Navbar from './components/Navbar'
 import Profile from './components/ProfilePage/Profile'
 import Users from './components/UsersPage/Users'
+import InputCode from './commonComponents/InputCode'
 import {useNavigate, Routes, Route} from 'react-router-dom'
 import {loginThunk, selectIsAuth, selectIsFirstLoad, autoLoginThunk} from './store/reducers/authInfoSlice'
 import AuthModalWindow from './commonComponents/AuthModalWindow'
@@ -43,6 +44,8 @@ function App() {
           <Route path='/edit' element={<EditProfile />} />
 
           <Route path='/auth' element={<AuthModalWindow/>}/>
+
+          <Route path='/input' element={<InputCode />} />
 
           <Route path='*' element={<div>404 PAGE NOT FOUND</div>} />
         </Routes>
