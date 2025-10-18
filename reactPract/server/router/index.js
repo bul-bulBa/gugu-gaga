@@ -1,13 +1,11 @@
-const Router = require('express').Router
-const expressValidator = require('express-validator')
-const router = new Router()
-const authController = require('../controller/auth-controller')
-const usersController = require('../controller/users-controller')
-const {body} = require('express-validator')
-const authMiddleware = require('../middleware/auth-middleware')
-const changeController = require('../controller/change-controller')
-const multer = require('multer')
+import { Router } from 'express'
+import authController from '../controller/auth-controller.js'
+import usersController from '../controller/users-controller.js'
+import authMiddleware from '../middleware/auth-middleware.js'
+import changeController from '../controller/change-controller.js'
+import multer from 'multer'
 
+const router = new Router()
 const upload = multer({ storage: multer.memoryStorage() });
 
 // authorization endpoints
@@ -32,4 +30,4 @@ router.get('/users', authMiddleware, usersController.getUsers) // працює �
 router.get('/image/:id', usersController.getImage)
 router.get('/profile/:id', usersController.getProfile)
 
-module.exports = router
+export default router

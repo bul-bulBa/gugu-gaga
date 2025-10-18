@@ -1,7 +1,7 @@
-const Fuse = require('fuse.js')
-const userModel = require('../models/user-model')
+import Fuse from 'fuse.js'
+import userModel from '../models/user-model.js'
 
-class filterService {
+class FilterService {
     filterMethod(array, term) {
       console.log("TERM ", term)
         const fuse = new Fuse(array, {keys: ['name']})
@@ -49,4 +49,4 @@ class filterService {
     }
 }
 
-module.exports = new filterService
+export default new FilterService

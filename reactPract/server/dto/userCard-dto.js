@@ -1,4 +1,4 @@
-module.exports = class UserCardDto {
+export default class UserCardDto {
 
     constructor(model) {
         this.id = model._id.toString()

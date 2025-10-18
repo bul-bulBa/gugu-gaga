@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken')
-const ApiError = require('../exceptions/api-error')
+import jwt from 'jsonwebtoken'
+import ApiError from '../exceptions/api-error.js'
 
-class tokenService {
+class TokenService {
     generate(payload) {
         const payloadObj = {id: payload}
         return jwt.sign(payloadObj, process.env.JWT_ACCESS_SECRET, {expiresIn: '30m'})
@@ -16,4 +16,4 @@ class tokenService {
     }
 }
 
-module.exports = new tokenService
+export default new TokenService

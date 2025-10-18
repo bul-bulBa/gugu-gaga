@@ -1,21 +1,21 @@
-const bcrypt = require('bcrypt')
-const uuid = require('uuid')
-const userModel = require('../models/user-model')
-const tokenService = require('./token-service')
-const UserDto = require('../dto/user-dto')
-const AuthDto = require('../dto/auth-dto')
-const ApiError = require('../exceptions/api-error')
-const reCaptchaService = require('./reCaptcha-service')
-const MailService = require('./mail-service')
+import bcrypt from 'bcrypt'
+import { v4 as uuidv4 } from 'uuid'
+import userModel from '../models/user-model.js'
+import tokenService from './token-service.js'
+import UserDto from '../dto/user-dto.js'
+import AuthDto from '../dto/auth-dto.js'
+import ApiError from '../exceptions/api-error.js'
+import reCaptchaService from './reCaptcha-service.js'
+import MailService from './mail-service.js'
 
-class authorizeService {
+class AuthorizeService {
     async createAccount(email, password, location, name, captcha) {
         const candidate = await userModel.findOne({email})
         if(candidate) throw ApiError.BadRequest("Користувач з такою поштою вже існує")
         
         await reCaptchaService.verify(captcha)
 
-        const hashPassword = await bcrypt.hash(password, 3)
+        const hashPassword = await bcrypt.hash(password, 3) 
 
         const user = await userModel.create({email, password: hashPassword, location: location, name})
 
@@ -63,7 +63,7 @@ class authorizeService {
         account.verificationCode = hashedCode
         account.verificationExpires = new Date(Date.now() + 5 * 60 * 1000)
         await account.save()
-            // console.log("       WORK ")
+
         await MailService.sendVerificationCode(email, code)
         return {message: 'ok'}
     }
@@ -87,4 +87,4 @@ class authorizeService {
     }
 }
 
-module.exports = new authorizeService
+export default new AuthorizeService

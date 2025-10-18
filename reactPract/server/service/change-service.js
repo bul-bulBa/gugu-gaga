@@ -1,10 +1,10 @@
-const userModel = require('../models/user-model')
-const tokenService = require('./token-service')
-const UserDto = require('../dto/user-dto')
-const ApiError = require('../exceptions/api-error')
-const imageModel = require('../models/image-model')
+import userModel from '../models/user-model.js'
+import tokenService from './token-service.js'
+import UserDto from '../dto/user-dto.js'
+import ApiError from '../exceptions/api-error.js'
+import imageModel from '../models/image-model.js'
 
-class changeService {
+class ChangeService {
 
     async toggleFollowing(actionId, jwt) {
         const {id} = tokenService.decrypt(jwt)
@@ -67,4 +67,4 @@ class changeService {
     }
 }
 
-module.exports = new changeService
+export default new ChangeService

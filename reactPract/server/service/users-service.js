@@ -1,10 +1,10 @@
-const userModel = require('../models/user-model')
-const filterService = require('./filter-service')
-const tokenService = require('./token-service')
-const UserDto = require('../dto/user-dto')
-const UsersCardDto = require('../dto/userCard-dto')
+import userModel from '../models/user-model.js'
+import filterService from './filter-service.js'
+import tokenService from './token-service.js'
+import UserDto from '../dto/user-dto.js'
+import UsersCardDto from '../dto/userCard-dto.js'
 
-class userService {
+class UserService {
     async getUsers(payload) {
         if(payload.friends === 'true') {
             const result = await filterService.filterFriends(payload)
@@ -30,4 +30,4 @@ class userService {
     }
 }
 
-module.exports = new userService
+export default new UserService

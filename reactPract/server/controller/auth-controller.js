@@ -1,8 +1,8 @@
-const { validationResult } = require('express-validator');
-const authorizeService = require('../service/authorize-service')
-const ApiError = require('../exceptions/api-error')
+import { validationResult } from 'express-validator'
+import authorizeService from '../service/authorize-service.js'
+import ApiError from '../exceptions/api-error.js'
 
-class authController {
+class AuthController {
     async createAccount(req, res, next) {
         try {
             const errors = validationResult(req)
@@ -83,4 +83,4 @@ class authController {
     }
 }
 
-module.exports = new authController
+export default new AuthController 

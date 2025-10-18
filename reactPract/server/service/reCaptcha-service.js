@@ -1,6 +1,6 @@
-const ApiError = require('../exceptions/api-error')
+import ApiError from '../exceptions/api-error.js'
 
-class reCaptchaService {
+class ReCaptchaService {
     async verify(captcha) {
         const verifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captcha}`
 
@@ -11,4 +11,4 @@ class reCaptchaService {
     }
 }
 
-module.exports = new reCaptchaService
+export default new ReCaptchaService 

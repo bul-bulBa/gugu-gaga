@@ -1,4 +1,4 @@
-const {Schema, model} = require('mongoose')
+import { Schema, model } from 'mongoose'
 
 const imageShema = new Schema({
   filename: { type: String, required: true },
@@ -6,4 +6,4 @@ const imageShema = new Schema({
   contentType: { type: String, required: true },
 })
 
-module.exports = model('Image', imageShema)
+export default model('Image', imageShema)

@@ -1,11 +1,11 @@
-const userService = require('../service/users-service')
-const imageModel = require('../models/image-model')
-const ApiError = require('../exceptions/api-error')
-const filterService = require('../service/filter-service')
-const tokenService = require('../service/token-service')
-const authorizeService = require('../service/authorize-service')
+import userService from '../service/users-service.js'
+import imageModel from '../models/image-model.js'
+import ApiError from '../exceptions/api-error.js'
+import filterService from '../service/filter-service.js'
+import tokenService from '../service/token-service.js'
+import authorizeService from '../service/authorize-service.js'
 
-class usersController {
+class UsersController {
     async getUsers(req, res, next) {
         try{
             const {page, limit, term, friends} = req.query
@@ -61,4 +61,4 @@ class usersController {
     }
 }
 
-module.exports = new usersController
+export default new UsersController

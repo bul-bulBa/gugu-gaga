@@ -1,4 +1,4 @@
-const {Schema, model} = require('mongoose')
+import { Schema, model } from 'mongoose'
 
 const locationSchema = new Schema({
     country:{type: String, required: true},
@@ -26,4 +26,4 @@ const userSchema = new Schema({
 
 userSchema.index({name: 'text'})
 
-module.exports = model('User', userSchema)
+export default model('User', userSchema)

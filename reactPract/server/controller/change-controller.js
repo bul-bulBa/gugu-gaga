@@ -1,8 +1,8 @@
-const ApiError = require('../exceptions/api-error')
-const changeService = require('../service/change-service')
-const {multer} = require('multer')
+import ApiError from '../exceptions/api-error.js'
+import changeService from '../service/change-service.js'
+import multer from 'multer'
 
-class changeController {
+class ChangeController {
     async toggleFollowing(req, res, next) {
         try {
             const {id} = req.params
@@ -34,8 +34,8 @@ class changeController {
             const {token} = req.cookies
             let updatedUser
             if(req.body.about) updatedUser = await changeService.changeAboutMe(token, req.body.about)
-            if(req.files.avatar) updatedUser = await changeService.changePhoto(token, req.files.avatar[0], 'avatar')
-            if(req.files.profilePhoto) updatedUser = await changeService.changePhoto(token, req.files.profilePhoto[0], 'profilePhoto')
+            if(req.files?.avatar) updatedUser = await changeService.changePhoto(token, req.files.avatar[0], 'avatar')
+            if(req.files?.profilePhoto) updatedUser = await changeService.changePhoto(token, req.files.profilePhoto[0], 'profilePhoto')
 
             res.json({message: updatedUser})
         }catch(e) {
@@ -44,4 +44,4 @@ class changeController {
     }
 }
 
-module.exports = new changeController
+export default new ChangeController()

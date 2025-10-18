@@ -1,4 +1,4 @@
-const WebSocketServer = require('ws')
+import { WebSocketServer } from 'ws'
 
 const initWebSocket = (server) => {
     const wss = new WebSocketServer({server})
@@ -8,4 +8,4 @@ const initWebSocket = (server) => {
     })
 } 
 
-module.exports = initWebSocket
+export default initWebSocket
