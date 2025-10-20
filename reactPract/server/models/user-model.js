@@ -19,9 +19,7 @@ const userSchema = new Schema({
     profilePhoto:{type: String, default: ''},
     location: locationSchema,
     followed: {type: followedSchema, default:{he: [], onHim: []}},
-    status: {type: String, default: ''},
-    verificationCode: {type: String, default: ''},
-    verificationExpires: {type: Date}
+    status: {type: String, default: ''}
 })
 
 userSchema.index({name: 'text'})

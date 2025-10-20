@@ -7,6 +7,7 @@ import AuthDto from '../dto/auth-dto.js'
 import ApiError from '../exceptions/api-error.js'
 import reCaptchaService from './reCaptcha-service.js'
 import MailService from './mail-service.js'
+import {client} from '../index.js'
 
 class AuthorizeService {
     async createAccount(email, password, location, name, captcha) {
@@ -57,12 +58,9 @@ class AuthorizeService {
     async verifyAccount(email) {
         const account = await userModel.findOne({email}) 
         if(!account) throw ApiError.BadRequest('Користувача з таким email нема')
-        
+
         const code = Math.floor(100000 + Math.random() * 900000).toString()
-        const hashedCode = await bcrypt.hash(code, 3)
-        account.verificationCode = hashedCode
-        account.verificationExpires = new Date(Date.now() + 5 * 60 * 1000)
-        await account.save()
+        await client.set(`dto_${email}`, code, { EX: 180});
 
         await MailService.sendVerificationCode(email, code)
         return {message: 'ok'}
@@ -72,17 +70,13 @@ class AuthorizeService {
         const account = await userModel.findOne({email})
         if(!account) throw ApiError.BadRequest('Користувача з таким email нема')
 
-        if(!account.verificationExpires || account.verificationExpires < new Date()) throw ApiError.BadRequest('Просрочений код')
-        const valid = await bcrypt.compare(code, account.verificationCode)
-        if(!valid) throw ApiError.BadRequest('Не вірний код')
-        
-        account.verificationCode = ''
-        account.verificationExpires = null 
-        account.save()
+        const value = await client.get(`dto_${email}`);
+        if(code !== value) throw ApiError.BadRequest('Не вірний код')
 
         const userDto = new AuthDto(account)
         const token = tokenService.generate(account._id)
 
+        
         return {token, user: userDto}
     }
 }

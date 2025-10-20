@@ -7,7 +7,13 @@ import cookieParcer from 'cookie-parser'
 import errorMiddleware from './middleware/error-middleware.js'
 import initWebSocket from './router/ws.js'
 import http from 'http'
+import { createClient } from 'redis';
 
+export const client = createClient({ url: 'redis://127.0.0.1:6379' });
+
+client.on('error', err => console.log('Redis Client Error', err));
+
+await client.connect();
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -15,7 +21,7 @@ const PORT = process.env.PORT || 5000
 app.use(express.json())
 app.use(cookieParcer())
 app.use(cors({
-    origin: 'http://localhost:5173', 
+    origin: 'http://localhost:5173',   
     credentials: true
 }))
 app.use('/api', router)
