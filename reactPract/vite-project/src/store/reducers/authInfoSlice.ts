@@ -63,12 +63,21 @@ export const verifyCodeThunk = createAsyncThunk(
     }
 )
 
+export const refreshThunk = createAsyncThunk(
+    'auth/refreshThunk',
+    async (): Promise<stateUserType> => {
+        return await authorize.refresh()
+    }
+)
+
 export const toggleFollowingThunk = createAsyncThunk<number[], number>(
     'auth/toggleFollowingThunk',
     async (id: number): Promise<Array<number>> => {
         return await getUsers.toggleFollowing(id)
     }
 )
+
+const thunks = [loginThunk, autoLoginThunk, signUpThunk, toggleFollowingThunk]
 
 // start Slice ;>
 const authInfoSlice = createSlice({
@@ -99,6 +108,16 @@ const authInfoSlice = createSlice({
     },
     extraReducers: (builder) => {
       builder
+        // .addMatcher(
+        //     (action) => thunks.some(t => action.type === t.rejected.type),
+        //     (state, action) => {
+        //         if((action as any).error.message === 'Unauthorized') dispatch(refreshThunk())
+
+        //         state.isFetching = false
+        //         state.error = (action as any).error.message
+        //     }
+        // )
+
         // login
         .addCase(loginThunk.pending, (state) => { state.isFetching = true })
         .addCase(loginThunk.fulfilled, (state, action) => {

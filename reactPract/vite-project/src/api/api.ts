@@ -2,13 +2,9 @@ import axios from 'axios'
 import {actionLoginType, stateUserType, actionSignUpType} from '../store/reducers/authInfoSlice'
 import {getUsersType, resultUsersType, autoComplType} from '../store/reducers/usersPageSlice'
 import {editProfileType, userType} from '../store/reducers/profilePageSlice'
+import {request} from './interceptor'
 
-export const PORT = 'http://localhost:5000/api'
 
-const request = axios.create({
-    baseURL: PORT,
-    withCredentials: true
-})
 
 export const authorize = {
     login({email, password, captcha}: actionLoginType) {
@@ -39,6 +35,10 @@ export const authorize = {
     },
     verifyCode({email, code}: {email: string, code: string}) {
         return request.post('/confirmVerification', {email, code})
+        .then((res): stateUserType => res.data)
+    },
+    refresh() {
+        return request.post('/refresh')
         .then((res): stateUserType => res.data)
     }
 }

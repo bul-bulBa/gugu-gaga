@@ -7,7 +7,7 @@ import imageModel from '../models/image-model.js'
 class ChangeService {
 
     async toggleFollowing(actionId, jwt) {
-        const {id} = tokenService.decrypt(jwt)
+        const {id} = tokenService.validateAccessToken(jwt)
 
         const user = await userModel.findById(id)
 
@@ -24,7 +24,7 @@ class ChangeService {
     }
 
     async changeStatus(text, jwt) {
-        const {id} = tokenService.decrypt(jwt)
+        const {id} = tokenService.validateAccessToken(jwt)
 
         const updatedUser = await userModel.findByIdAndUpdate(
             id,
@@ -36,7 +36,7 @@ class ChangeService {
     }
 
     async changePhoto(jwt, img, name) {
-        const token = tokenService.decrypt(jwt)
+        const token = tokenService.validateAccessToken(jwt)
         const image = new imageModel({
             data: img.buffer,
             filename: img.originalname,
@@ -55,7 +55,7 @@ class ChangeService {
     }
 
     async changeAboutMe(jwt, text) {
-        const token = tokenService.decrypt(jwt)
+        const token = tokenService.validateAccessToken(jwt)
         const updatedUser = await userModel.findByIdAndUpdate(
             token.id,
             {$set: {about: text}},

@@ -9,10 +9,10 @@ class UsersController {
     async getUsers(req, res, next) {
         try{
             const {page, limit, term, friends} = req.query
-            const {token} = req.cookies
+            const {accessToken} = req.cookies
 
             // гавнокод
-            const user = await authorizeService.autoLogin(token)
+            const user = await authorizeService.autoLogin(accessToken)
             const heFollowed = user.followed.he
 
             const result = await userService.getUsers({page, limit, term, friends, heFollowed: heFollowed})
@@ -29,7 +29,7 @@ class UsersController {
             const {id} = req.params
             const {token} = req.cookies
             const userId = id
-            if(!id) user = tokenService.decrypt(token)
+            if(!id) user = tokenService.validateAccessToken(token)
             
             const user = await userService.getProfile(userId)
 

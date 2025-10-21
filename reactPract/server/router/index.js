@@ -15,6 +15,9 @@ router.delete('/registration', authController.deleteAccount)
 router.post('/login', authController.login)
 router.delete('/login', authController.logout)
 
+// refresh access token
+router.post('/refresh', authController.refresh)
+
 // verification endpoints
 router.post('/verifyAccount', authController.verifyAccount)
 router.post('/confirmVerification', authController.confirmVerification)

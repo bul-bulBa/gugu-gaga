@@ -3,12 +3,12 @@ import TokenService from '../service/token-service.js'
 
 export default function (req, res, next) {
     try {
-        const {token} = req.cookies
-        if(!token) {
+        const {accessToken} = req.cookies
+        if(!accessToken) {
             throw next(ApiError.Unauthorized())
         }
 
-        const id = TokenService.decrypt(token)
+        const id = TokenService.validateAccessToken(accessToken)
         if (!id) {
             return next(ApiError.Unauthorized())
         }

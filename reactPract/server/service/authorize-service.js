@@ -35,19 +35,19 @@ class AuthorizeService {
         await reCaptchaService.verify(captcha)
 
         const userDto = new AuthDto(user)
-        const token = tokenService.generate(user._id)
+        const tokens = tokenService.generate(user._id)
 
-        return {token, user: userDto}
+        return {tokens, user: userDto}
     }
 
     async deleteAccount(jwt) {
-        const {id} = tokenService.decrypt(jwt)
+        const {id} = tokenService.validateAccessToken(jwt)
         if(!id) throw ApiError.Unauthorized()
         return await userModel.findByIdAndDelete(id)
     }
 
     async autoLogin(jwt) {
-        const {id}  = tokenService.decrypt(jwt)
+        const {id}  = tokenService.validateAccessToken(jwt)
         if(!id) throw ApiError.Unauthorized()
 
         const user = await userModel.findOne({_id: id})
@@ -74,10 +74,29 @@ class AuthorizeService {
         if(code !== value) throw ApiError.BadRequest('Не вірний код')
 
         const userDto = new AuthDto(account)
-        const token = tokenService.generate(account._id)
+        const tokens = tokenService.generate(account._id)
+        await tokenService.saveToken(userDto.id, tokens.refreshToken)
 
         
-        return {token, user: userDto}
+        return {tokens, user: userDto}
+    }
+    
+    async refresh(refreshToken) {
+        if(!refreshToken) throw ApiError.BadRequest('нема refresh токена')
+
+        const validatedToken = tokenService.validateRefreshToken(refreshToken)
+        const tokenFromDB = await tokenService.findToken(refreshToken)
+        if(!validatedToken && !tokenFromDB) throw ApiError.Unauthorized()
+
+        console.log('TOKEN ', tokenFromDB, "REFRESHTOKEN ", refreshToken)
+        const user = await userModel.findById(tokenFromDB.user)
+        // console.log('USER ', user, 'TOKENFROMDB ', tokenFromDB)
+        const userDto = new AuthDto(user)
+        const tokens = tokenService.generate(user._id)
+        await tokenService.removeToken(refreshToken)
+        await tokenService.saveToken(userDto.id, tokens.refreshToken)
+
+        return {...tokens, userDto}
     }
 }
 
