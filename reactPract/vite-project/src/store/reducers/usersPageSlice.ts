@@ -66,7 +66,6 @@ const usersPageSlice = createSlice({
 
     // getAutoCompNames
         .addCase(getAutoCompNamesThunk.fulfilled, (state, action) => {
-            console.log("ACTIONPAYLOAD ", action.payload)
             state.usersAutocomplete = action.payload.map(u => u.name)
         })
     }

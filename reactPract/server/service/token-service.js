@@ -7,7 +7,7 @@ class TokenService {
     generate(id) {
         // const payloadObj = {id: payload}
         const accessToken = jwt.sign({id}, process.env.JWT_ACCESS_SECRET, {expiresIn: '5s'})
-        const refreshToken = jwt.sign({id}, process.env.JWT_REFRESH_SECRET, {expiresIn: '45s'})
+        const refreshToken = jwt.sign({id}, process.env.JWT_REFRESH_SECRET, {expiresIn: '1d'})
         return {refreshToken, accessToken}
     }
     validateAccessToken(token) {
@@ -42,7 +42,6 @@ class TokenService {
     }
     async findToken(refreshToken) {
         const tokenData = await TokenModel.findOne({refreshToken})
-        console.log("TOKENDATA ", tokenData, "PAYLOAD ", refreshToken)
         return tokenData
     }
 }

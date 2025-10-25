@@ -6,9 +6,9 @@ class ChangeController {
     async toggleFollowing(req, res, next) {
         try {
             const {id} = req.params
-            const {token} = req.cookies
+            const {accessToken} = req.cookies
 
-            const result = await changeService.toggleFollowing(id, token)
+            const result = await changeService.toggleFollowing(id, accessToken)
 
             res.json(result)
         } catch(e) {
@@ -18,10 +18,10 @@ class ChangeController {
 
     async changeStatus(req, res, next) {
         try{
-            const {token} = req.cookies
+            const {accessToken} = req.cookies
             const {text} = req.body
 
-            const result = await changeService.changeStatus(text, token)
+            const result = await changeService.changeStatus(text, accessToken)
             
             res.json(result)
         }catch(e) {
@@ -31,11 +31,11 @@ class ChangeController {
 
     async editProfile(req, res, next) {
         try{
-            const {token} = req.cookies
+            const {accessToken} = req.cookies
             let updatedUser
-            if(req.body.about) updatedUser = await changeService.changeAboutMe(token, req.body.about)
-            if(req.files?.avatar) updatedUser = await changeService.changePhoto(token, req.files.avatar[0], 'avatar')
-            if(req.files?.profilePhoto) updatedUser = await changeService.changePhoto(token, req.files.profilePhoto[0], 'profilePhoto')
+            if(req.body.about) updatedUser = await changeService.changeAboutMe(accessToken, req.body.about)
+            if(req.files?.avatar) updatedUser = await changeService.changePhoto(accessToken, req.files.avatar[0], 'avatar')
+            if(req.files?.profilePhoto) updatedUser = await changeService.changePhoto(accessToken, req.files.profilePhoto[0], 'profilePhoto')
 
             res.json({message: updatedUser})
         }catch(e) {

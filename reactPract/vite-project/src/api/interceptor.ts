@@ -9,12 +9,15 @@ export const request = axios.create({
 })
 
 let isRefreshing = false;
-let failedQueue: any[] = [];
+let failedQueue: Array<{
+  resolve: (value?: any) => void;
+  reject: (reason?: any) => void;
+}> = [];
 
-const processQueue = (error: any, token: any = null) => {
-  failedQueue.forEach((p) => {
-    if (error) p.reject(error);
-    else p.resolve(token);
+const processQueue = (error: any = null) => {
+  failedQueue.forEach(({ resolve, reject }) => {
+    if (error) reject(error);
+    else resolve();
   });
   failedQueue = [];
 };
@@ -28,23 +31,24 @@ request.interceptors.response.use(
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
-        })
-          .then(() => request(originalRequest))
-          .catch((err) => Promise.reject(err));
+        }).then(() => {
+          originalRequest._retry = true;
+          return request(originalRequest);
+        });
       }
 
       originalRequest._retry = true;
       isRefreshing = true;
 
       try {
-        await authorize.refresh(); // твоя функція, яка оновлює токен через /refresh
-        processQueue(null);
-        return request(originalRequest);
+        await authorize.refresh(); // токен оновиться в cookie
+        isRefreshing = false;
+        processQueue(); // сповіщаємо інші очікуючі запити
+        return request(originalRequest); // повторюємо запит
       } catch (err) {
+        isRefreshing = false;
         processQueue(err);
         return Promise.reject(err);
-      } finally {
-        isRefreshing = false;
       }
     }
 

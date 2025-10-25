@@ -88,9 +88,8 @@ class AuthorizeService {
         const tokenFromDB = await tokenService.findToken(refreshToken)
         if(!validatedToken && !tokenFromDB) throw ApiError.Unauthorized()
 
-        console.log('TOKEN ', tokenFromDB, "REFRESHTOKEN ", refreshToken)
         const user = await userModel.findById(tokenFromDB.user)
-        // console.log('USER ', user, 'TOKENFROMDB ', tokenFromDB)
+
         const userDto = new AuthDto(user)
         const tokens = tokenService.generate(user._id)
         await tokenService.removeToken(refreshToken)

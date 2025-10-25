@@ -53,6 +53,7 @@ class AuthController {
 
     async autoLogin(req, res, next) {
         try{
+            console.log('AUTOLOGIN')
             const {accessToken} = req.cookies
 
             const response = await authorizeService.autoLogin(accessToken)
@@ -88,12 +89,14 @@ class AuthController {
 
     async refresh(req, res, next) {
         try{
+            console.log('REFRESH')
             const {refreshToken} = req.cookies
             const userData = await authorizeService.refresh(refreshToken) 
             
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 1 * 24 * 60 * 60 * 1000})
-            res.json(userData.user)
+            // res.json(userData.user)
+            res.json({message: 'ok'})
         }catch(e) {
             next(e)
         }

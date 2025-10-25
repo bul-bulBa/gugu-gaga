@@ -65,7 +65,8 @@ export const verifyCodeThunk = createAsyncThunk(
 
 export const refreshThunk = createAsyncThunk(
     'auth/refreshThunk',
-    async (): Promise<stateUserType> => {
+    // async (): Promise<stateUserType> => {
+    async () => {
         return await authorize.refresh()
     }
 )

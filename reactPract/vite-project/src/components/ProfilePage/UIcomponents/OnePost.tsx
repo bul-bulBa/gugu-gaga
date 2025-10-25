@@ -5,7 +5,7 @@ type propsType = {
 }
 
 const OnePost: React.FC<propsType> = (props) => {
-    console.log(props)
+    
     return (
         <div className="p-5 whitespace-normal break-words w-full">
 

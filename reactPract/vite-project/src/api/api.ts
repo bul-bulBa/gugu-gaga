@@ -39,7 +39,8 @@ export const authorize = {
     },
     refresh() {
         return request.post('/refresh')
-        .then((res): stateUserType => res.data)
+        .then((res) => res.data)
+        // .then((res): stateUserType => res.data)
     }
 }
 
