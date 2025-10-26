@@ -79,7 +79,7 @@ class AuthController {
             const {email, code} = req.body
 
             const {tokens, user} = await authorizeService.confirmVerification(email, code)
-            res.cookie('accessToken', tokens.accessToken, {maxAge: 24 * 60 * 60 * 1000, httpOnly: true})
+            res.cookie('accessToken', tokens.accessToken, {maxAge: 30 * 60 * 1000, httpOnly: true})
             res.cookie('refreshToken', tokens.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             res.json(user)
         }catch(e) {

@@ -47,7 +47,7 @@ class AuthorizeService {
     }
 
     async autoLogin(jwt) {
-        const {id}  = tokenService.validateAccessToken(jwt)
+        const {id} = tokenService.validateAccessToken(jwt)
         if(!id) throw ApiError.Unauthorized()
 
         const user = await userModel.findOne({_id: id})

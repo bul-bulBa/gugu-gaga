@@ -3,6 +3,7 @@ import authController from '../controller/auth-controller.js'
 import usersController from '../controller/users-controller.js'
 import authMiddleware from '../middleware/auth-middleware.js'
 import changeController from '../controller/change-controller.js'
+import postController from '../controller/post-controller.js'
 import multer from 'multer'
 
 const router = new Router()
@@ -32,5 +33,11 @@ router.get('/usersAutocomplete/:user', usersController.autoComplete)
 router.get('/users', authMiddleware, usersController.getUsers) // працює на божому слові, мені страшно там шось фіксити
 router.get('/image/:id', usersController.getImage)
 router.get('/profile/:id', usersController.getProfile)
+
+// post endpoints
+router.post('/post', postController.newPost)
+router.delete('/post/:id', postController.deletePost)
+router.get('/post', postController.getPosts)
+router.put('/post', postController.getUserPosts)
 
 export default router
