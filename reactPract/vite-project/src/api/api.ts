@@ -2,6 +2,7 @@ import axios from 'axios'
 import {actionLoginType, stateUserType, actionSignUpType} from '../store/reducers/authInfoSlice'
 import {getUsersType, resultUsersType, autoComplType} from '../store/reducers/usersPageSlice'
 import {editProfileType, userType} from '../store/reducers/profilePageSlice'
+import {postType, getPostType} from '../store/reducers/postsPageSlice'
 import {request} from './interceptor'
 
 
@@ -76,5 +77,23 @@ export const changeProfile = {
 
         return request.put('/edit', formData)
         .then((res): void => res.data)
+    }
+}
+
+export const posts = {
+    getPosts({lastId, userId}: getPostType) {
+        const params: Record<string, string> = {}
+        if(lastId) params.lastId = lastId
+        if(userId) params.userId = userId
+        console.log(userId)
+        return request.get(`/post`, { params })
+        .then((res): postType[] => res.data)
+    },
+    addPost(text: string) {
+        return request.post('/post', {text})
+        .then((res): postType => res.data)
+    },
+    deletePost(id: string) {
+        return request.delete(`/post/${id}`)
     }
 }

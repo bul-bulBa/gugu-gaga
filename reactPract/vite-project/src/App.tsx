@@ -4,6 +4,7 @@ import Header from "./components/Header"
 import Navbar from './components/Navbar'
 import Profile from './components/ProfilePage/Profile'
 import Users from './components/UsersPage/Users'
+import Posts from './components/PostsPage/Posts'
 import InputCode from './commonComponents/InputCode'
 import {useNavigate, Routes, Route} from 'react-router-dom'
 import {loginThunk, selectIsAuth, selectIsFirstLoad, autoLoginThunk} from './store/reducers/authInfoSlice'
@@ -39,6 +40,7 @@ function App() {
           <Route path='/profile/:id?/*' element={<Profile/>} />
           <Route path='/dialogs/:id?/*' element={<DialogsPage />} /> 
           <Route path='/users' element={< Users />}/>
+          <Route path='/posts' element={<Posts />} />
           <Route path='/news' element={<News />} />
           <Route path='/setting' element={<Setting />} />
           <Route path='/edit' element={<EditProfile />} />

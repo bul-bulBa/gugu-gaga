@@ -3,6 +3,7 @@ import dialogsPageReducer from './reducers/dialogsPageSlice'
 import profilePageReducer from './reducers/profilePageSlice'
 import usersPageReducer from './reducers/usersPageSlice'
 import authInfoReducer from './reducers/authInfoSlice'
+import postsPageReducer from './reducers/postsPageSlice'
 import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux'
 
 const rootReducer = combineReducers({
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
     profile: profilePageReducer,
     users: usersPageReducer,
     auth: authInfoReducer,
+    posts: postsPageReducer
 })
 export type stateType = ReturnType<typeof rootReducer>
 export const useAppState: TypedUseSelectorHook<stateType> = useSelector

@@ -1,19 +1,18 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
-import {getUsers, changeProfile} from '../../api/api'
+import {getUsers, changeProfile, posts} from '../../api/api'
 import {stateType} from '../StoreConfig'
+import { postType, getPostType } from './postsPageSlice'
 
 // EDIT PROFILE TYPE
     export type editProfileType = {avatar: File | null, profilePhoto: File | null, about: string}
 
-// STATE TYPE (only user)
-    export type postType = {id: string, likesCount: number, message: string}    
+// STATE TYPE (only user)  
     export type userType = {
             id: string,
             name: string,
             avatar: string,
             profilePhoto: string,
             about: string,
-            // posts: Array<postType>, 
             location: {
                 city: string,
                 country: string
@@ -43,6 +42,21 @@ export const editThunk = createAsyncThunk(
     }
 )
 
+export const getUserPostsThunk = createAsyncThunk<postType[], getPostType>(
+    'profile/getUserPostsThunk',
+    async (params) => {
+        return await posts.getPosts(params)
+    }
+)
+
+export const deleteUserPostsThunk = createAsyncThunk<string, string>(
+    'profile/deleteUserPostsThunk',
+    async (id) => {
+        await posts.deletePost(id)
+        return id
+    }
+)
+
 // start Slice :>
 const profilePageSlice = createSlice({
     name: 'profile',
@@ -53,7 +67,6 @@ const profilePageSlice = createSlice({
             avatar: '',
             profilePhoto: '',
             about: '',
-            // posts: [],
             location: {
                 city: '',
                 country: ''
@@ -61,7 +74,9 @@ const profilePageSlice = createSlice({
             status: ''
         } as userType,
         isFetching: false,
-        itIsMe: false
+        itIsMe: false,
+        posts: [] as postType[],
+        lastId: undefined as string | undefined
     },
     reducers: {
         profileWillUnmount(state) {
@@ -71,13 +86,14 @@ const profilePageSlice = createSlice({
                 avatar: '',
                 profilePhoto: '',
                 about: '',
-                // posts: [],
                 location: {
                     city: '',
                     country: ''
                 },
                 status: ''
             }
+            state.posts = [],
+            state.lastId = undefined
         },
         setItIsMe(state, action) {
             state.itIsMe = action.payload
@@ -103,6 +119,16 @@ const profilePageSlice = createSlice({
         .addCase(editThunk.fulfilled, (state) => {
             state.isFetching = false
         })
+    // get posts
+        .addCase(getUserPostsThunk.fulfilled, (state, action) => {
+            state.posts = [...state.posts, ...action.payload]
+            state.lastId = action.payload[action.payload.length - 1]._id
+        })
+    // deletePosts
+        .addCase(deleteUserPostsThunk.fulfilled, (state, action) => {
+            const index = state.posts.findIndex(p => p._id === action.payload)
+            state.posts.splice(index, 1)
+        })
     }
 })
 
@@ -111,6 +137,8 @@ export type profileStateType = ReturnType<typeof profilePageSlice.reducer>
 export const selectUser = (state: stateType) => state.profile.user
 export const selectItIsMe = (state: stateType) => state.profile.itIsMe
 export const selectFetching  = (state: stateType) => state.profile.isFetching
+export const selectPosts = (state: stateType) => state.profile.posts
+export const selectLastId = (state: stateType) => state.profile.lastId
 
 // export const setStateAC = (data) => ({
 //     id: data.id,

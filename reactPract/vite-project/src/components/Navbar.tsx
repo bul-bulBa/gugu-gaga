@@ -23,14 +23,8 @@ function Navbar() {
         </div>
 
         <div>
-          <NavLink to="/news">
-            News
-          </NavLink>
-        </div>
-
-        <div>
-          <NavLink to="/setting">
-            Settings
+          <NavLink to="/posts">
+            Posts
           </NavLink>
         </div>
 

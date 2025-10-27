@@ -7,9 +7,9 @@ class postController {
             const {accessToken} = req.cookies
             const {text} = req.body
 
-            await postService.newPost(accessToken, text)
+            const post = await postService.newPost(accessToken, text)
 
-            res.json({message: 'post is added'})
+            res.json(post)
         }catch(e) {
             next(e)
         }
@@ -27,8 +27,9 @@ class postController {
     async getPosts(req, res, next) {
         try{
             const {lastId} = req.query
+            const {userId} = req.query
 
-            const posts = await postService.getPosts(lastId)
+            const posts = await postService.getPosts(lastId, userId)
 
             res.json(posts)
         }catch(e) {
@@ -45,7 +46,7 @@ class postController {
             res.json(posts)
         }catch(e) {
             next(e)
-        }
+        } 
     }
 }
 

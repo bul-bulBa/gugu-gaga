@@ -1,5 +1,4 @@
 import MyPosts from './UIcomponents/MyPosts';
-import OnePost from "./UIcomponents/OnePost";
 import ProfileDescription from "./UIcomponents/ProfileDescription";
 import LoadingComponent from '../../commonComponents/LoadingComponent'
 import {profileWillUnmount, setProfileThunk, 
@@ -39,7 +38,7 @@ function Profile() {
       dispatch(setProfileThunk(id))
     }
     return () => {
-      profileWillUnmount();
+      dispatch(profileWillUnmount())
     }
   }, [id, auth.isAuth]);
 
@@ -51,8 +50,7 @@ function Profile() {
               avatar={state.avatar} profilePhoto={state.profilePhoto} status={state.status} 
               country={state.location.country} city={state.location.city} 
               changeStatus={changeStatus}/>
-            {/* <MyPosts state={draft} changeInput={changeInput} addPosts={addPosts} isValid={isValid}/> */}
-            {/* <OnePost posts={state.posts} /> */}
+            <MyPosts />
 
             {itIsMe && <button className='absolute bottom-3 right-3' onClick={() => navigate('/edit')}>Edit</button>}
           </div>
