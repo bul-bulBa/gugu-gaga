@@ -1,7 +1,7 @@
-import {DeleteOutlined} from '@ant-design/icons'
+import {DeleteOutlined, HeartFilled, HeartOutlined} from '@ant-design/icons'
 import defaultAvatar from '../../assets/userPhoto.webp'
 import { useAppDispatch, useAppState } from "../../store/StoreConfig"
-import { postType, deletePostThunk } from "../../store/reducers/postsPageSlice"
+import { postType, deletePostThunk, toggleLikeThunk } from "../../store/reducers/postsPageSlice"
 import {selectAuthId} from '../../store/reducers/authInfoSlice'
 
 type propsType = {
@@ -17,8 +17,12 @@ const Post = (props: propsType) => {
         dispatch(props.deleteFunc(props.post._id))
     }
 
+    const toggleLike = () => {
+        dispatch(toggleLikeThunk({postId: props.post._id, userId: props.post.user._id}))
+    }
+    console.log(props.post.liked)
     return (
-        <div className="grid grid-cols[10px_1fr] grid-rows[10px_200px] p-3 w-[220px]">
+        <div className="grid grid-cols[10px_1fr] grid-rows[10px_200px_10px] p-3 w-[220px]">
             <div className="col-start-1 row-start-1">
                 {!props.post.user.avatar
                 ? <img src={defaultAvatar} alt="avatar"  className="w-10 h-10 rounded-full"/>
@@ -26,6 +30,10 @@ const Post = (props: propsType) => {
             </div>
             <div className="col-start-2 row-start-1 flex justify-start">{props.post.user.name}</div>
             <div className="col-start-1 col-span-2 row-start-2 flex justify-start">{props.post.text}</div>
+            <div className='col-start-1 row-start-3' onClick={toggleLike}>
+                {props.post.liked ? <HeartFilled /> : <HeartOutlined /> }
+            </div>
+            <div className='col-start-2 row-start-3'>{props.post.likes}</div>
 
             {userId === props.post.user._id && 
             <div className="col-start-2 row-start-1 flex justify-end" onClick={deletePost}><DeleteOutlined /></div>}

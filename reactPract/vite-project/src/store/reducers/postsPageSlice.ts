@@ -5,6 +5,8 @@ import {posts} from '../../api/api'
 export type postType = {
     _id: string,
     text: string,
+    likes: number,
+    liked: boolean,
     user: {
         _id: string,
         name: string,
@@ -39,6 +41,13 @@ export const deletePostThunk = createAsyncThunk<string, string>(
     }
 )
 
+export const toggleLikeThunk = createAsyncThunk<postType, {userId: string, postId: string}>(
+    'post/toggleLikeThunk',
+    async (params) => {
+        return await posts.toggleLike(params)
+    }
+)
+
 const postsPageSlice = createSlice({
     name: 'posts',
     initialState: {
@@ -62,6 +71,10 @@ const postsPageSlice = createSlice({
             .addCase(deletePostThunk.fulfilled, (state, action) => {
                 const index = state.posts.findIndex(p => p._id === action.payload)
                 state.posts.splice(index, 1)
+            })
+            .addCase(toggleLikeThunk.fulfilled, (state, action) => {
+                const index = state.posts.findIndex(p => p._id === action.payload._id)
+                state.posts[index] = action.payload
             })
     }
 })

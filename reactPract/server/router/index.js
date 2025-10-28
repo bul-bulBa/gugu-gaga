@@ -38,6 +38,7 @@ router.get('/profile/:id', usersController.getProfile)
 router.post('/post', postController.newPost)
 router.delete('/post/:id', postController.deletePost)
 router.get('/post', postController.getPosts)
-router.put('/post', postController.getUserPosts)
+// router.put('/post', postController.getUserPosts)
+router.post('/toggleLike', postController.toggleLikes)
 
 export default router

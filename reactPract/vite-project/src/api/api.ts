@@ -95,5 +95,9 @@ export const posts = {
     },
     deletePost(id: string) {
         return request.delete(`/post/${id}`)
+    },
+    toggleLike({postId, userId}: {postId: string, userId: string}) {
+        return request.post('/toggleLike', {postId, userId})
+        .then((res): postType => res.data)
     }
 }
