@@ -35,8 +35,6 @@ class postService {
         if(lastId) match._id = { $lt: new ObjectId(lastId) } 
         if(userId) match.userId = new ObjectId(userId)
 
-          console.log("USERID", currentUserId)
-
         const posts = await postModel.aggregate([
     { $match: match },
     { $sort: { _id: -1 } },
@@ -85,7 +83,7 @@ class postService {
       }
     }
   ])
-  if (posts.length) console.log('LIKED ', posts[0].liked, 'LIKES ', posts[0].likes)
+
   return posts
     }
 
@@ -118,10 +116,12 @@ class postService {
     // }
 
 // ПРАЦЮЄ НЕ КОРРЕКТНО
-    async toggleLikes(id, postId) {
+    async toggleLikes(token, authorId, postId) {
+      const {id} = tokenService.validateAccessToken(token)
 
       const like = await likesModel.findOne({userId: id, postId})
-      const user = await userModel.findById(id)
+      const user = await userModel.findById(authorId)
+
 
       let updatedPost
       let liked
@@ -132,10 +132,12 @@ class postService {
         liked = false
       } else {
         await likesModel.create({ userId: id, postId})
-        updatedPost = await postModel.findByIdAndUpdate( postId, { $inc: { likes: +1 }}, {new: true})
+        updatedPost = await postModel.findByIdAndUpdate( postId, { $inc: { likes: 1 }}, { new: true })
         liked = true
       }
-      console.log('LIKED', liked, 'LIKESCOUNT', updatedPost.likes)
+      const count = await likesModel.countDocuments({ postId })
+
+
         return { 
           user: {_id: user._id, name: user.name, avatar: user.avatar}, 
           text: updatedPost.text, 

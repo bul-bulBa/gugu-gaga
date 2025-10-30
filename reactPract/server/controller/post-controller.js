@@ -1,5 +1,7 @@
 import ApiError from '../exceptions/api-error.js'
+import tokenModel from '../models/token-model.js'
 import postService from '../service/post-service.js'
+import tokenService from '../service/token-service.js'
 
 class postController {
     async newPost(req, res, next) {
@@ -41,8 +43,9 @@ class postController {
         try{
             const {postId} = req.body
             const {userId} = req.body
+            const {accessToken} = req.cookies
 
-            const post = await postService.toggleLikes(userId, postId)
+            const post = await postService.toggleLikes(accessToken, userId, postId)
             res.json(post)
         }catch(e) {
             next(e)
