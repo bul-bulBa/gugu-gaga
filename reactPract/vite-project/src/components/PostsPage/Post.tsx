@@ -3,11 +3,10 @@ import defaultAvatar from '../../assets/userPhoto.webp'
 import { useAppDispatch, useAppState } from "../../store/StoreConfig"
 import { postType, deletePostThunk, toggleLikeThunk } from "../../store/reducers/postsPageSlice"
 import {selectAuthId} from '../../store/reducers/authInfoSlice'
-import { Divider } from 'antd'
+
 
 type propsType = {
     post: postType,
-    deleteFunc: (id: string) => ReturnType<typeof deletePostThunk>,
     replyFunc?: React.Dispatch<React.SetStateAction<postType | undefined>>
 }
 
@@ -15,12 +14,12 @@ const Post = (props: propsType) => {
     const dispatch = useAppDispatch()
     const userId = useAppState(selectAuthId)
 
-    const deletePost = () => dispatch(props.deleteFunc(props.post._id))
+    const deletePost = () => dispatch(deletePostThunk(props.post._id))
 
     const toggleLike = () => {
         dispatch(toggleLikeThunk({postId: props.post._id, userId: props.post.user._id}))
     }
-    console.log(props.post)
+
     return (
         <div className="flex flex-col gap-5 p-3 w-[220px]">
             <div className="flex justify-start">

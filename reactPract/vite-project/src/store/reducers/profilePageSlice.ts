@@ -42,20 +42,6 @@ export const editThunk = createAsyncThunk(
     }
 )
 
-export const getUserPostsThunk = createAsyncThunk<postType[], getPostType>(
-    'profile/getUserPostsThunk',
-    async (params) => {
-        return await posts.getPosts(params)
-    }
-)
-
-export const deleteUserPostsThunk = createAsyncThunk<string, string>(
-    'profile/deleteUserPostsThunk',
-    async (id) => {
-        await posts.deletePost(id)
-        return id
-    }
-)
 
 // start Slice :>
 const profilePageSlice = createSlice({
@@ -119,16 +105,6 @@ const profilePageSlice = createSlice({
         .addCase(editThunk.fulfilled, (state) => {
             state.isFetching = false
         })
-    // get posts
-        .addCase(getUserPostsThunk.fulfilled, (state, action) => {
-            state.posts = [...state.posts, ...action.payload]
-            state.lastId = action.payload[action.payload.length - 1]._id
-        })
-    // deletePosts
-        .addCase(deleteUserPostsThunk.fulfilled, (state, action) => {
-            const index = state.posts.findIndex(p => p._id === action.payload)
-            state.posts.splice(index, 1)
-        })
     }
 })
 
@@ -139,16 +115,6 @@ export const selectItIsMe = (state: stateType) => state.profile.itIsMe
 export const selectFetching  = (state: stateType) => state.profile.isFetching
 export const selectPosts = (state: stateType) => state.profile.posts
 export const selectLastId = (state: stateType) => state.profile.lastId
-
-// export const setStateAC = (data) => ({
-//     id: data.id,
-//     fullName: data.fullName, 
-//     avatar: data.avatar, 
-//     profilePhoto: data.profilePhoto, 
-//     about: data.about, 
-//     posts: data.posts,
-//     location: data.location
-// })
 
 export default profilePageSlice.reducer
 export const {profileWillUnmount, setItIsMe} = profilePageSlice.actions 

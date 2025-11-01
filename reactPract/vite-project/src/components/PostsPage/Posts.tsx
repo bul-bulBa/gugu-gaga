@@ -29,7 +29,7 @@ const Posts = () => {
 
             <div className='flex flex-col gap-10'>
                 {posts.map(p => (
-                    <Post post={p} deleteFunc={deletePostThunk} key={p._id} replyFunc={setReply}/>
+                    <Post post={p} key={p._id} replyFunc={setReply}/>
                 ))}
             </div>
 

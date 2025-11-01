@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import {useParams, useNavigate} from 'react-router-dom'
 import {selectAuth, authInfoType} from '../../store/reducers/authInfoSlice'
 import {useAppState, useAppDispatch} from '../../store/StoreConfig'
+import {clearPosts} from '../../store/reducers/postsPageSlice'
 
 function Profile() {
   // get some info
@@ -39,6 +40,7 @@ function Profile() {
     }
     return () => {
       dispatch(profileWillUnmount())
+      dispatch(clearPosts())
     }
   }, [id, auth.isAuth]);
 
