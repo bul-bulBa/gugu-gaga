@@ -99,5 +99,9 @@ export const posts = {
     toggleLike({postId, userId}: {postId: string, userId: string}) {
         return request.post('/toggleLike', {postId, userId})
         .then((res): postType => res.data)
+    },
+    replyPost({repliedUserId, repliedPostId, text}: {repliedPostId: string, repliedUserId: string, text: string}) {
+        return request.post('/reply', {repliedPostId, repliedUserId, text})
+        .then((res): postType => res.data)
     }
 }

@@ -51,18 +51,18 @@ class postController {
             next(e)
         }
     }
-    // async getUserPosts(req, res, next) {
-    //     try{
-    //         const {accessToken} = req.cookies
-    //         const {id} = req.query
+    
+    async replyPost(req, res, next) {
+        try{
+            const {accessToken} = req.cookies
+            const {repliedUserId, repliedPostId, text} = req.body
 
-    //         const posts = await postService.getUserPosts(accessToken, id)
-            
-    //         res.json(posts)
-    //     }catch(e) {
-    //         next(e)
-    //     } 
-    // }
+            const reply = await postService.replyPost(accessToken, text, repliedPostId, repliedUserId)
+            res.json(reply)
+        }catch(e) {
+            next(e)
+        }
+    }
 }
 
 export default new postController

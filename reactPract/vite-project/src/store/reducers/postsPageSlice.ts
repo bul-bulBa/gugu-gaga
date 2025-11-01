@@ -11,6 +11,11 @@ export type postType = {
         _id: string,
         name: string,
         avatar: string
+    },
+    repliedPost?: {
+        text: string, 
+        name: string,
+        avatar: string
     }
 }
 
@@ -43,10 +48,19 @@ export const deletePostThunk = createAsyncThunk<string, string>(
 
 export const toggleLikeThunk = createAsyncThunk<postType, {userId: string, postId: string}>(
     'post/toggleLikeThunk',
-    async (params) => {
-        return await posts.toggleLike(params)
+    async (data) => {
+        return await posts.toggleLike(data)
     }
 )
+
+export const replyPostThunk = createAsyncThunk<postType, {repliedPostId: string, repliedUserId: string, text: string}>(
+    'posts/replyPostThunk',
+    async (data) => {
+        return await posts.replyPost(data)
+    }
+)
+
+const addPostThunks = [addPostThunk, replyPostThunk]
 
 const postsPageSlice = createSlice({
     name: 'posts',
@@ -65,9 +79,6 @@ const postsPageSlice = createSlice({
                 state.posts = [...state.posts, ...action.payload]
                 state.lastId = action.payload[action.payload.length - 1]._id
             } )
-            .addCase(addPostThunk.fulfilled, (state, action) => {
-                state.posts = [action.payload, ...state.posts]
-            })
             .addCase(deletePostThunk.fulfilled, (state, action) => {
                 const index = state.posts.findIndex(p => p._id === action.payload)
                 state.posts.splice(index, 1)
@@ -76,6 +87,12 @@ const postsPageSlice = createSlice({
                 const index = state.posts.findIndex(p => p._id === action.payload._id)
                 state.posts[index] = action.payload
             })
+            .addMatcher(
+                (action) => addPostThunks.some(t => action.type === t.fulfilled.type),
+                (state, action: PayloadAction<postType>) => {
+                    state.posts = [action.payload, ...state.posts]
+                }
+            )
     }
 })
 
