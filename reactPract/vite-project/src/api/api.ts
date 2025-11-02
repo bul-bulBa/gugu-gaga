@@ -85,7 +85,7 @@ export const posts = {
         const params: Record<string, string> = {}
         if(lastId) params.lastId = lastId
         if(userId) params.userId = userId
-        console.log(userId)
+
         return request.get(`/post`, { params })
         .then((res): postType[] => res.data)
     },

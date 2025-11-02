@@ -138,7 +138,6 @@ class postService {
 
       let reply = {}
       if(updatedPost.repliedPost?.postId) {
-        console.log('GUGUGAGAGA', updatedPost)
         const repliedPost = await postModel.findById(updatedPost.repliedPost.postId)
         const repliedUser = await userModel.findById(updatedPost.repliedPost.userId)
         if(repliedPost) reply = {text: repliedPost.text, name: repliedUser.name, avatar: repliedUser.avatar}

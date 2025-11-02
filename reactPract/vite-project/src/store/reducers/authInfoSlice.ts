@@ -2,15 +2,15 @@ import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit'
 import {authorize, getUsers} from '../../api/api'
 import {stateType} from '../StoreConfig'
 
-// LOGIN THUNK TYPES
-    type followedType = {he: Array<number>, onHim: Array<number>}
-    export type actionLoginType = {email?: string, password?: string, captcha?: string}
-// SIGNUP THUNK TYPES
-    export type actionSignUpType = {email: string,name: string, password: string, country: string, city: string, captcha: string}
-// STATE TYPE
-    export type stateUserType = {avatar: string,followed: followedType, id: string}
 
-// start Thunks :)
+type followedType = {he: Array<number>, onHim: Array<number>}
+export type actionLoginType = {email?: string, password?: string, captcha?: string}
+
+export type actionSignUpType = {email: string,name: string, password: string, country: string, city: string, captcha: string}
+
+export type stateUserType = {avatar: string,followed: followedType, id: string}
+
+
 export const loginThunk = createAsyncThunk<string, actionLoginType>(
     'auth/loginThunk',
     async (action: actionLoginType ): Promise<string> => {
@@ -22,7 +22,7 @@ export const loginThunk = createAsyncThunk<string, actionLoginType>(
 )
 
 export const autoLoginThunk = createAsyncThunk(
-    'auth, autoLoginThunk',
+    'auth, autoLoginThunk', 
     async (): Promise<stateUserType> => {
         return await authorize.autoLogin()
     }

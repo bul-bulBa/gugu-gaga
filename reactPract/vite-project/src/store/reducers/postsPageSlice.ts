@@ -77,7 +77,6 @@ const postsPageSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getPostsThunk.fulfilled, (state, action) => {
-                console.log("PAYLOAD ", action.payload)
                 state.posts = [...state.posts, ...action.payload]
                 state.lastId = action.payload[action.payload.length - 1]._id
             } )

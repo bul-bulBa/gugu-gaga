@@ -9,7 +9,7 @@ function Header() {
     const dispatch = useAppDispatch()
 
     return (
-            <div className='col-start-1 col-span-2 row-start-1 border-2 border-stone-300 rounded-xl flex justify-between alingn-items-center p-2'>
+            <div className='col-start-1 col-span-2 row-start-1 border border-stone-300 rounded-xl flex justify-between alingn-items-center p-2'>
                 <img className="w-[40px] m-4" src={image} alt="" />
 
                 {!state

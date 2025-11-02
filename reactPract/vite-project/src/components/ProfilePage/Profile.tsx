@@ -46,7 +46,7 @@ function Profile() {
 
   
     return (
-          <div className='col-start-2 row-start-2 border-2 border-stone-300 rounded-xl p-3 relative'>
+          <div className='col-start-2 row-start-2 p-3 relative'>
             {isFetching && <LoadingComponent/>}
             <ProfileDescription itIsMe={itIsMe} name={state.name} about={state.about} 
               avatar={state.avatar} profilePhoto={state.profilePhoto} status={state.status} 

@@ -31,7 +31,7 @@ function App() {
     return <LoadingComponent />
   }
   return (
-      <div className='grid grid-cols-[130px_1fr] grid-rows-[70px_minmax(80vh,_auto)] w-[1200px] gap-[10px]'>
+      <div className='grid grid-cols-[1fr] grid-rows-[70px_1fr] gap-[10px] pb-10 overflow-hidden md:grid-cols-[130px_1fr] md:grid-rows-[70px_1fr]'>
         <Header />
         <Navbar />
         

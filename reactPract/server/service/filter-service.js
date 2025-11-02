@@ -3,7 +3,6 @@ import userModel from '../models/user-model.js'
 
 class FilterService {
     filterMethod(array, term) {
-      // console.log("TERM ", term)
         const fuse = new Fuse(array, {keys: ['name']})
         return fuse.search(term).map(u => u.item)
     }

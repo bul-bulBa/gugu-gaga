@@ -88,7 +88,7 @@ class AuthController {
 
     async refresh(req, res, next) {
         try{
-            console.log('REFRESH')
+
             const {refreshToken} = req.cookies
             const userData = await authorizeService.refresh(refreshToken) 
             
