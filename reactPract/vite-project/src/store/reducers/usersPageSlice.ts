@@ -4,7 +4,7 @@ import {stateType} from '../StoreConfig'
 
 // STATE TYPES
     export type userType = {
-      id: number,
+      _id: string,
       name: string,
       about: string,
       avatar: string,
@@ -13,14 +13,14 @@ import {stateType} from '../StoreConfig'
     type usersType = Array<userType>
     export type autoComplType = {name: string, _id: string}
 // GET USERS THUNK TYPE
-    export type getUsersType = {currentPage: number, limit: number, term: string | null, friends: string | null}
+    export type getUsersType = {currentPage: number, limit: number, term: string | null, heFollowed: string[] | null}
     export type resultUsersType = {users: usersType, allUsers: number}
 
 // start Thunks ;)
 export const getUsersCardThunk = createAsyncThunk(
     'users/getUsersCardThunk',
-    async ({currentPage, limit, term, friends}: getUsersType): Promise<resultUsersType> => {
-        return await getUsers.getUsersCard({currentPage, limit, term, friends})
+    async ({currentPage, limit, term, heFollowed}: getUsersType): Promise<resultUsersType> => {
+        return await getUsers.getUsersCard({currentPage, limit, term, heFollowed})
     }
 ) 
 

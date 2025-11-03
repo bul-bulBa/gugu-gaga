@@ -8,7 +8,7 @@ class ChangeService {
 
     async toggleFollowing(actionId, jwt) {
         const {id} = tokenService.validateAccessToken(jwt)
-
+        if(!id) throw ApiError.Unauthorized()
         const user = await userModel.findById(id)
 
         const updatedUser = await userModel.findByIdAndUpdate(

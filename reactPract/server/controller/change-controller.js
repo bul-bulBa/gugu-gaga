@@ -9,7 +9,7 @@ class ChangeController {
             const {accessToken} = req.cookies
 
             const result = await changeService.toggleFollowing(id, accessToken)
-
+            
             res.json(result)
         } catch(e) {
             next(e)
@@ -22,7 +22,7 @@ class ChangeController {
             const {text} = req.body
 
             const result = await changeService.changeStatus(text, accessToken)
-            
+
             res.json(result)
         }catch(e) {
             next(e)

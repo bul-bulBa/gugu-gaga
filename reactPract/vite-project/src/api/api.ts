@@ -46,8 +46,8 @@ export const authorize = {
 }
 
 export const getUsers = {
-    getUsersCard({currentPage, limit, term, friends}: getUsersType) {
-        return request.get(`/users?page=${currentPage}&limit=${limit}&term=${term}&friends=${friends}`)
+    getUsersCard({currentPage, limit, term, heFollowed}: getUsersType) {
+        return request.get(`/filter?page=${currentPage}&limit=${limit}&term=${term}&heFollowed=${heFollowed}`)
         .then((res): resultUsersType => res.data)
     },
     getAutoCompNames(value: string) {
@@ -58,9 +58,9 @@ export const getUsers = {
         return request.get(`/profile/${id}`)
         .then((res): userType => res.data)
     },
-    toggleFollowing(id: number) {
+    toggleFollowing(id: string) {
         return request.put(`/toggleFollowing/${id}`)
-        .then((res): Array<number> => res.data)
+        .then((res): Array<string> => res.data)
     }
 }
 

@@ -34,7 +34,7 @@ const Post = (props: propsType) => {
             {props.post.repliedPost && Object.keys(props.post.repliedPost || {}).length > 0 && 
                 <div className='flex flex-col gap-3 border rounded-xl m-2 p-2'>
                     <div className="flex justify-start">
-                    {props.post.repliedPost.avatar
+                    {!props.post.repliedPost.avatar
                     ? <img src={defaultAvatar} alt="avatar"  className="w-7 h-7 rounded-full"/>
                     : <img src={props.post.repliedPost.avatar} alt="avatar"  className="w-7 h-7 rounded-full"/>}
                     <p className="">{props.post.repliedPost.name}</p>

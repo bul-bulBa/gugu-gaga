@@ -25,6 +25,16 @@ class FilterService {
       
     }
 
+    async filter(term, heFollowed, page, limit) {
+      let query = {}
+      if(term && term !== 'null' && term !== '') query.$text = { $search: term}
+      if(heFollowed) query._id = {$in: heFollowed}
+
+      const users = await userModel.find(query).skip((page - 1) * limit).limit(limit)
+      const allUsers = await userModel.countDocuments(query)
+      return {users, allUsers}
+    }
+
     async autoComplete(payload) {
         // return await userModel.find({ $text: {$search: payload}}).select('name').limit(5)
 

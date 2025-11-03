@@ -46,7 +46,7 @@ function Profile() {
 
   
     return (
-          <div className='col-start-2 row-start-2 p-3 relative'>
+          <div className='md:col-start-2 md:row-start-2 p-3 relative'>
             {isFetching && <LoadingComponent/>}
             <ProfileDescription itIsMe={itIsMe} name={state.name} about={state.about} 
               avatar={state.avatar} profilePhoto={state.profilePhoto} status={state.status} 
@@ -54,7 +54,7 @@ function Profile() {
               changeStatus={changeStatus}/>
             <MyPosts />
 
-            {itIsMe && <button className='absolute bottom-3 right-3' onClick={() => navigate('/edit')}>Edit</button>}
+            {itIsMe && <button className='absolute fixed bottom-18 right-4' onClick={() => navigate('/edit')}>Edit</button>}
           </div>
     )
 }

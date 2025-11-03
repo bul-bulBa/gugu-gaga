@@ -4,6 +4,7 @@ import tokenService from './token-service.js'
 import UserDto from '../dto/user-dto.js'
 import UsersCardDto from '../dto/userCard-dto.js'
 
+
 class UserService {
     async getUsers(payload) {
         if(payload.friends === 'true') {

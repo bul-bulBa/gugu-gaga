@@ -3,7 +3,7 @@ import {authorize, getUsers} from '../../api/api'
 import {stateType} from '../StoreConfig'
 
 
-type followedType = {he: Array<number>, onHim: Array<number>}
+type followedType = {he: Array<string>, onHim: Array<string>}
 export type actionLoginType = {email?: string, password?: string, captcha?: string}
 
 export type actionSignUpType = {email: string,name: string, password: string, country: string, city: string, captcha: string}
@@ -71,9 +71,9 @@ export const refreshThunk = createAsyncThunk(
     }
 )
 
-export const toggleFollowingThunk = createAsyncThunk<number[], number>(
+export const toggleFollowingThunk = createAsyncThunk<string[], string>(
     'auth/toggleFollowingThunk',
-    async (id: number): Promise<Array<number>> => {
+    async (id: string): Promise<Array<string>> => {
         return await getUsers.toggleFollowing(id)
     }
 )
@@ -213,6 +213,7 @@ export const selectIsFirstLoad = (state: stateType) => state.auth.firstLoad
 export const selectAuthId = (state: stateType) => state.auth.user?.id ?? null
 export const selectError = (state: stateType) => state.auth.error
 export const selectAuth = (state: stateType) => state.auth
+export const selectHeFollowed = (state: stateType) => state.auth.user.followed.he
 
 export default authInfoSlice.reducer
 export const {setProfile, setError} = authInfoSlice.actions 

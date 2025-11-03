@@ -5,6 +5,7 @@ import { StateComponent } from './globalState/StateContex'
 import {Provider} from 'react-redux'
 import store from './store/StoreConfig'
 import { HashRouter } from 'react-router-dom'
+import './App.css'
 
 
  createRoot(document.getElementById('root')!).render(

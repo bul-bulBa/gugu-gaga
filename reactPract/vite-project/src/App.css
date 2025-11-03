@@ -1,4 +1,38 @@
 @import "tailwindcss";
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+:root {
+  --bg: 255 255 255;
+  --text: 17 17 17;
+  --border: 229 229 229;
+
+  --red: 254 202 202;
+  --orange: 254 215 170;
+  --yellow: 254 240 138;
+  --purple: 221 214 254;
+  --blue: 191 219 254;
+  --green: 187 247 208;
+  --pink: 251 207 232;
+}
+
+
+[data-theme="dark"] {
+  --bg: 17 17 17;
+  --text: 255 255 255;
+  --border: 63 63 70;
+
+  --red: 153 27 27;
+  --orange: 154 52 18;
+  --yellow: 133 77 14;
+  --purple: 91 33 182;
+  --blue: 30 64 175;
+  --green: 22 101 52;
+  --pink: 157 23 77;
+}
+
+[data-theme='dark'] a { color: rgb(255, 255, 255) }
+[data-theme='dark'] a:active { color: rgb(255, 255, 255) }
+[data-theme='dark'] a:hover { color: rgb(221, 221, 221)}
 
 a {
   color: #000;

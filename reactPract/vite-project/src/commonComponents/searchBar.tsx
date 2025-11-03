@@ -35,7 +35,7 @@ const SearchBar = () => {
     return (
         <div className='w-full grid grid-cols-3'>
 
-            <div className='col-start-2 flex justify-center items-center'>
+            <div className='col-start-1 col-span-2 sm:col-start-2 sm:col-span-1 flex justify-center items-center'>
                 <AutoComplete
                     style={{ width: 200 }}
                     options={

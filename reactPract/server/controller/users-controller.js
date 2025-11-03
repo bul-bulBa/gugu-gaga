@@ -24,6 +24,22 @@ class UsersController {
         }
     }
 
+    async filter(req, res, next) {
+        try{
+            let {term, heFollowed, page, limit} = req.query
+            
+            if(heFollowed === 'null') heFollowed = null
+            else if(heFollowed === '') heFollowed = []
+            else if(heFollowed) heFollowed = heFollowed.split(',')
+            
+            const resObj = await filterService.filter(term, heFollowed, page, limit)
+
+            res.json(resObj)
+        }catch(e) {
+            next(e)
+        }
+    }
+
     async getProfile(req, res, next) {
         try{
             const {id} = req.params

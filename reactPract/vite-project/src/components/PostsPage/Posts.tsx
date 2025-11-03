@@ -24,7 +24,7 @@ const Posts = () => {
     }, [])
 
     return (
-        <div className='col-start-2 row-start-2 flex flex-col items-center gap-10 relative'>
+        <div className='md:col-start-2 md:row-start-2 flex flex-col items-center gap-10 relative'>
             <AddPost />
 
             <div className='flex flex-col gap-10'>

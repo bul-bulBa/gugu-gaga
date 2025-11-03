@@ -33,6 +33,7 @@ router.get('/usersAutocomplete/:user', usersController.autoComplete)
 router.get('/users', authMiddleware, usersController.getUsers) // працює на божому слові, мені страшно там шось фіксити
 router.get('/image/:id', usersController.getImage)
 router.get('/profile/:id', usersController.getProfile)
+router.get('/filter', usersController.filter)
 
 // post endpoints
 router.post('/post', postController.newPost)
