@@ -8,6 +8,7 @@ import errorMiddleware from './middleware/error-middleware.js'
 import initWebSocket from './router/ws.js'
 import http from 'http'
 import { createClient } from 'redis';
+import wsService from './service/ws-service.js'
 
 export const client = createClient({ url: 'redis://127.0.0.1:6379' });
 
@@ -27,13 +28,14 @@ app.use(cors({
 app.use('/api', router)
 app.use(errorMiddleware)
 
-// const server = http.createServer(app)
-// const wss = initWebSocket(server)
+const server = http.createServer(app)
+const ws = initWebSocket(server)
+wsService.setServer(ws)
 
 const start = async () => {
     try {
         await mongoose.connect(process.env.DB_URI)
-        app.listen(PORT, () => console.log(`server started on: http://localhost:${PORT}`))
+        server.listen(PORT, () => console.log(`server started on: http://localhost:${PORT}`))
     } catch(e) {
         console.log("SERVER ERROR", e, " END SERVER ERROR")
     }

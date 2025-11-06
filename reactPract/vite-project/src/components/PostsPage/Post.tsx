@@ -21,8 +21,8 @@ const Post = (props: propsType) => {
     }
 
     return (
-        <div className="flex flex-col gap-5 p-3 w-[220px]">
-            <div className="flex justify-start">
+        <div className="flex flex-col gap-3 p-3 w-[200px] sm:w-[300px] md:w-[500px]">
+            <div className="flex justify-start items-center gap-2">
                 {!props.post.user.avatar
                 ? <img src={defaultAvatar} alt="avatar"  className="w-10 h-10 rounded-full"/>
                 : <img src={props.post.user.avatar} alt="avatar"  className="w-10 h-10 rounded-full"/>}
@@ -42,7 +42,7 @@ const Post = (props: propsType) => {
                 <div className="flex text-start break-all whitespace-pre-wrap">{props.post.repliedPost.text}</div>
             </div>}
 
-            <div className='flex justify-around'>
+            <div className='flex justify-around md:justify-start md:gap-5'>
                 {props.replyFunc && <div className='col-start-1 row-start-3'
                 onClick={() => props.replyFunc?.(props.post)}><CommentOutlined /></div>}
 
