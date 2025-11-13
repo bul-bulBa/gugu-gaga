@@ -2,6 +2,8 @@ import cookie from 'cookie'
 import tokenService from './token-service.js';
 import ApiError from "../exceptions/api-error.js";
 import messageModel from "../models/message-model.js";
+import userModel from '../models/user-model.js';
+import ChatterDto from '../dto/chatter-dto.js';
 
 let wsServer = null
 
@@ -24,9 +26,16 @@ class wsService {
         return message
     }
 
+    async getUsers(usersId) {
+        let users = await userModel.find({ _id: { $in: usersId}})
+
+        const usersDto = users.map(u => new ChatterDto(u))
+        return usersDto 
+    }
+
     async getId(ws, req) {
         const cookies = req.headers.cookie
-        if(!cookies) return ws.close()
+        if(!cookies) return ws.close() 
 
         const parcedCookies = cookie.parse(cookies)
         const token = parcedCookies.accessToken

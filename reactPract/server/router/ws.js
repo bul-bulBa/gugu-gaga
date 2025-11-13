@@ -23,8 +23,17 @@ const initWebSocket = (server) => {
                     const {writerId, readerId, text} = message.payload
                     const newMessage = await wsService.addMessage(writerId, readerId, text)
                     ws.send(JSON.stringify({
-                        type: 'message',
+                        type: 'addMessage',
                         payload: newMessage
+                    }))
+                break
+
+                case 'getChatters': 
+                    const {usersId} = message.payload
+                    const users = await wsService.getUsers(usersId)
+                    ws.send(JSON.stringify({
+                        type: 'chatters',
+                        payload: users
                     }))
                 break
             }
