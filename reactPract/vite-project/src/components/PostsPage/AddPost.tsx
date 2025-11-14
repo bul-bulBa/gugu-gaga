@@ -17,6 +17,7 @@ const AddPost = () => {
         <div className='border border-stone-200'>
             <TextArea 
             style={{ border: 'none', boxShadow: 'none', outline: 'none' }}
+            className='scrollbar-hide'
             placeholder="What's happening?" 
             autoSize 
             onChange={(e) => setText(e.target.value)}/>

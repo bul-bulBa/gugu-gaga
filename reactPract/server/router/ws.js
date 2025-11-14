@@ -1,12 +1,23 @@
 import { WebSocketServer } from 'ws'
 import wsService from '../service/ws-service.js'
+import tokenService from '../service/token-service.js'
 
 const initWebSocket = (server) => {
     const ws = new WebSocketServer({server})
 
-    ws.on('connection', (ws) => {
+    const clients = new Map()
+
+    ws.on('connection', (ws, req) => {
+        const cookies = req.headers.cookie
+        const token = cookies
+            .split('; ')
+            .find(c => c.startsWith('accessToken='))
+            ?.split('=')[1]
+        const {id} = tokenService.validateAccessToken(token)
+        clients.set(id, ws)
+
         ws.on('message', async (message) => {
-            message = JSON.parse(message)
+            message = JSON.parse(message) 
 
             switch(message.event) {
                 
@@ -22,10 +33,10 @@ const initWebSocket = (server) => {
                 case 'addMessage':
                     const {writerId, readerId, text} = message.payload
                     const newMessage = await wsService.addMessage(writerId, readerId, text)
-                    ws.send(JSON.stringify({
-                        type: 'addMessage',
-                        payload: newMessage
-                    }))
+                    const res = JSON.stringify({ type: 'addMessage', payload: newMessage })
+                    ws.send(res)
+                    const received = clients.get(readerId)
+                    if(received) received.send(res)
                 break
 
                 case 'getChatters': 

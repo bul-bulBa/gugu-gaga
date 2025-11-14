@@ -39,7 +39,7 @@ router.get('/filter', usersController.filter)
 router.post('/post', postController.newPost)
 router.delete('/post/:id', postController.deletePost)
 router.get('/post', postController.getPosts)
-// router.put('/post', postController.getUserPosts)
+// router.put('/post', postController.getUserPosts) 
 router.post('/toggleLike', postController.toggleLikes)
 router.post('/reply', postController.replyPost)
 

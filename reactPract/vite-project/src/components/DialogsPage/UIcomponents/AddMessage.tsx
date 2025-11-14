@@ -1,14 +1,12 @@
 import {useState} from 'react'
+import { newMessage } from '../DialogsPage'
 
-type propsType = {
-    add: (message: string) => void
-}
 
-const AddMessage = (props: propsType) => {
+const AddMessage = () => {
     const [value, setValue] = useState<string>('')
 
     const addMessageFunc = () => {
-        props.add(value)
+        newMessage(value)
         setValue('')
     }
 

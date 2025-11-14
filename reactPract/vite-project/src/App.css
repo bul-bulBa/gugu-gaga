@@ -55,6 +55,22 @@ a.active {
   text-align: center;
 }
 
+.scrollbar-hide {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+.scrollbar-hide::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, and Opera */
+    }
+
+.msg.left {
+  align-self: flex-start;
+}
+
+.msg.right {
+  align-self: flex-end;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

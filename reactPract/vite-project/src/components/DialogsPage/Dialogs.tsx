@@ -25,7 +25,7 @@ const Dialogs = () => {
             {state
                 ? (<div className='flex flex-col justify-between w-full'>
                         <Discussion state={state}/>
-                        {/* <AddMessage add={add}/> */}
+                        <AddMessage />
                     </div>)
                 : <span></span>
             }

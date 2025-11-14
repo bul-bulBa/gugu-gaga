@@ -1,15 +1,17 @@
 import {useState, useEffect, useRef} from 'react'
 import { useAppDispatch, useAppState } from '../../store/StoreConfig'
 import {selectAuthId, selectHeFollowed} from '../../store/reducers/authInfoSlice'
-import {setMessage, addMessage, setChatters } from '../../store/reducers/dialogsPageSlice'
+import {setMessage, addMessage, setChatters, setChatter, selectChatter } from '../../store/reducers/dialogsPageSlice'
 import Dialogs from "./Dialogs"
 import DialogItems from "./DialogItems"
 
 export let getMessages: any
+export let newMessage: any
 const DialogsPage = () => {
     const dispatch = useAppDispatch()
     const socket = useRef<WebSocket>(null!)
     const userA = useAppState(selectAuthId)
+    const userB = useAppState(selectChatter)
     const heFollowed = useAppState(selectHeFollowed)
 
     function connect() {
@@ -17,7 +19,6 @@ const DialogsPage = () => {
 
         socket.current.onopen = () => {
             getUsers()
-            // getMessages('68ff5564b8cb9d8808983458')
         }
 
         socket.current.onmessage = event => {
@@ -28,12 +29,13 @@ const DialogsPage = () => {
             console.log(message) 
         }
     }
-    getMessages = (userB: string) => {
+    getMessages = (userBclicked: any) => {
+        dispatch(setChatter(userBclicked))
         const message = {
             event: 'getMessages',
             payload: {
                 userA,
-                userB
+                userB: userBclicked._id
             }
         }
         socket.current.send(JSON.stringify(message))
@@ -48,13 +50,13 @@ const DialogsPage = () => {
         }))
     }
 
-    const newMessage = () => {
+    newMessage = (text: string) => {
         const message = {
             event: 'addMessage',
             payload: {
-                text: 'gugu gaga',
-                writerId: '68ef77014617522a78005e00',
-                readerId: '68ff5564b8cb9d8808983458'
+                text,
+                writerId: userA,
+                readerId: userB._id
             }
         }
         socket.current.send(JSON.stringify(message))
@@ -71,8 +73,6 @@ const DialogsPage = () => {
             <div className='border-r-1'></div>
 
             <Dialogs />
-
-            <button onClick={() => newMessage()}>Add post</button>
         </div>
     )
 }
