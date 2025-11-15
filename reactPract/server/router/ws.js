@@ -19,7 +19,8 @@ const initWebSocket = (server) => {
         ws.on('message', async (message) => {
             message = JSON.parse(message) 
 
-            switch(message.event) {
+            try {
+                switch(message.event) {
                 
                 case 'getMessages':
                     const {userA, userB} = message.payload
@@ -27,16 +28,7 @@ const initWebSocket = (server) => {
                     ws.send(JSON.stringify({ 
                         type: 'messages',
                         payload: messages
-                    }))
-                break
-
-                case 'addMessage':
-                    const {writerId, readerId, text} = message.payload
-                    const newMessage = await wsService.addMessage(writerId, readerId, text)
-                    const res = JSON.stringify({ type: 'addMessage', payload: newMessage })
-                    ws.send(res)
-                    const received = clients.get(readerId)
-                    if(received) received.send(res)
+                    })) 
                 break
 
                 case 'getChatters': 
@@ -47,6 +39,40 @@ const initWebSocket = (server) => {
                         payload: users
                     }))
                 break
+
+                case 'addMessage': {
+                    const {writerId, readerId, text} = message.payload
+                    const newMessage = await wsService.addMessage(writerId, readerId, text)
+                    const res = JSON.stringify({ type: 'addMessage', payload: newMessage })
+                    ws.send(res)
+                    const received = clients.get(readerId)
+                    if(received) received.send(res)
+                break
+                }
+
+                case 'editMessage':{
+                    const {messageId, readerId, text} = message.payload
+                    const message = await wsService.editMessage(messageId, text)
+                    const res = JSON.stringify({ type: 'editMessage', payload: message})
+                    ws.send(res)
+                    const received = clients.get(readerId)
+                    if(received) received.send(res)
+                break
+                }
+
+                case 'deleteMessage': {
+                    const {messageId, readerId} = message.payload
+                    await wsService.deleteMessage(messageId)
+                    const res = JSON.stringify({ type: 'deleteMessage', payload: messageId})
+                    ws.send(res)
+                    const received = clients.get(readerId)
+                    if(received) received.send(res)
+                    break
+                }
+
+                }
+            } catch (e) {
+                console.log(e)
             }
         })
     })

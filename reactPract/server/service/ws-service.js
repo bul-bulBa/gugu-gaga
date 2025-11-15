@@ -33,16 +33,25 @@ class wsService {
         return usersDto 
     }
 
-    async getId(ws, req) {
-        const cookies = req.headers.cookie
-        if(!cookies) return ws.close() 
-
-        const parcedCookies = cookie.parse(cookies)
-        const token = parcedCookies.accessToken
-        if(!token) return ws.close()
-
-        return {id} = tokenService.validateAccessToken(token)
+    async editMessage(messageId, newText) {
+        const message = await messageModel.findByIdAndUpdate( messageId, { $set: { text: newText}}, { new: true} )
+        return message
     }
+
+    async deleteMessage(messageId) {
+        await messageModel.findByIdAndDelete(messageId)
+    }
+
+    // async getId(ws, req) {
+    //     const cookies = req.headers.cookie
+    //     if(!cookies) return ws.close() 
+
+    //     const parcedCookies = cookie.parse(cookies)
+    //     const token = parcedCookies.accessToken
+    //     if(!token) return ws.close()
+
+    //     return {id} = tokenService.validateAccessToken(token)
+    // }
 }
 
 export default new wsService 

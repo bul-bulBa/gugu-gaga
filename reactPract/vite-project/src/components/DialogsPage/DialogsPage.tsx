@@ -1,12 +1,14 @@
 import {useState, useEffect, useRef} from 'react'
 import { useAppDispatch, useAppState } from '../../store/StoreConfig'
 import {selectAuthId, selectHeFollowed} from '../../store/reducers/authInfoSlice'
-import {setMessage, addMessage, setChatters, setChatter, selectChatter } from '../../store/reducers/dialogsPageSlice'
+import {setMessage, addMessage, setChatters, setChatter, selectChatter, removeMessage } from '../../store/reducers/dialogsPageSlice'
 import Dialogs from "./Dialogs"
 import DialogItems from "./DialogItems"
 
 export let getMessages: any
 export let newMessage: any
+export let editMessage: any
+export let deleteMessage: any
 const DialogsPage = () => {
     const dispatch = useAppDispatch()
     const socket = useRef<WebSocket>(null!)
@@ -26,7 +28,8 @@ const DialogsPage = () => {
             if(message.type === 'messages') dispatch(setMessage(message.payload))
             if(message.type === 'addMessage') dispatch(addMessage(message.payload))
             if(message.type === 'chatters') dispatch(setChatters(message.payload))
-            console.log(message) 
+            if(message.type === 'deleteMessage') dispatch(removeMessage(message.payload))
+            console.log(message.payload)
         }
     }
     getMessages = (userBclicked: any) => {
@@ -62,12 +65,35 @@ const DialogsPage = () => {
         socket.current.send(JSON.stringify(message))
     }
 
+    editMessage = (messageId: string, text: string) => {
+        const message = {
+            event: 'editMessage',
+            payload: {
+                messageId,
+                text,
+                readerId: userB._id
+            }
+        }
+        socket.current.send(JSON.stringify(message))
+    }
+
+    deleteMessage = (messageId: string) => {
+        const message = {
+            event: 'deleteMessage',
+            payload: {
+                messageId,
+                readerId: userB._id
+            }
+        }
+        socket.current.send(JSON.stringify(message))
+    }
+
     useEffect(() => {
         connect()
     }, [])
 
     return (
-        <div className='flex gap-[15%] p-10'>
+        <div className='flex gap-[5%] p-10'>
             <DialogItems />
 
             <div className='border-r-1'></div>
