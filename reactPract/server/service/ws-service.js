@@ -22,7 +22,7 @@ class wsService {
     }
 
     async addMessage(writerId, readerId, text) {
-        const message = await messageModel.create({readerId, writerId, text})
+        const message = await messageModel.create({readerId, writerId, text, edited: false})
         return message
     }
 
@@ -33,8 +33,8 @@ class wsService {
         return usersDto 
     }
 
-    async editMessage(messageId, newText) {
-        const message = await messageModel.findByIdAndUpdate( messageId, { $set: { text: newText}}, { new: true} )
+    async editMessage(messageId, newText) { 
+        const message = await messageModel.findByIdAndUpdate( messageId, { $set: { text: newText, edited: true}}, { new: true} )
         return message
     }
 

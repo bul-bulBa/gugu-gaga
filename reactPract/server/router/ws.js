@@ -52,8 +52,8 @@ const initWebSocket = (server) => {
 
                 case 'editMessage':{
                     const {messageId, readerId, text} = message.payload
-                    const message = await wsService.editMessage(messageId, text)
-                    const res = JSON.stringify({ type: 'editMessage', payload: message})
+                    const editedMessage = await wsService.editMessage(messageId, text)
+                    const res = JSON.stringify({ type: 'editMessage', payload: editedMessage})
                     ws.send(res)
                     const received = clients.get(readerId)
                     if(received) received.send(res)
@@ -72,7 +72,7 @@ const initWebSocket = (server) => {
 
                 }
             } catch (e) {
-                console.log(e)
+                console.log(e) 
             }
         })
     })

@@ -1,8 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {stateType} from '../StoreConfig'
 
-type addMessageType = { id: number, message: string}
-export type dialogsMessageType = {_id: string, writerId: string, readerId: string, text: string, createdAt: Date, updatedAt: Date}
+export type dialogsMessageType = {_id: string, writerId: string, readerId: string, 
+    text: string, createdAt: Date, updatedAt: Date, edited: boolean}
 export type chattersType = {_id: string, name: string, avatar: string}
 
 const dialogsPageSlice = createSlice({
@@ -33,6 +33,10 @@ const dialogsPageSlice = createSlice({
         },
         setChatter(state, action) {
             state.chatter = action.payload
+        },
+        changeMessage(state, action) {
+            const message = state.messages.find(m => m._id === action.payload._id)
+            if(message) Object.assign(message, action.payload)
         }
     }
 })
@@ -44,4 +48,4 @@ export const selectChatters = (state: stateType) => state.dialogs.chatters
 export const selectChatter = (state: stateType) => state.dialogs.chatter
 
 export default dialogsPageSlice.reducer
-export const {setMessage, addMessage, setChatters, setChatter, removeMessage} = dialogsPageSlice.actions
+export const {setMessage, addMessage, setChatters, setChatter, removeMessage, changeMessage} = dialogsPageSlice.actions

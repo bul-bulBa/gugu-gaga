@@ -15,11 +15,11 @@ const Discussion = ({state}: propsType) => {
     return (
         <div className='flex flex-col gap-[10%] h-[500px] overflow-y-auto scrollbar-hide w-full'>
 
-            {state.map( (m, index) => {
+            {state.map(m => {
                 const time = new Date(m.updatedAt).toTimeString().slice(0, 5)
                 const message = m.writerId === id
-                ? <Message text={m.text} key={index} position={'right'} date={time} messageId={m._id} />
-                : <Message text={m.text} key={index} position={'left'} date={time}/>
+                ? <Message key={m._id} position={'right'} message={m} date={time} />
+                : <Message key={m._id} position={'left'} message={m} date={time}/>
                 return message
             })}
 

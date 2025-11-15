@@ -1,15 +1,25 @@
 import {useState} from 'react'
-import { newMessage } from '../DialogsPage'
+import { useAppDispatch, useAppState } from '../../../store/StoreConfig';
+import { setValue, setEditMessage, getValue, getEditMessage} from '../../../store/reducers/addMessageSlice'
+import { newMessage, editMessage } from '../DialogsPage' 
 import { Input } from 'antd';
 
 const { TextArea } = Input;
 
 const AddMessage = () => {
-    const [value, setValue] = useState<string>('')
+    const value = useAppState(getValue)
+    const editMessageId = useAppState(getEditMessage)
+    const dispatch = useAppDispatch()
 
     const addMessageFunc = () => {
         newMessage(value)
-        setValue('')
+        dispatch(setValue(''))
+    }
+
+    const editMessageFunc = () => {
+        editMessage(editMessageId, value)
+        dispatch(setEditMessage(''))
+        dispatch(setValue(''))
     }
 
     return (
@@ -24,10 +34,11 @@ const AddMessage = () => {
             className='scrollbar-hide'
             placeholder="What's happening?" 
             autoSize 
-            onChange={(e) => setValue(e.target.value)}/>
-            {!value
-            ? <button style={{color: '#a8a29e', borderColor: '#a8a29e'}} >Send</button>
-            : <button onClick={addMessageFunc}>Send</button>}
+            onChange={(e) => dispatch(setValue(e.target.value))}/>
+            {!editMessageId
+            ? <button className={`${!value ? 'disabled' : ''}`} onClick={addMessageFunc}>Send</button>
+            : <button className={`${!value ? 'disabled' : ''}`} onClick={editMessageFunc}>Save</button>
+            }
         </div>
     )
 }

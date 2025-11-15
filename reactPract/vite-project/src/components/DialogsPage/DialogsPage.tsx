@@ -1,7 +1,8 @@
 import {useState, useEffect, useRef} from 'react'
 import { useAppDispatch, useAppState } from '../../store/StoreConfig'
 import {selectAuthId, selectHeFollowed} from '../../store/reducers/authInfoSlice'
-import {setMessage, addMessage, setChatters, setChatter, selectChatter, removeMessage } from '../../store/reducers/dialogsPageSlice'
+import {setMessage, addMessage, setChatters, setChatter, 
+    selectChatter, removeMessage, changeMessage } from '../../store/reducers/dialogsPageSlice'
 import Dialogs from "./Dialogs"
 import DialogItems from "./DialogItems"
 
@@ -29,6 +30,7 @@ const DialogsPage = () => {
             if(message.type === 'addMessage') dispatch(addMessage(message.payload))
             if(message.type === 'chatters') dispatch(setChatters(message.payload))
             if(message.type === 'deleteMessage') dispatch(removeMessage(message.payload))
+            if(message.type === 'editMessage') dispatch(changeMessage(message.payload))
             console.log(message.payload)
         }
     }

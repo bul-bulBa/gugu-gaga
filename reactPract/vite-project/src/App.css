@@ -68,7 +68,7 @@ a.active {
 }
 
 .msg.right {
-  align-self: flex-end;
+  align-self: flex-end
 }
 
 .logo {
@@ -114,6 +114,13 @@ button {
   padding: 5px 10px;
   border-radius: 5px;
   margin: 5px;
+}
+
+.disabled {
+  background-color: transparent;
+  color: #bbb;
+  border: 1px solid #bbb;
+  pointer-events: none
 }
 
 .warning {
