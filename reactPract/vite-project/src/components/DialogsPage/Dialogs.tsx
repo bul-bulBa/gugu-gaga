@@ -13,8 +13,6 @@ const Dialogs = () => {
     const {id: stringId} = useParams(); 
     const id: number = stringId ? +stringId : 0
 
-    console.log(state)
-    console.log('updated')
     return (
         <div className=' p-10'>
             {state

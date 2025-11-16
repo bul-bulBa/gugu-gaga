@@ -1,8 +1,9 @@
 import {useState, useEffect, useRef} from 'react'
 import { useAppDispatch, useAppState } from '../../store/StoreConfig'
 import {selectAuthId, selectHeFollowed} from '../../store/reducers/authInfoSlice'
-import {setMessage, addMessage, setChatters, setChatter, 
-    selectChatter, removeMessage, changeMessage } from '../../store/reducers/dialogsPageSlice'
+import {setMessage, addMessage, setDialogs, setChatter, 
+    selectChatter, removeMessage, changeMessage,
+    updateDialog, updateUnreadMessages } from '../../store/reducers/dialogsPageSlice'
 import Dialogs from "./Dialogs"
 import DialogItems from "./DialogItems"
 
@@ -10,6 +11,7 @@ export let getMessages: any
 export let newMessage: any
 export let editMessage: any
 export let deleteMessage: any
+export let onRead: any
 const DialogsPage = () => {
     const dispatch = useAppDispatch()
     const socket = useRef<WebSocket>(null!)
@@ -28,19 +30,21 @@ const DialogsPage = () => {
             const message = JSON.parse(event.data)
             if(message.type === 'messages') dispatch(setMessage(message.payload))
             if(message.type === 'addMessage') dispatch(addMessage(message.payload))
-            if(message.type === 'chatters') dispatch(setChatters(message.payload))
+            if(message.type === 'chatters') dispatch(setDialogs(message.payload))
             if(message.type === 'deleteMessage') dispatch(removeMessage(message.payload))
             if(message.type === 'editMessage') dispatch(changeMessage(message.payload))
+            if(message.type === 'youReadMessage') dispatch(updateDialog(message.payload))
+            if(message.type === 'heReadMessage') dispatch(updateUnreadMessages())
             console.log(message.payload)
         }
     }
-    getMessages = (userBclicked: any) => {
-        dispatch(setChatter(userBclicked))
+    getMessages = (userBclickedId: string) => {
+        dispatch(setChatter(userBclickedId))
         const message = {
             event: 'getMessages',
             payload: {
                 userA,
-                userB: userBclicked._id
+                userB: userBclickedId
             }
         }
         socket.current.send(JSON.stringify(message))
@@ -50,7 +54,7 @@ const DialogsPage = () => {
         socket.current.send(JSON.stringify({
             event: 'getChatters',
             payload: {
-                usersId: heFollowed
+                userId: userA
             }
         }))
     }
@@ -61,7 +65,7 @@ const DialogsPage = () => {
             payload: {
                 text,
                 writerId: userA,
-                readerId: userB._id
+                readerId: userB
             }
         }
         socket.current.send(JSON.stringify(message))
@@ -73,7 +77,7 @@ const DialogsPage = () => {
             payload: {
                 messageId,
                 text,
-                readerId: userB._id
+                readerId: userB
             }
         }
         socket.current.send(JSON.stringify(message))
@@ -84,10 +88,27 @@ const DialogsPage = () => {
             event: 'deleteMessage',
             payload: {
                 messageId,
-                readerId: userB._id
+                readerId: userB
             }
         }
         socket.current.send(JSON.stringify(message))
+    }
+
+    onRead = () => {
+        socket.current.send(JSON.stringify({
+            event: 'onRead',
+            payload: {
+                readerId: userA,
+                writerId: userB
+            }
+        }))
+    }
+
+    const addNewDialog = (userBId: string) => {
+        socket.current.send(JSON.stringify({
+            event: 'makeNewDialog',
+            payload: {  userAId: userA, userBId }
+        }))
     }
 
     useEffect(() => {
@@ -101,6 +122,8 @@ const DialogsPage = () => {
             <div className='border-r-1'></div>
 
             <Dialogs />
+
+            {/* <button onClick={() => addNewDialog('68ff5564b8cb9d8808983458')}>.</button> */}
         </div>
     )
 }

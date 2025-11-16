@@ -30,7 +30,7 @@ class ChangeService {
             id,
             {$set: {status: text}},
             {new: true}
-        )
+        ) 
 
         return text
     }

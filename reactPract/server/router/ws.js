@@ -32,25 +32,26 @@ const initWebSocket = (server) => {
                 break
 
                 case 'getChatters': 
-                    const {usersId} = message.payload
-                    const users = await wsService.getUsers(usersId)
+                    const {userId} = message.payload
+                    const dialogs = await wsService.getUsers(userId)
                     ws.send(JSON.stringify({
                         type: 'chatters',
-                        payload: users
+                        payload: dialogs
                     }))
                 break
 
                 case 'addMessage': {
                     const {writerId, readerId, text} = message.payload
                     const newMessage = await wsService.addMessage(writerId, readerId, text)
-                    const res = JSON.stringify({ type: 'addMessage', payload: newMessage })
+                    const changedDialog = await wsService.changeLastMessage(writerId, readerId, text)
+                    const res = JSON.stringify({ type: 'addMessage', payload: {message: newMessage, dialog: changedDialog} })
                     ws.send(res)
                     const received = clients.get(readerId)
                     if(received) received.send(res)
                 break
                 }
 
-                case 'editMessage':{
+                case 'editMessage': {
                     const {messageId, readerId, text} = message.payload
                     const editedMessage = await wsService.editMessage(messageId, text)
                     const res = JSON.stringify({ type: 'editMessage', payload: editedMessage})
@@ -68,6 +69,23 @@ const initWebSocket = (server) => {
                     const received = clients.get(readerId)
                     if(received) received.send(res)
                     break
+                }
+
+                case 'makeNewDialog': {
+                    const {userAId, userBId} = message.payload
+                    await wsService.makeNewDialog(userAId, userBId)
+                    ws.send(JSON.stringify('new dialog was maked'))
+                    break
+                }
+
+                case 'onRead': {
+                    const {readerId, writerId} = message.payload
+
+                    const dialog = await wsService.onRead(writerId, readerId)
+                    console.log('RESPONSE ', dialog)
+                    ws.send(JSON.stringify({type: 'youReadMessage', payload: dialog}))
+                    const writer = clients.get(writerId)
+                    if(writer) writer.send(JSON.stringify({type: 'heReadMessage', payload: 'messages has been readed' }))
                 }
 
                 }
