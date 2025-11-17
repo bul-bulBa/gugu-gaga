@@ -45,7 +45,8 @@ class wsService {
         })
         if(dialog) {
             dialog.lastMessage = text
-            dialog.unread.set(readerId, 1)
+            const current = dialog.unread.get(readerId)
+            dialog.unread.set(readerId, current + 1)
             await dialog.save()
         }
 
@@ -65,10 +66,9 @@ class wsService {
               { "participants.userAId": readerId, "participants.userBId": writerId }
             ]
           },
-          { $unset: { [`uread.${readerId}`]: "" } },
+          { $set: { [`unread.${readerId}`]: 0 } },
           { new: true }
         )
-        console.log('DIALOG ', dialog)
         return dialog
     }
 
@@ -83,11 +83,36 @@ class wsService {
 
     async editMessage(messageId, newText) { 
         const message = await messageModel.findByIdAndUpdate( messageId, { $set: { text: newText, edited: true}}, { new: true} )
-        return message
+
+        const dialog = await this.changeLastMessage(message.writerId, message.readerId)
+        return {message, dialog}
     }
 
-    async deleteMessage(messageId) {
+    async deleteMessage(messageId, writerId, readerId) {
+
         await messageModel.findByIdAndDelete(messageId)
+
+        const dialog = await this.changeLastMessage(writerId, readerId)
+        return dialog
+    }
+
+    async changeLastMessage(writerId, readerId) {
+        let lastMessage = await messageModel.findOne({ 
+            $or: [
+                {writerId, readerId},
+                {readerId: writerId, writerId: readerId}
+            ]
+         }, {}, { sort: { _id: -1} })
+        if(!lastMessage) lastMessage = {text: ''}
+        
+        const dialog = await dialogModel.findOneAndUpdate({
+            $or: [
+              { "participants.userAId": writerId, "participants.userBId": readerId },
+              { "participants.userAId": readerId, "participants.userBId": writerId }
+            ]
+        }, { $set: { lastMessage: lastMessage.text}}, { new: true})
+
+        return dialog
     }
 
     // async getId(ws, req) {

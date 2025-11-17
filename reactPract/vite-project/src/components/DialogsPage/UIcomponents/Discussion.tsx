@@ -1,6 +1,6 @@
 import '../../../App.css'
 import { useRef, useEffect, useState } from 'react'
-import {dialogsMessageType, selectChatter} from '../../../store/reducers/dialogsPageSlice'
+import {dialogsMessageType, selectChatter, selectDialogs, exitFromDialog} from '../../../store/reducers/dialogsPageSlice'
 import {useAppState, useAppDispatch} from '../../../store/StoreConfig'
 import {selectAuthId} from '../../../store/reducers/authInfoSlice'
 import {selectUser, } from '../../../store/reducers/profilePageSlice'
@@ -9,28 +9,36 @@ import Message from './Message'
 
 type propsType = {state: Array<dialogsMessageType>}
 
-const Discussion = ({state}: propsType) => {
+const Discussion = () => {
     // const {name, avatar} = useAppState(selectChatter)
+    const dispatch = useAppDispatch()
+    const state = useAppState(selectDialogs)
     const user = useAppState(selectUser)
     const id = useAppState(selectAuthId)
     const lastMessageRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
-    const [hasBeenRead, setHasBeenRead] = useState(false)
-
-    const lastIndex = [...state].reverse().findIndex(m => m.readerId === id)
-    const actualIndex = lastIndex === -1 ? -1 : state.length - 1 - lastIndex
+    
+    const reverseLastIndex = [...state].reverse().findIndex(m => m.readerId === id)
+    const lastIndex = reverseLastIndex === -1 ? -1 : state.length - 1 - reverseLastIndex
 
     useEffect(() => {
-      // Observe the last message inside the scrollable container.
-      // Use the container as the root so intersection is calculated relative to the scrollable div.
+      return () => {
+        dispatch(exitFromDialog())
+      }
+    }, [])
+    
+    // console.log(state.map(m => m.read))
+    // debugger
+    useEffect(() => {
       const rootEl = containerRef.current
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting && !hasBeenRead) {
-              console.log('MESSAGE IS READ')
-              setHasBeenRead(true)
+            // debugger
+            if (entry.isIntersecting && !state[lastIndex].read) {
+              // console.log('MESSAGE IS READ', state[lastIndex].read, state[lastIndex])
               onRead()
+              observer.disconnect()
             }
           })
         },
@@ -44,8 +52,7 @@ const Discussion = ({state}: propsType) => {
         if (el) observer.unobserve(el)
         observer.disconnect()
       }
-      // Re-run when the observed element index or read state changes.
-    }, [actualIndex, hasBeenRead])
+    }, [lastIndex])
 
   return (
     <div ref={containerRef} className='flex flex-col gap-[10%] h-[500px] overflow-y-auto scrollbar-hide w-full'>
@@ -55,7 +62,7 @@ const Discussion = ({state}: propsType) => {
         const message = m.writerId === id
         ? <Message key={m._id} position={'right'} message={m} date={time} />
         : <Message key={m._id} position={'left'} message={m} date={time}/>
-        return <div ref={i === actualIndex ? lastMessageRef : null} key={m._id}>{message}</div>
+        return <div ref={i === lastIndex ? lastMessageRef : null} key={m._id}>{message}</div>
       })}
 
     </div>

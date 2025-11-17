@@ -23,30 +23,48 @@ const dialogsPageSlice = createSlice({
      },
     reducers: {
         setMessage(state, action: PayloadAction<dialogsMessageType[]>) {
-            state.messages = action.payload
+            // Merge incoming messages but preserve any `read: true` flags
+            // that are already set in the client state to avoid races where
+            // a later server payload (or older snapshot) resets them to false.
+            const incoming = action.payload
+            const existingById = new Map(state.messages.map(m => [m._id, m]))
+            state.messages = incoming.map(m => {
+                const existing = existingById.get(m._id)
+                if (existing && existing.read) return { ...m, read: true }
+                return m
+            })
+        },
+        exitFromDialog(state) {
+            state.messages = []
+            state.chatter = { _id: ''}
         },
         addMessage(state, action) {
+            console.log('ADDMESSAGE')
             state.messages = [...state.messages, action.payload.message]
             const index = state.dialogs.findIndex(d => d._id === action.payload.dialog._id)
             state.dialogs[index] = action.payload.dialog
         },
         removeMessage(state, action) {
             console.log(action.payload)
-            const index = state.messages.findIndex(m => m._id === action.payload)
+            const index = state.messages.findIndex(m => m._id === action.payload.messageId)
             state.messages.splice(index, 1)
+            const dialogIndex = state.dialogs.findIndex(d => d._id === action.payload.dialog._id)
+            state.dialogs[dialogIndex] = action.payload.dialog
         },
         setDialogs(state, action) {
             state.dialogs = action.payload
         },
         setChatter(state, action) {
-            state.chatter = action.payload
+            state.chatter._id = action.payload
         },
         changeMessage(state, action) {
-            const message = state.messages.find(m => m._id === action.payload._id)
-            if(message) Object.assign(message, action.payload)
+            const messageIndex = state.messages.findIndex(m => m._id === action.payload.message._id)
+            state.messages[messageIndex] = action.payload.message
+
+            const dialogIndex = state.dialogs.findIndex(d => d._id === action.payload.dialog._id)
+            state.dialogs[dialogIndex] = action.payload.dialog
         },
         updateDialog(state, action) {
-            console.log(action.payload)
             const dialog = state.dialogs.find(d => d._id === action.payload._id)
             if(dialog) Object.assign(dialog, action.payload)
         },
@@ -56,6 +74,7 @@ const dialogsPageSlice = createSlice({
                     m.read = true
                 }
             })
+            console.log('UPDATE', state.messages.map(m => m.read))
         }
     }
 })
@@ -69,4 +88,4 @@ export const selectChatter = (state: stateType) => state.dialogs.chatter
 export default dialogsPageSlice.reducer
 export const {setMessage, addMessage, setDialogs, 
     setChatter, removeMessage, changeMessage, 
-    updateDialog, updateUnreadMessages} = dialogsPageSlice.actions
+    updateDialog, updateUnreadMessages, exitFromDialog} = dialogsPageSlice.actions

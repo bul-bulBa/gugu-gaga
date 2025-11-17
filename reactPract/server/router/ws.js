@@ -53,8 +53,8 @@ const initWebSocket = (server) => {
 
                 case 'editMessage': {
                     const {messageId, readerId, text} = message.payload
-                    const editedMessage = await wsService.editMessage(messageId, text)
-                    const res = JSON.stringify({ type: 'editMessage', payload: editedMessage})
+                    const obj = await wsService.editMessage(messageId, text)
+                    const res = JSON.stringify({ type: 'editMessage', payload: obj})
                     ws.send(res)
                     const received = clients.get(readerId)
                     if(received) received.send(res)
@@ -62,9 +62,9 @@ const initWebSocket = (server) => {
                 }
 
                 case 'deleteMessage': {
-                    const {messageId, readerId} = message.payload
-                    await wsService.deleteMessage(messageId)
-                    const res = JSON.stringify({ type: 'deleteMessage', payload: messageId})
+                    const {messageId, writerId, readerId} = message.payload
+                    const dialog = await wsService.deleteMessage(messageId, writerId, readerId)
+                    const res = JSON.stringify({ type: 'deleteMessage', payload: {messageId, dialog}})
                     ws.send(res)
                     const received = clients.get(readerId)
                     if(received) received.send(res)
@@ -82,7 +82,6 @@ const initWebSocket = (server) => {
                     const {readerId, writerId} = message.payload
 
                     const dialog = await wsService.onRead(writerId, readerId)
-                    console.log('RESPONSE ', dialog)
                     ws.send(JSON.stringify({type: 'youReadMessage', payload: dialog}))
                     const writer = clients.get(writerId)
                     if(writer) writer.send(JSON.stringify({type: 'heReadMessage', payload: 'messages has been readed' }))

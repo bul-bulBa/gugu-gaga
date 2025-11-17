@@ -2,7 +2,7 @@
       "extends": "./tsconfig.json",
       "compilerOptions": {
         "composite": true,
-        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "lib": ["DOM", "DOM.Iterable", "ESNext", "ES2023"],
         "module": "ESNext",
         "skipLibCheck": true,
         "jsx": "react-jsx",

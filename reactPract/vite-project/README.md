@@ -10,3 +10,6 @@ Currently, two official plugins are available:
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+### Чому на бекенді current не віднімається по одному, а обнуляється
+Оскільки для встановлення, що повідомлення прочитано, береться lastFindIndex with read: false, і навіть якщо користувач в полі зору має не прочитані повідомлення, але які не є останнім з непрочитаних, то функція onRead не буде запускатись. Ця фукнція запуститься тільки після того, як в поле зору попаде останнє не прочитане повідомлення, тому й на бекенді в методі onRead кількість не прочитаних просто обнуляється 

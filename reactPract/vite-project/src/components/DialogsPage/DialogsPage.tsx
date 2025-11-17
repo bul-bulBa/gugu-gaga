@@ -7,6 +7,7 @@ import {setMessage, addMessage, setDialogs, setChatter,
 import Dialogs from "./Dialogs"
 import DialogItems from "./DialogItems"
 
+// export let isConnected: boolean
 export let getMessages: any
 export let newMessage: any
 export let editMessage: any
@@ -16,7 +17,7 @@ const DialogsPage = () => {
     const dispatch = useAppDispatch()
     const socket = useRef<WebSocket>(null!)
     const userA = useAppState(selectAuthId)
-    const userB = useAppState(selectChatter)
+    const {_id: userB} = useAppState(selectChatter)
     const heFollowed = useAppState(selectHeFollowed)
 
     function connect() {
@@ -33,9 +34,12 @@ const DialogsPage = () => {
             if(message.type === 'chatters') dispatch(setDialogs(message.payload))
             if(message.type === 'deleteMessage') dispatch(removeMessage(message.payload))
             if(message.type === 'editMessage') dispatch(changeMessage(message.payload))
-            if(message.type === 'youReadMessage') dispatch(updateDialog(message.payload))
             if(message.type === 'heReadMessage') dispatch(updateUnreadMessages())
-            console.log(message.payload)
+            if(message.type === 'youReadMessage') {
+                dispatch(updateDialog(message.payload))
+                dispatch(updateUnreadMessages())
+            }
+            // console.log(message.payload)
         }
     }
     getMessages = (userBclickedId: string) => {
@@ -88,7 +92,8 @@ const DialogsPage = () => {
             event: 'deleteMessage',
             payload: {
                 messageId,
-                readerId: userB
+                readerId: userB,
+                writerId: userA
             }
         }
         socket.current.send(JSON.stringify(message))
@@ -127,6 +132,5 @@ const DialogsPage = () => {
         </div>
     )
 }
-
 
 export default DialogsPage
