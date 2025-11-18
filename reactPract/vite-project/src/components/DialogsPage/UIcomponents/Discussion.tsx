@@ -21,11 +21,22 @@ const Discussion = () => {
     const reverseLastIndex = [...state].reverse().findIndex(m => m.readerId === id)
     const lastIndex = reverseLastIndex === -1 ? -1 : state.length - 1 - reverseLastIndex
 
+    const handleAutoScroll = () => {
+      const container = containerRef.current
+      if(!container) return
+
+      const isNearBottom = container.scrollTop - container.clientHeight < 50
+      if(!isNearBottom) container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+      else container.scrollTop = container.scrollHeight
+    }
+
     useEffect(() => {
       return () => {
         dispatch(exitFromDialog())
       }
     }, [])
+
+    useEffect(() =>  handleAutoScroll() , [state])
     
     // console.log(state.map(m => m.read))
     // debugger
