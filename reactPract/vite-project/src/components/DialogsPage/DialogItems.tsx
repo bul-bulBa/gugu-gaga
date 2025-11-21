@@ -21,7 +21,7 @@ function DialogItems() {
                     const countOfUnread = d.unread[authUserId] !== 0 
                     ? <div className='bg-green-400 rounded-full'>{d.unread[authUserId]}</div>
                     : <span></span>
-
+                    console.log(d.unread[authUserId])
                     return (
                         <span className={`m-2 rounded-xl p-3 ${chatterId === otherUser.id && 'bg-blue-50'}`} 
                         key={`user - ` + otherUser.id} onClick={() => getMessages(otherUser.id)}>

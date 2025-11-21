@@ -1,3 +1,4 @@
+import { MessageOutlined } from '@ant-design/icons'
 import MyPosts from './UIcomponents/MyPosts';
 import ProfileDescription from "./UIcomponents/ProfileDescription";
 import LoadingComponent from '../../commonComponents/LoadingComponent'
@@ -9,6 +10,7 @@ import {useParams, useNavigate} from 'react-router-dom'
 import {selectAuth, authInfoType} from '../../store/reducers/authInfoSlice'
 import {useAppState, useAppDispatch} from '../../store/StoreConfig'
 import {clearPosts} from '../../store/reducers/postsPageSlice'
+import { setNewDialogId } from '../../store/reducers/dialogsPageSlice'
 
 function Profile() {
   // get some info
@@ -25,6 +27,10 @@ function Profile() {
   // const addPosts = (): void => dispatch(addPost())
   const changeStatus = (text: string) => dispatch(changeStatusThunk(text))
   // const changeAvatar = (file: File) => dispatch(changeAvatarThunk(file))
+  const makeNewDialogFunc = () => {
+    dispatch(setNewDialogId(id))
+    navigate('/dialogs')
+  }
   
   useEffect(() => {
     if(!id) {
@@ -54,7 +60,8 @@ function Profile() {
               changeStatus={changeStatus}/>
             <MyPosts />
 
-            {itIsMe && <button className='absolute fixed bottom-18 right-4' onClick={() => navigate('/edit')}>Edit</button>}
+            {itIsMe && <button className='sticky bottom-0 ' onClick={() => navigate('/edit')}>Edit</button>}
+            {!itIsMe && <button onClick={makeNewDialogFunc} className='sticky bottom-0'><MessageOutlined /></button>}
           </div>
     )
 }

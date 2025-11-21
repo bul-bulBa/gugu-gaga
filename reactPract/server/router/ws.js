@@ -74,7 +74,9 @@ const initWebSocket = (server) => {
                 case 'makeNewDialog': {
                     const {userAId, userBId} = message.payload
                     await wsService.makeNewDialog(userAId, userBId)
-                    ws.send(JSON.stringify('new dialog was maked'))
+                    const dialogs = await wsService.getUsers(userAId)
+                    const messages = await wsService.getMessages(userAId, userBId)
+                    ws.send(JSON.stringify({type: 'makeNewDialog', payload: { dialogs, messages }}))
                     break
                 }
 

@@ -3,7 +3,8 @@ import { useAppDispatch, useAppState } from '../../store/StoreConfig'
 import {selectAuthId, selectHeFollowed} from '../../store/reducers/authInfoSlice'
 import {setMessage, addMessage, setDialogs, setChatter, 
     selectChatter, removeMessage, changeMessage,
-    updateDialog, updateUnreadMessages } from '../../store/reducers/dialogsPageSlice'
+    updateDialog, updateUnreadMessages, selectMakeNewDialog,
+    makeNewDialog,  } from '../../store/reducers/dialogsPageSlice'
 import Dialogs from "./Dialogs"
 import DialogItems from "./DialogItems"
 
@@ -19,11 +20,20 @@ const DialogsPage = () => {
     const userA = useAppState(selectAuthId)
     const {_id: userB} = useAppState(selectChatter)
     const heFollowed = useAppState(selectHeFollowed)
+    const makeNewDialogId = useAppState(selectMakeNewDialog)
 
     function connect() {
         socket.current = new WebSocket('ws://localhost:5000')
 
         socket.current.onopen = () => {
+            if(makeNewDialogId) {
+                    socket.current.send(JSON.stringify({
+                    event: 'makeNewDialog',
+                    payload: {  userAId: userA, userBId: makeNewDialogId }
+                }))
+            return
+            }
+            
             getUsers()
         }
 
@@ -39,6 +49,7 @@ const DialogsPage = () => {
                 dispatch(updateDialog(message.payload))
                 dispatch(updateUnreadMessages())
             }
+            if(message.type === 'makeNewDialog') dispatch(makeNewDialog(message.payload))
             // console.log(message.payload)
         }
     }
@@ -109,16 +120,10 @@ const DialogsPage = () => {
         }))
     }
 
-    const addNewDialog = (userBId: string) => {
-        socket.current.send(JSON.stringify({
-            event: 'makeNewDialog',
-            payload: {  userAId: userA, userBId }
-        }))
-    }
-
     useEffect(() => {
         connect()
     }, [])
+    
 
     return (
         <div className='flex gap-[5%] p-10'>

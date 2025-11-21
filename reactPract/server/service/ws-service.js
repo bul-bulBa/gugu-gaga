@@ -17,9 +17,18 @@ class wsService {
         const userA = await userModel.findById(userAId)
         const userB = await userModel.findById(userBId)
 
-        await dialogModel.create(
+        let dialog = await dialogModel.findOne({
+            $or: [
+                {"participants.userAId": userAId, "participants.userBId": userBId},
+                {"participants.userAId": userBId, "participants.userBId": userAId}
+            ]
+        })
+
+        if(!dialog) {
+            dialog = await dialogModel.create(
             {participants: {userAId, userBId}, 
             participantsNames: {userAName: userA.name, userBName: userB.name}}) 
+        }
     }
 
     async getMessages(user1, user2) {
@@ -47,6 +56,7 @@ class wsService {
             dialog.lastMessage = text
             const current = dialog.unread.get(readerId)
             dialog.unread.set(readerId, current + 1)
+            console.log('UNREAD ', current)
             await dialog.save()
         }
 

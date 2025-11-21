@@ -73,8 +73,6 @@ const ProfileDescription: React.FC<propsType> = (props) => {
         <div>
           {statusSpan}
         </div>
-        <div className='sticky bottom-1 right-1 z-2'>
-        </div>
     </div>
     )
 }

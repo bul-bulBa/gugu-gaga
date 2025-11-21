@@ -19,7 +19,8 @@ const dialogsPageSlice = createSlice({
             _id: '',
             // name: '',
             // avatar: ''
-        }
+        },
+        makeNewDialog: ''
      },
     reducers: {
         setMessage(state, action: PayloadAction<dialogsMessageType[]>) {
@@ -75,6 +76,16 @@ const dialogsPageSlice = createSlice({
                 }
             })
             console.log('UPDATE', state.messages.map(m => m.read))
+        },
+        makeNewDialog(state, action) {
+            state.dialogs = action.payload.dialogs
+            state.messages = action.payload.messages
+            state.chatter._id = state.makeNewDialog
+            state.makeNewDialog = ''
+            console.log(state.chatter._id)
+        },
+        setNewDialogId(state, action) {
+            state.makeNewDialog = action.payload
         }
     }
 })
@@ -84,8 +95,10 @@ const dialogsPageSlice = createSlice({
 export const selectDialogs = (state: stateType) => state.dialogs.messages
 export const selectChatters = (state: stateType) => state.dialogs.dialogs
 export const selectChatter = (state: stateType) => state.dialogs.chatter
+export const selectMakeNewDialog = (state: stateType) => state.dialogs.makeNewDialog
 
 export default dialogsPageSlice.reducer
 export const {setMessage, addMessage, setDialogs, 
     setChatter, removeMessage, changeMessage, 
-    updateDialog, updateUnreadMessages, exitFromDialog} = dialogsPageSlice.actions
+    updateDialog, updateUnreadMessages, exitFromDialog, 
+    makeNewDialog, setNewDialogId, } = dialogsPageSlice.actions
