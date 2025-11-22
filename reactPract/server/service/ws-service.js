@@ -45,7 +45,7 @@ class wsService {
         return message
     }
 
-    async changeLastMessage(writerId, readerId, text) {
+    async changeLastMessageNewText(writerId, readerId, text) {
         const dialog = await dialogModel.findOne({
             $or: [
                 {"participants.userAId": writerId, "participants.userBId": readerId},
@@ -53,13 +53,11 @@ class wsService {
             ]
         })
         if(dialog) {
-            dialog.lastMessage = text
+            dialog.lastMessage = text 
             const current = dialog.unread.get(readerId)
             dialog.unread.set(readerId, current + 1)
-            console.log('UNREAD ', current)
             await dialog.save()
         }
-
         return dialog
     }
 
