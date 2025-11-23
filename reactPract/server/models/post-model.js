@@ -9,7 +9,8 @@ const postSchema = new Schema({
     userId: {type: Schema.Types.ObjectId, required: true},
     text: {type: String, required: true},
     likes: {type: Number, required: true, default: 0},
-    repliedPost: replySchema
+    repliedPost: replySchema,
+    img: [{type: String}]
 })
 
 export default model('Post', postSchema)

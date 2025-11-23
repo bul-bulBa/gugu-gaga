@@ -2,11 +2,14 @@ import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit'
 import {stateType} from '../StoreConfig'
 import {posts} from '../../api/api'
 
+export type addPostType = { file: File | null, text: string}
+
 export type postType = {
     _id: string,
     text: string,
     likes: number,
     liked: boolean,
+    img: string[] | string | null,
     user: {
         _id: string,
         name: string,
@@ -15,7 +18,8 @@ export type postType = {
     repliedPost?: {
         text: string, 
         name: string,
-        avatar: string
+        avatar: string,
+        img: string[] | string | null,
     }
 }
 
@@ -31,10 +35,10 @@ export const getPostsThunk = createAsyncThunk<postType[], getPostType>(
     }
 )
 
-export const addPostThunk = createAsyncThunk<postType, string>(
+export const addPostThunk = createAsyncThunk<postType, addPostType>(
     'posts/addPostThunk',
-    async (text) => {
-        return await posts.addPost(text)
+    async (data) => {
+        return await posts.addPost(data)
     }
 )
 

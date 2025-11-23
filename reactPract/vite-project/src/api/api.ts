@@ -2,7 +2,7 @@ import axios from 'axios'
 import {actionLoginType, stateUserType, actionSignUpType} from '../store/reducers/authInfoSlice'
 import {getUsersType, resultUsersType, autoComplType} from '../store/reducers/usersPageSlice'
 import {editProfileType, userType} from '../store/reducers/profilePageSlice'
-import {postType, getPostType} from '../store/reducers/postsPageSlice'
+import {postType, getPostType, addPostType} from '../store/reducers/postsPageSlice'
 import {request} from './interceptor'
 
 
@@ -89,8 +89,13 @@ export const posts = {
         return request.get(`/post`, { params })
         .then((res): postType[] => res.data)
     },
-    addPost(text: string) {
-        return request.post('/post', {text})
+    addPost(data: addPostType) {
+        // const img = data.file ? data.file : ''
+        const formData = new FormData()
+        formData.append('text', data.text)
+        if(data.file) formData.append('img', data.file)
+        console.log('IMAGE ', formData, data)
+        return request.post('/post', formData)
         .then((res): postType => res.data)
     },
     deletePost(id: string) {

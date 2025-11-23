@@ -2,20 +2,23 @@ import { ObjectId } from 'mongodb'
 import postModel from '../models/post-model.js'
 import likesModel from '../models/likes-model.js'
 import userModel from '../models/user-model.js'
+import imageModel from '../models/image-model.js'
+import PostDto from '../dto/post-dto.js'
 import ApiError from '../exceptions/api-error.js'
 import tokenService from './token-service.js'
 
 class postService {
-    async newPost(token, TEXT) {
+    async newPost(token, TEXT, img) {
         const {id} = tokenService.validateAccessToken(token)
         if(!id) throw ApiError.Unauthorized()
-        const user = await userModel.findById(id)
+        const user = await userModel.findById(id) 
 
-        const post = await postModel.create({userId: id, text: TEXT, likes: 0})
-        // toObject перетворює mongoose object з додатковими методами у звичайний об'єкт
-        const {_id, text, likes} = post.toObject()
+        let post = await postModel.create({userId: id, text: TEXT, likes: 0})
+        if(img) post = await this.addImageToPost(img, post._id)
 
-        return { _id, text, likes, user: {name: user.name, avatar: user.avatar, _id: user._id}}
+        const postDto = new PostDto(post, user, null, null)
+
+        return postDto
     }
 
     async deletePost(postId) {
@@ -102,11 +105,13 @@ class postService {
               text: 1,
               likes: 1,
               liked: 1,
+              img: 1,
               'user._id': 1,
               'user.name': 1,
               'user.avatar': 1,
               repliedPost: {
                 text: '$repliedPostData.text',
+                img: '$repliedPostData.img',
                 name: '$repliedUser.name',
                 avatar: '$repliedUser.avatar'
               }
@@ -140,7 +145,7 @@ class postService {
       if(updatedPost.repliedPost?.postId) {
         const repliedPost = await postModel.findById(updatedPost.repliedPost.postId)
         const repliedUser = await userModel.findById(updatedPost.repliedPost.userId)
-        if(repliedPost) reply = {text: repliedPost.text, name: repliedUser.name, avatar: repliedUser.avatar}
+        if(repliedPost) reply = {text: repliedPost.text, name: repliedUser.name, avatar: repliedUser.avatar, img: repliedPost.img}
       }
 
         return { 
@@ -148,6 +153,7 @@ class postService {
           text: updatedPost.text, 
           _id: updatedPost._id, 
           likes: updatedPost.likes,
+          img: updatedPost.img,
           liked,
           repliedPost: reply}
     } 
@@ -163,11 +169,27 @@ class postService {
       const reply = await postModel.create({userId: id, text: TEXT, likes: 0, 
         repliedPost:{userId: repliedUserId, postId: repliedPostId}})
 
-        const { _id, text, likes} = reply.toObject()
+      const postDto = new PostDto(reply, user, repliedPost, repliedUser)
 
-      return { _id, text, likes, 
-        user: {name: user.name, avatar: user.avatar, _id: user._id}, 
-        repliedPost:{name: repliedUser.name, avatar: repliedUser.avatar, text: repliedPost.text} }
+      return postDto
+    }
+
+    async addImageToPost(img, postId) {
+      console.log('IMAGE ', img)
+      const image = new imageModel({
+          data: img.buffer,
+          filename: img.originalname,
+          contentType: img.mimetype
+      })
+      await image.save()
+
+      const post = await postModel.findByIdAndUpdate(
+        postId,
+        { $push: { img: `http://localhost:${process.env.PORT}/api/image/${image._id}`}},
+        { new: true }
+      )
+
+      return post
     }
 }
 

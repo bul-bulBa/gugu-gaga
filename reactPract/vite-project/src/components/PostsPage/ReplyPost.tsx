@@ -23,12 +23,13 @@ const ReplyPost = ({post, closeFunc}: propsType) => {
     }
 
     return (
-        <div className='absolute w-[400px] m-0 p-3 border rounded-xl bg-stone-50 flex flex-col gap-5'>
+        <div className='absolute fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+        w-[400px] m-0 p-3 border rounded-xl bg-stone-50 flex flex-col gap-5'>
             <div className='flex justify-start'>
                 <button className='rounded-full bg-stone-200' onClick={() => closeFunc(undefined)}>X</button>
             </div>
 
-            <div className="grid grid-cols[10px_1fr] grid-rows[10px_200px] p-3 w-[220px]">
+            <div className="grid grid-cols[10px_1fr] grid-rows[10px_200px_100px] p-3 w-[220px]">
                 <div className="col-start-1 row-start-1">
                     {!post.user.avatar
                         ? <img src={defaultAvatar} alt="avatar"  className="w-10 h-10 rounded-full"/>
@@ -36,6 +37,7 @@ const ReplyPost = ({post, closeFunc}: propsType) => {
                 </div>
                 <div className="col-start-2 row-start-1 flex justify-start">{post.user.name}</div>
                 <div className="col-start-1 col-span-2 row-start-2 flex justify-start">{post.text}</div>
+                {post.img && <div className='col-start-1 col-span-2, row-start-3 w-full'><img src={post.img[0]} alt="" /></div>}
             </div>
             
             <TextArea 
