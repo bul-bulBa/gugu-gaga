@@ -1,4 +1,5 @@
 import {DeleteOutlined, HeartFilled, HeartOutlined, CommentOutlined} from '@ant-design/icons'
+import { Image } from 'antd'
 import defaultAvatar from '../../assets/userPhoto.webp'
 import { useAppDispatch, useAppState } from "../../store/StoreConfig"
 import { postType, deletePostThunk, toggleLikeThunk } from "../../store/reducers/postsPageSlice"
@@ -19,9 +20,27 @@ const Post = (props: propsType) => {
     const toggleLike = () => {
         dispatch(toggleLikeThunk({postId: props.post._id, userId: props.post.user._id}))
     }
+    
+    const position = props.post.img?.length === 1 ? 'w-full' : 'w-[49%]'
+    const renderImages = (arr?: string[] | null) =>
+    arr?.length
+    ? arr.map((src, i) => (
+        <div key={i} className={`${position}`}>
+          <Image
+            src={src}
+            className="rounded-xl"
+            style={{ width: "100%", maxWidth: '100%', height: "auto", display: "block" }}
+          />
+        </div>
+      ))
+    : null;
+
+
+    const imgArray = props.post.img ? renderImages(props.post.img) : null
+    const repliedImgArray = props.post.repliedPost ? renderImages(props.post.repliedPost.img) : null
 
     return (
-        <div className="flex flex-col gap-3 p-3 w-[200px] sm:w-[300px] md:w-[500px]">
+        <div className="flex flex-col gap-3 p-3 w-[70%]">
             {/* POST */}
             <div className="flex justify-start items-center gap-2">
                 {!props.post.user.avatar
@@ -31,11 +50,11 @@ const Post = (props: propsType) => {
             </div>
 
             <div className="flex text-start break-all whitespace-pre-wrap">{props.post.text}</div>
-            { props.post.img ? <div className='w-full '><img src={props.post.img[0]} className='rounded-xl' /></div> : null}
+            <div className='flex flex-wrap gap-2'>{imgArray}</div>
 
             {/* REPLIED POST */}
             {props.post.repliedPost && Object.keys(props.post.repliedPost || {}).length > 0 && 
-                <div className='flex flex-col gap-3 border rounded-xl m-2 p-2'>
+                <div className='flex flex-col gap-3 border-l-1 m-2 p-2'>
                     <div className="flex justify-start">
                     {!props.post.repliedPost.avatar
                     ? <img src={defaultAvatar} alt="avatar"  className="w-7 h-7 rounded-full"/>
@@ -43,9 +62,7 @@ const Post = (props: propsType) => {
                     <p className="">{props.post.repliedPost.name}</p>
                 </div>
                 <div className="flex text-start break-all whitespace-pre-wrap">{props.post.repliedPost.text}</div>
-
-                { props.post.repliedPost.img 
-                ? <div className='w-full '><img src={props.post.repliedPost.img[0]} className='rounded-xl' /></div> : null}
+                 <div className='flex flex-wrap gap-2'>{repliedImgArray}</div>
 
             </div>}
 

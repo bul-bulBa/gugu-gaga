@@ -7,11 +7,8 @@ class postController {
     async newPost(req, res, next) {
         try{
             const {accessToken} = req.cookies
-            // console.log('CONTROLLERIMG ', req)
-            // const { text } = req.body
-            // const { img } = req.files
 
-            const post = await postService.newPost(accessToken, req.body.text, req.files?.img[0])
+            const post = await postService.newPost(accessToken, req.body.text, req.files?.img)
 
             res.json(post)
         }catch(e) {

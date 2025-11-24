@@ -48,8 +48,10 @@ const AddPost = () => {
                             onChange={(e) => setFieldValue('text', e.target.value)}/>
 
                             <div className='flex justify-between items-center p-3'>
-                                <input id='imageUpload' type="file" name='file' onChange={(e) => {
-                                    setFieldValue('file', e.currentTarget.files?.[0] ?? null)
+                                <input id='imageUpload' type="file" name='file' multiple onChange={(e) => {
+                                    const newFiles = Array.from(e.currentTarget.files ?? [])
+                                    const prev = values.file ?? []
+                                    setFieldValue('file', [...prev, ...newFiles])
                                 }} className='hidden' /> 
                                 
                                 <label htmlFor="imageUpload" className="cursor-pointer">

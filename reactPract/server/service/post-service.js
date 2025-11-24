@@ -12,9 +12,9 @@ class postService {
         const {id} = tokenService.validateAccessToken(token)
         if(!id) throw ApiError.Unauthorized()
         const user = await userModel.findById(id) 
-
+        console.log(img.length)
         let post = await postModel.create({userId: id, text: TEXT, likes: 0})
-        if(img) post = await this.addImageToPost(img, post._id)
+        if(img && img.length > 0) post = await this.addImageToPost(img, post._id)
 
         const postDto = new PostDto(post, user, null, null)
 
@@ -176,16 +176,19 @@ class postService {
 
     async addImageToPost(img, postId) {
       console.log('IMAGE ', img)
-      const image = new imageModel({
+      const images = img.map(img => {
+        return new imageModel({
           data: img.buffer,
           filename: img.originalname,
           contentType: img.mimetype
+        })
       })
-      await image.save()
+      const saved = await Promise.all(images.map(i => i.save()))
+      const urls = saved.map(i => `http://localhost:${process.env.PORT}/api/image/${i._id}`)
 
       const post = await postModel.findByIdAndUpdate(
         postId,
-        { $push: { img: `http://localhost:${process.env.PORT}/api/image/${image._id}`}},
+        { $push: { img: { $each: urls } } },
         { new: true }
       )
 

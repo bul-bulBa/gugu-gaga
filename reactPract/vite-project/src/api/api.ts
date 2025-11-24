@@ -90,11 +90,9 @@ export const posts = {
         .then((res): postType[] => res.data)
     },
     addPost(data: addPostType) {
-        // const img = data.file ? data.file : ''
         const formData = new FormData()
         formData.append('text', data.text)
-        if(data.file) formData.append('img', data.file)
-        console.log('IMAGE ', formData, data)
+        if(data.file) data.file.forEach(f => formData.append('img', f))
         return request.post('/post', formData)
         .then((res): postType => res.data)
     },
