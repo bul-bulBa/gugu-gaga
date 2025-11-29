@@ -8,7 +8,7 @@ class postController {
         try{
             const {accessToken} = req.cookies
 
-            const post = await postService.newPost(accessToken, req.body.text, req.files?.img)
+            const post = await postService.newPost(accessToken, req.body.text, req.files?.file)
 
             res.json(post)
         }catch(e) {

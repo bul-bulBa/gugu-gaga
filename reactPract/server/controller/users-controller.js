@@ -59,8 +59,8 @@ class UsersController {
         try{
             const img = await imageModel.findById(req.params.id)
             if(!img) throw new ApiError.BadRequest('image is not defined')
-
-            res.contentType('image/png')    
+                
+            res.contentType(img.contentType)    
             res.send(img.data)
         }catch(e) {
             next(e)

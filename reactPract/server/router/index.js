@@ -36,7 +36,7 @@ router.get('/profile/:id', usersController.getProfile)
 router.get('/filter', usersController.filter)
 
 // post endpoints
-router.post('/post', upload.fields([{name: 'img'}]), postController.newPost)
+router.post('/post', upload.fields([{name: 'file'}]), postController.newPost)
 router.delete('/post/:id', postController.deletePost)
 router.get('/post', postController.getPosts)
 // router.put('/post', postController.getUserPosts) 

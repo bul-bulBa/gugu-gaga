@@ -2,7 +2,7 @@ import {DeleteOutlined, HeartFilled, HeartOutlined, CommentOutlined} from '@ant-
 import { Image } from 'antd'
 import defaultAvatar from '../../assets/userPhoto.webp'
 import { useAppDispatch, useAppState } from "../../store/StoreConfig"
-import { postType, deletePostThunk, toggleLikeThunk } from "../../store/reducers/postsPageSlice"
+import { postType, deletePostThunk, toggleLikeThunk, fileType } from "../../store/reducers/postsPageSlice"
 import {selectAuthId} from '../../store/reducers/authInfoSlice'
 
 
@@ -22,15 +22,18 @@ const Post = (props: propsType) => {
     }
     
     const position = props.post.img?.length === 1 ? 'w-full' : 'w-[49%]'
-    const renderImages = (arr?: string[] | null) =>
+    const renderImages = (arr?: fileType[] | null) =>
     arr?.length
-    ? arr.map((src, i) => (
+    ? arr.map((file, i) => (
         <div key={i} className={`${position}`}>
-          <Image
-            src={src}
+          {file.type === 'image/png'
+          ? <Image
+            src={file.url}
             className="rounded-xl"
             style={{ width: "100%", maxWidth: '100%', height: "auto", display: "block" }}
           />
+          : <video src={file.url} controls/>
+          }
         </div>
       ))
     : null;

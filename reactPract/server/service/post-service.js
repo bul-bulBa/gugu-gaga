@@ -8,13 +8,13 @@ import ApiError from '../exceptions/api-error.js'
 import tokenService from './token-service.js'
 
 class postService {
-    async newPost(token, TEXT, img) {
+    async newPost(token, TEXT, file) {
         const {id} = tokenService.validateAccessToken(token)
         if(!id) throw ApiError.Unauthorized()
         const user = await userModel.findById(id) 
-        console.log(img.length)
+        console.log(file.length)
         let post = await postModel.create({userId: id, text: TEXT, likes: 0})
-        if(img && img.length > 0) post = await this.addImageToPost(img, post._id)
+        if(file && file.length > 0) post = await this.addFileToPost(file, post._id)
 
         const postDto = new PostDto(post, user, null, null)
 
@@ -174,17 +174,19 @@ class postService {
       return postDto
     }
 
-    async addImageToPost(img, postId) {
-      console.log('IMAGE ', img)
-      const images = img.map(img => {
+    async addFileToPost(file, postId) {
+      const images = file.map(file => {
         return new imageModel({
-          data: img.buffer,
-          filename: img.originalname,
-          contentType: img.mimetype
+          data: file.buffer,
+          filename: file.originalname,
+          contentType: file.mimetype
         })
       })
       const saved = await Promise.all(images.map(i => i.save()))
-      const urls = saved.map(i => `http://localhost:${process.env.PORT}/api/image/${i._id}`)
+      const urls = saved.map(i => ({
+        url: `http://localhost:${process.env.PORT}/api/image/${i._id}`,
+        type: i.contentType
+      }))
 
       const post = await postModel.findByIdAndUpdate(
         postId,

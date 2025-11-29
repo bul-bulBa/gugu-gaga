@@ -3,13 +3,13 @@ import {stateType} from '../StoreConfig'
 import {posts} from '../../api/api'
 
 export type addPostType = { file: File[] | null, text: string}
-
+export type fileType = { url: string, type: string}
 export type postType = {
     _id: string,
     text: string,
     likes: number,
     liked: boolean,
-    img: string[] | null,
+    img: fileType[] | null,
     user: {
         _id: string,
         name: string,
@@ -19,7 +19,7 @@ export type postType = {
         text: string, 
         name: string,
         avatar: string,
-        img: string[] | null,
+        img: fileType[] | null,
     }
 }
 
