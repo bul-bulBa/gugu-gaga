@@ -12,7 +12,7 @@ class postService {
         const {id} = tokenService.validateAccessToken(token)
         if(!id) throw ApiError.Unauthorized()
         const user = await userModel.findById(id) 
-        console.log(file.length)
+        console.log(file?.length)
         let post = await postModel.create({userId: id, text: TEXT, likes: 0})
         if(file && file.length > 0) post = await this.addFileToPost(file, post._id)
 
@@ -27,12 +27,14 @@ class postService {
     }
 
     async getPosts(lastId, userId, token) {
+      // хуєта якась
         let currentUserId
         if(token) {
           const {id} = tokenService.validateAccessToken(token)
           currentUserId = id
         }
         const currentUserIdStr = currentUserId ? String(currentUserId) : null
+      // 
 
         // pagination of posts
         const match = {}
@@ -58,7 +60,7 @@ class postService {
           {
             $lookup: {
               from: 'posts',
-              localField: 'repliedPost.postId',
+              localField: 'repliedPost.0.postId',
               foreignField: '_id',
               as: 'repliedPostData'
             }
@@ -100,6 +102,9 @@ class postService {
             : [{ $addFields: { liked: false } }]
           ),
           {
+            $unset: 'repliedPost'
+          },
+          {
             $project: {
               _id: 1,
               text: 1,
@@ -110,6 +115,7 @@ class postService {
               'user.name': 1,
               'user.avatar': 1,
               repliedPost: {
+                _id: '$repliedPostData._id',
                 text: '$repliedPostData.text',
                 img: '$repliedPostData.img',
                 name: '$repliedUser.name',
@@ -118,7 +124,7 @@ class postService {
             }
           }
         ])
-
+        
         return posts
     }
 
@@ -142,10 +148,10 @@ class postService {
       }
 
       let reply = {}
-      if(updatedPost.repliedPost?.postId) {
-        const repliedPost = await postModel.findById(updatedPost.repliedPost.postId)
-        const repliedUser = await userModel.findById(updatedPost.repliedPost.userId)
-        if(repliedPost) reply = {text: repliedPost.text, name: repliedUser.name, avatar: repliedUser.avatar, img: repliedPost.img}
+      if(updatedPost.repliedPost[0].postId) {
+        const repliedPost = await postModel.findById(updatedPost.repliedPost[0].postId)
+        const repliedUser = await userModel.findById(updatedPost.repliedPost[0].userId)
+        if(repliedPost) reply = {text: repliedPost.text, name: repliedUser.name, avatar: repliedUser.avatar, img: repliedPost.img, _id: repliedPost._id}
       }
 
         return { 
@@ -167,7 +173,7 @@ class postService {
       const repliedPost = await postModel.findById(repliedPostId)
 
       const reply = await postModel.create({userId: id, text: TEXT, likes: 0, 
-        repliedPost:{userId: repliedUserId, postId: repliedPostId}})
+        repliedPost:[{userId: repliedUserId, postId: repliedPostId}, ...repliedPost.repliedPost]})
 
       const postDto = new PostDto(reply, user, repliedPost, repliedUser)
 
@@ -195,6 +201,66 @@ class postService {
       )
 
       return post
+    }
+
+    async replyHistory(postId, token) {
+      const {id} = tokenService.validateAccessToken(token)
+
+      const post = await postModel.findById(postId)
+
+      const replies = await postModel.aggregate([
+        {
+          $match: {
+            'repliedPost.postId': new ObjectId(post._id)
+          }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'user'
+          }
+        },
+        ...(id
+          ? [{
+              $lookup: {
+                from: 'likes',
+                let: { postId: '$_id' },
+                pipeline: [
+                  { $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: [ { $toString: '$postId' }, { $toString: '$$postId' } ] },
+                          { $eq: [ { $toString: '$userId' }, String(id) ] }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                as: 'userLiked'
+              }
+            },
+            { $addFields: { liked: { $gt: [{ $size: '$userLiked' }, 0] } } }
+            ]
+          : [{ $addFields: { liked: false } }]
+        ),
+        { $unwind: '$user'},
+        {
+          $project: {
+            _id: 1,
+            text: 1,
+            likes: 1,
+            liked: 1,
+            img: 1,
+            'user._id': 1,
+            'user.name': 1,
+            'user.avatar': 1,
+          }
+        }
+      ])
+      console.log('REPLIES ', replies, post.repliedPost)
+      return replies
     }
 }
 

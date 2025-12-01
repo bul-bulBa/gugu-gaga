@@ -16,6 +16,7 @@ export type postType = {
         avatar: string
     },
     repliedPost?: {
+        _id: string,
         text: string, 
         name: string,
         avatar: string,
@@ -64,6 +65,13 @@ export const replyPostThunk = createAsyncThunk<postType, {repliedPostId: string,
     }
 )
 
+export const replyHistoryThunk = createAsyncThunk<postType[], string>(
+    'posts/replyHistoryThunk',
+    async (postId) => {
+        return await posts.replyHistory(postId)
+    }
+)
+
 const addPostThunks = [addPostThunk, replyPostThunk]
 
 const postsPageSlice = createSlice({
@@ -91,6 +99,10 @@ const postsPageSlice = createSlice({
             .addCase(toggleLikeThunk.fulfilled, (state, action) => {
                 const index = state.posts.findIndex(p => p._id === action.payload._id)
                 state.posts[index] = action.payload
+            })
+            .addCase(replyHistoryThunk.fulfilled, (state, action) => {
+                state.posts = action.payload
+                state.lastId = ''
             })
             .addMatcher(
                 (action) => addPostThunks.some(t => action.type === t.fulfilled.type),

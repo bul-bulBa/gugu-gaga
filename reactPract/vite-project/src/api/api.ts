@@ -106,5 +106,10 @@ export const posts = {
     replyPost({repliedUserId, repliedPostId, text}: {repliedPostId: string, repliedUserId: string, text: string}) {
         return request.post('/reply', {repliedPostId, repliedUserId, text})
         .then((res): postType => res.data)
+    },
+    replyHistory(postId: string) {
+        console.log('POSTID ', postId)
+        return request.post('/replyHistory', {postId})
+        .then((res): postType[] => res.data)
     }
 }

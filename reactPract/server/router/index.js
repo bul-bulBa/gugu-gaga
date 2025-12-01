@@ -42,5 +42,6 @@ router.get('/post', postController.getPosts)
 // router.put('/post', postController.getUserPosts) 
 router.post('/toggleLike', postController.toggleLikes)
 router.post('/reply', postController.replyPost)
+router.post('/replyHistory', postController.replyHistory)
 
 export default router

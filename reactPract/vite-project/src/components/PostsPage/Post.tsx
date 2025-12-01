@@ -2,7 +2,8 @@ import {DeleteOutlined, HeartFilled, HeartOutlined, CommentOutlined} from '@ant-
 import { Image } from 'antd'
 import defaultAvatar from '../../assets/userPhoto.webp'
 import { useAppDispatch, useAppState } from "../../store/StoreConfig"
-import { postType, deletePostThunk, toggleLikeThunk, fileType } from "../../store/reducers/postsPageSlice"
+import { postType, deletePostThunk, toggleLikeThunk, 
+    fileType, replyHistoryThunk } from "../../store/reducers/postsPageSlice"
 import {selectAuthId} from '../../store/reducers/authInfoSlice'
 
 
@@ -57,17 +58,16 @@ const Post = (props: propsType) => {
 
             {/* REPLIED POST */}
             {props.post.repliedPost && Object.keys(props.post.repliedPost || {}).length > 0 && 
-                <div className='flex flex-col gap-3 border-l-1 m-2 p-2'>
+                <div className='flex flex-col gap-3 border-l-1 m-2 p-2' onClick={() => dispatch(replyHistoryThunk(props.post.repliedPost!._id))}>
                     <div className="flex justify-start">
-                    {!props.post.repliedPost.avatar
-                    ? <img src={defaultAvatar} alt="avatar"  className="w-7 h-7 rounded-full"/>
-                    : <img src={props.post.repliedPost.avatar} alt="avatar"  className="w-7 h-7 rounded-full"/>}
-                    <p className="">{props.post.repliedPost.name}</p>
-                </div>
-                <div className="flex text-start break-all whitespace-pre-wrap">{props.post.repliedPost.text}</div>
-                 <div className='flex flex-wrap gap-2'>{repliedImgArray}</div>
-
-            </div>}
+                        {!props.post.repliedPost.avatar
+                        ? <img src={defaultAvatar} alt="avatar"  className="w-7 h-7 rounded-full"/>
+                        : <img src={props.post.repliedPost.avatar} alt="avatar"  className="w-7 h-7 rounded-full"/>}
+                        <p className="">{props.post.repliedPost.name}</p>
+                    </div>
+                    <div className="flex text-start break-all whitespace-pre-wrap">{props.post.repliedPost.text}</div>
+                    <div className='flex flex-wrap gap-2'>{repliedImgArray}</div>
+                </div>}
 
             {/* REACTION */}
             <div className='flex justify-around md:justify-start md:gap-5'>

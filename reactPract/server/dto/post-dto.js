@@ -12,6 +12,7 @@ export default class PostDto {
         if(post.img) this.img = post.img
         if(repliedPost && repliedUser) {
             this.repliedPost = {
+                _id: repliedPost._id,
                 text: repliedPost.text,
                 name: repliedUser.name,
                 avatar: repliedUser.avatar,

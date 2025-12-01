@@ -62,6 +62,19 @@ class postController {
             next(e)
         }
     }
+
+    async replyHistory(req, res, next) {
+        try{
+            const {accessToken} = req.cookies
+            const {postId} = req.body
+
+            const reply = await postService.replyHistory(postId, accessToken)
+            
+            res.json(reply)
+        }catch(e) {
+            next(e)
+        }
+    }
 }
 
 export default new postController
