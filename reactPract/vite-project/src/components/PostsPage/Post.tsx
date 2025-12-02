@@ -3,7 +3,7 @@ import { Image } from 'antd'
 import defaultAvatar from '../../assets/userPhoto.webp'
 import { useAppDispatch, useAppState } from "../../store/StoreConfig"
 import { postType, deletePostThunk, toggleLikeThunk, 
-    fileType, replyHistoryThunk } from "../../store/reducers/postsPageSlice"
+    fileType, replyHistoryThunk, selectIsHistory } from "../../store/reducers/postsPageSlice"
 import {selectAuthId} from '../../store/reducers/authInfoSlice'
 
 
@@ -15,6 +15,7 @@ type propsType = {
 const Post = (props: propsType) => {
     const dispatch = useAppDispatch()
     const userId = useAppState(selectAuthId)
+    const isHistory = useAppState(selectIsHistory)
 
     const deletePost = () => dispatch(deletePostThunk(props.post._id))
 
@@ -58,7 +59,7 @@ const Post = (props: propsType) => {
 
             {/* REPLIED POST */}
             {props.post.repliedPost && Object.keys(props.post.repliedPost || {}).length > 0 && 
-                <div className='flex flex-col gap-3 border-l-1 m-2 p-2' onClick={() => dispatch(replyHistoryThunk(props.post.repliedPost!._id))}>
+                <div className='flex flex-col gap-3 border-l-1 m-2 p-2' onClick={() => dispatch(replyHistoryThunk(props.post._id))}>
                     <div className="flex justify-start">
                         {!props.post.repliedPost.avatar
                         ? <img src={defaultAvatar} alt="avatar"  className="w-7 h-7 rounded-full"/>
@@ -70,18 +71,20 @@ const Post = (props: propsType) => {
                 </div>}
 
             {/* REACTION */}
-            <div className='flex justify-around md:justify-start md:gap-5'>
-                {props.replyFunc && <div className='col-start-1 row-start-3'
-                onClick={() => props.replyFunc?.(props.post)}><CommentOutlined /></div>}
-
-                <div className='flex gap-2' onClick={toggleLike}>
-                    {props.post.liked ? <HeartFilled /> : <HeartOutlined /> }
-                    <div className=''>{props.post.likes}</div>
+            {!isHistory &&
+                <div className='flex justify-around md:justify-start md:gap-5'>
+                    {props.replyFunc && <div className='col-start-1 row-start-3'
+                    onClick={() => props.replyFunc?.(props.post)}><CommentOutlined /></div>}
+    
+                    <div className='flex gap-2' onClick={toggleLike}>
+                        {props.post.liked ? <HeartFilled /> : <HeartOutlined /> }
+                        <div className=''>{props.post.likes}</div>
+                    </div>
+                    
+                    {userId === props.post.user._id && 
+                    <div className="" onClick={deletePost}><DeleteOutlined /></div>}
                 </div>
-
-                {userId === props.post.user._id && 
-                <div className="" onClick={deletePost}><DeleteOutlined /></div>}
-            </div>
+            }
         </div>
     )
 }

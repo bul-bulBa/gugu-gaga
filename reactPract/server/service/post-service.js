@@ -146,9 +146,9 @@ class postService {
         updatedPost = await postModel.findByIdAndUpdate( postId, { $inc: { likes: 1 }}, { new: true })
         liked = true
       }
-
+      console.log(updatedPost.repliedPost)
       let reply = {}
-      if(updatedPost.repliedPost[0].postId) {
+      if(updatedPost.repliedPost[0] && updatedPost.repliedPost[0].postId) {
         const repliedPost = await postModel.findById(updatedPost.repliedPost[0].postId)
         const repliedUser = await userModel.findById(updatedPost.repliedPost[0].userId)
         if(repliedPost) reply = {text: repliedPost.text, name: repliedUser.name, avatar: repliedUser.avatar, img: repliedPost.img, _id: repliedPost._id}
@@ -207,11 +207,12 @@ class postService {
       const {id} = tokenService.validateAccessToken(token)
 
       const post = await postModel.findById(postId)
+      const postsHistory = post.repliedPost.map(p => p.postId)
 
-      const replies = await postModel.aggregate([
+      let replies = await postModel.aggregate([
         {
           $match: {
-            'repliedPost.postId': new ObjectId(post._id)
+            _id: { $in: postsHistory }
           }
         },
         {
@@ -259,7 +260,12 @@ class postService {
           }
         }
       ])
-      console.log('REPLIES ', replies, post.repliedPost)
+
+      // add replied post to replies posts history
+      const author = await userModel.findById(post.userId)
+      const replyDTO = new PostDto(post, author, null, null)
+      replies.push(replyDTO)
+
       return replies
     }
 }

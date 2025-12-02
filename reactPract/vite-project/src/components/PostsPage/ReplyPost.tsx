@@ -2,8 +2,8 @@ import {useState} from 'react'
 import { useAppDispatch, useAppState } from "../../store/StoreConfig"
 import {Dispatch, SetStateAction} from 'react'
 import defaultAvatar from '../../assets/userPhoto.webp'
-import { postType } from "../../store/reducers/postsPageSlice"
-import { replyPostThunk } from "../../store/reducers/postsPageSlice"
+import { postType, replyPostThunk } from "../../store/reducers/postsPageSlice"
+import Post from './Post'
 import { Input } from 'antd';
 
 const { TextArea } = Input;
@@ -30,14 +30,7 @@ const ReplyPost = ({post, closeFunc}: propsType) => {
             </div>
 
             <div className="grid grid-cols[10px_1fr] grid-rows[10px_200px_100px] p-3 w-[220px]">
-                <div className="col-start-1 row-start-1">
-                    {!post.user.avatar
-                        ? <img src={defaultAvatar} alt="avatar"  className="w-10 h-10 rounded-full"/>
-                        : <img src={post.user.avatar} alt="avatar"  className="w-10 h-10 rounded-full"/>}
-                </div>
-                <div className="col-start-2 row-start-1 flex justify-start">{post.user.name}</div>
-                <div className="col-start-1 col-span-2 row-start-2 flex justify-start">{post.text}</div>
-                {post.img && <div className='col-start-1 col-span-2, row-start-3 w-full'><img src={post.img[0]} alt="" /></div>}
+                <Post post={post} />
             </div>
             
             <TextArea 

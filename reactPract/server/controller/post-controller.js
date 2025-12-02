@@ -40,8 +40,7 @@ class postController {
     }
     async toggleLikes(req, res, next) {
         try{
-            const {postId} = req.body
-            const {userId} = req.body
+            const {postId, userId} = req.body
             const {accessToken} = req.cookies
 
             const post = await postService.toggleLikes(accessToken, userId, postId)

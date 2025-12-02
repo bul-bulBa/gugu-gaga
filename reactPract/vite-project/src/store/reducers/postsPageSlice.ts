@@ -78,7 +78,8 @@ const postsPageSlice = createSlice({
     name: 'posts',
     initialState: {
         posts: [] as postType[],
-        lastId: undefined as string | undefined
+        lastId: undefined as string | undefined,
+        history: false
     },
     reducers: {
         clearPosts(state) {
@@ -91,10 +92,12 @@ const postsPageSlice = createSlice({
             .addCase(getPostsThunk.fulfilled, (state, action) => {
                 state.posts = [...state.posts, ...action.payload]
                 state.lastId = action.payload[action.payload.length - 1]._id
+                state.history = false
             } )
             .addCase(deletePostThunk.fulfilled, (state, action) => {
                 const index = state.posts.findIndex(p => p._id === action.payload)
                 state.posts.splice(index, 1)
+                state.history = false
             })
             .addCase(toggleLikeThunk.fulfilled, (state, action) => {
                 const index = state.posts.findIndex(p => p._id === action.payload._id)
@@ -103,11 +106,13 @@ const postsPageSlice = createSlice({
             .addCase(replyHistoryThunk.fulfilled, (state, action) => {
                 state.posts = action.payload
                 state.lastId = ''
+                state.history = true
             })
             .addMatcher(
                 (action) => addPostThunks.some(t => action.type === t.fulfilled.type),
                 (state, action: PayloadAction<postType>) => {
                     state.posts = [action.payload, ...state.posts]
+                    state.history = false
                 }
             )
     }
@@ -115,6 +120,7 @@ const postsPageSlice = createSlice({
 
 export const selectPosts = (state: stateType) => state.posts.posts
 export const selectLastId = (state: stateType) => state.posts.lastId
+export const selectIsHistory = (state: stateType) => state.posts.history
 
 export default postsPageSlice.reducer
 export const {clearPosts} = postsPageSlice.actions
