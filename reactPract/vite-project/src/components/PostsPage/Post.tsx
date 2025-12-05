@@ -3,7 +3,7 @@ import { Image } from 'antd'
 import defaultAvatar from '../../assets/userPhoto.webp'
 import { useAppDispatch, useAppState } from "../../store/StoreConfig"
 import { postType, deletePostThunk, toggleLikeThunk, 
-    fileType, replyHistoryThunk, selectIsHistory } from "../../store/reducers/postsPageSlice"
+    fileType, replyHistoryThunk, selectIsHistory, setHistory } from "../../store/reducers/postsPageSlice"
 import {selectAuthId} from '../../store/reducers/authInfoSlice'
 
 
@@ -74,7 +74,10 @@ const Post = (props: propsType) => {
             {!isHistory &&
                 <div className='flex justify-around md:justify-start md:gap-5'>
                     {props.replyFunc && <div className='col-start-1 row-start-3'
-                    onClick={() => props.replyFunc?.(props.post)}><CommentOutlined /></div>}
+                    onClick={() => {
+                        dispatch(setHistory(true))
+                        props.replyFunc?.(props.post)}
+                    }><CommentOutlined /></div>}
     
                     <div className='flex gap-2' onClick={toggleLike}>
                         {props.post.liked ? <HeartFilled /> : <HeartOutlined /> }

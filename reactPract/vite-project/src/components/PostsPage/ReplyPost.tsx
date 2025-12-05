@@ -2,7 +2,7 @@ import {useState} from 'react'
 import { useAppDispatch, useAppState } from "../../store/StoreConfig"
 import {Dispatch, SetStateAction} from 'react'
 import defaultAvatar from '../../assets/userPhoto.webp'
-import { postType, replyPostThunk } from "../../store/reducers/postsPageSlice"
+import { postType, replyPostThunk, setHistory } from "../../store/reducers/postsPageSlice"
 import Post from './Post'
 import { Input } from 'antd';
 
@@ -26,7 +26,9 @@ const ReplyPost = ({post, closeFunc}: propsType) => {
         <div className='absolute fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
         w-[400px] m-0 p-3 border rounded-xl bg-stone-50 flex flex-col gap-5'>
             <div className='flex justify-start'>
-                <button className='rounded-full bg-stone-200' onClick={() => closeFunc(undefined)}>X</button>
+                <button className='rounded-full bg-stone-200' onClick={() => {
+                    dispatch(setHistory(false))
+                    closeFunc(undefined) }}>X</button>
             </div>
 
             <div className="grid grid-cols[10px_1fr] grid-rows[10px_200px_100px] p-3 w-[220px]">

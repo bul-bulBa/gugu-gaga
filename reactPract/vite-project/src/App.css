@@ -1,7 +1,8 @@
 @import "tailwindcss";
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
-:root {
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* :root {
   --bg: 255 255 255;
   --text: 17 17 17;
   --border: 229 229 229;
@@ -32,7 +33,7 @@
 
 [data-theme='dark'] a { color: rgb(255, 255, 255) }
 [data-theme='dark'] a:active { color: rgb(255, 255, 255) }
-[data-theme='dark'] a:hover { color: rgb(221, 221, 221)}
+[data-theme='dark'] a:hover { color: rgb(221, 221, 221)} */
 
 a {
   color: #000;

@@ -25,14 +25,16 @@ function App() {
 
   useEffect(() => {
     dispatch(autoLoginThunk())
-    // document.documentElement.setAttribute('data-theme', 'dark')
+    const color = localStorage.getItem('theme')
+    if(color === 'dark') document.documentElement.classList.add('dark')
   }, [])
 
   if(firstLoad) {
     return <LoadingComponent />
   }
   return (
-      <div className='grid grid-cols-[1fr] grid-rows-[70px_1fr] gap-[10px] pb-10  md:grid-cols-[130px_1fr] md:grid-rows-[70px_1fr]'>
+      <div className='grid grid-cols-[1fr] grid-rows-[70px_1fr] gap-[10px] pb-10  md:grid-cols-[130px_1fr] md:grid-rows-[70px_1fr] 
+      dark:bg-stone-900 '>
         <Header />
         <Navbar />
         

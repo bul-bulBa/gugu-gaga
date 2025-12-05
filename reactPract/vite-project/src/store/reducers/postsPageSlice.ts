@@ -85,6 +85,9 @@ const postsPageSlice = createSlice({
         clearPosts(state) {
             state.posts = []
             state.lastId = undefined
+        },
+        setHistory(state, action) {
+            state.history = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -123,4 +126,4 @@ export const selectLastId = (state: stateType) => state.posts.lastId
 export const selectIsHistory = (state: stateType) => state.posts.history
 
 export default postsPageSlice.reducer
-export const {clearPosts} = postsPageSlice.actions
+export const {clearPosts, setHistory} = postsPageSlice.actions
