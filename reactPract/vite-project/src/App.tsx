@@ -11,9 +11,6 @@ import {loginThunk, selectIsAuth, selectIsFirstLoad, autoLoginThunk} from './sto
 import AuthModalWindow from './commonComponents/AuthModalWindow'
 import LoadingComponent from './commonComponents/LoadingComponent'
 import {useAppState, useAppDispatch} from './store/StoreConfig' 
-
-const News = lazy(() => import('./components/NewsPage/News'))
-const Setting = lazy(() => import('./components/SettingPage/Setting'))
 const DialogsPage = lazy(() => import('./components/DialogsPage/DialogsPage'))
 const EditProfile = lazy(() => import('./components/ProfilePage/EditProfile'))
 
@@ -44,8 +41,6 @@ function App() {
           <Route path='/dialogs/:id?/*' element={<DialogsPage />} /> 
           <Route path='/users' element={< Users />}/>
           <Route path='/posts' element={<Posts />} />
-          <Route path='/news' element={<News />} />
-          <Route path='/setting' element={<Setting />} />
           <Route path='/edit' element={<EditProfile />} />
 
           <Route path='/auth' element={<AuthModalWindow/>}/>

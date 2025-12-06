@@ -6,37 +6,45 @@ import { useNavigate } from 'react-router-dom'
 import {selectIsAuth} from '../store/reducers/authInfoSlice'
 import {useAppState} from '../store/StoreConfig' 
 
+type pageType = {
+    thisPage: 'login' | 'signUp' | 'inputCode' | undefined,
+    prevPage: 'login' | 'signUp' | 'inputCode' | undefined }
+
 function AuthModalWindow() {
     const isAuth: boolean = useAppState(selectIsAuth)
     const email: string = useAppState((state) => state.auth.email)
     const navigate = useNavigate()
 
-    const [page, setPage] = useState<'login' | 'signUp' | 'inputCode' | undefined>()
+    const [page, setPage] = useState<pageType>()
 
-    useEffect(() => { if(email) setPage('inputCode') }, [email])
+    useEffect(() => { if(email) setPage(prev => ({prevPage: prev?.thisPage, thisPage: 'inputCode'})) }, [email])
     useEffect(() => {
         if(isAuth) navigate('/profile')
     }, [isAuth])
 
-     return (
+    const backFunc = () => setPage(prev => ({thisPage: prev?.prevPage, prevPage: undefined}))
+
+    return (
         <div className='flex justify-center items-center'>
             
-            {page === 'login' ? <Login /> : null}
-            {page === 'signUp' ? <SignUp /> : null}
-            {page === 'inputCode' ? <InputCode /> : null}
+            {page?.thisPage === 'login' ? <Login /> : null}
+            {page?.thisPage === 'signUp' ? <SignUp /> : null}
+            {page?.thisPage === 'inputCode' ? <InputCode /> : null}
 
-            {!page &&   (
+            {page?.thisPage === undefined  &&   (
                 <div className='bg-gray-200 p-3 rounded'>
                     <div className='flex flex-col gap-3'>
                         <span>
-                            <button onClick={() => setPage('login')}>Login</button>
+                            <button onClick={() => setPage(prev => ({prevPage: prev?.thisPage, thisPage: 'login'}))}>Login</button>
                         </span>
                         <span>
-                            <button onClick={() => setPage('signUp')}>Sign Up</button>
+                            <button onClick={() => setPage(prev => ({prevPage: prev?.thisPage, thisPage: 'signUp'}))}>Sign Up</button>
                         </span>
                     </div>
                 </div>
             )}
+
+            {page?.thisPage !== undefined && <div className='sticky right-3 bottom-3'><button onClick={backFunc}>back</button></div>}
         </div>
      )
 }
