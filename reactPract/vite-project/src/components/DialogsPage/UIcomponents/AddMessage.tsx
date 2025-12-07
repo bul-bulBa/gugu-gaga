@@ -25,13 +25,10 @@ const AddMessage = () => {
     return (
 
         <div>
-            {/* <textarea value={value} className='border rounded' name="textarea" onChange={(e) => setValue(e.target.value)}></textarea>
-            {value.length > 0 && <button onClick={() => addMessageFunc()}>AddMessage</button>} */}
-
             <TextArea 
             style={{ border: 'none', boxShadow: 'none', outline: 'none', width: '90%' }}
             value={value}
-            className='scrollbar-hide'
+            className='scrollbar-hide TextArea'
             placeholder="What's happening?" 
             autoSize 
             onChange={(e) => dispatch(setValue(e.target.value))}/>

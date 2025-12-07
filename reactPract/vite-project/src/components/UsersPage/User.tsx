@@ -19,7 +19,8 @@ const User: React.FC<propsType> = ({followed, followFunc, user}) => {
         </NavLink>
 
         <div className="text-sm w-[200px] p-2 m-3 grid grid-cols-[1fr-50px] grid-rows-[1fr-1fr] gap-[10px] border-2 rounded-xl border-gray-300 
-        sm:w-[300px] sm:text-base">
+        sm:w-[300px] sm:text-base
+        dark:border-stone-500">
             <span className="text-left row-start-1 col-start-1">{user.name}</span>
             <span className="text-left row-start-2 col-start-1">{user.about}</span>
             <span className="text-right row-start-1 col-start-2">{user.location.country}</span>

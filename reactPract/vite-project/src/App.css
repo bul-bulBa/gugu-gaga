@@ -49,6 +49,18 @@ a.active {
   font-weight: 700;
 }
 
+.dark a {
+  color: #ccc;
+}
+.dark a:hover {
+  color: #fff;
+  font-weight: 300; 
+}
+.dark a:active {
+  color: #ccc; 
+  font-weight: 700; 
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -124,6 +136,21 @@ button {
   pointer-events: none
 }
 
+.dark button {
+  background-color: transparent;
+  color: #8CB2E8;
+  border: 1px solid #8CB2E8;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin: 5px;
+}
+.dark .disabled {
+  background-color: transparent;
+  color: #444;
+  border: 1px solid #666;
+  pointer-events: none
+}
+
 .warning {
   color: #dc3545;
   border-color: #dc3545;
@@ -148,4 +175,16 @@ button {
   justify-content: space-between;
   align-items: center;
   padding: 5px;
+}
+
+.dark .TextArea {
+  background-color: transparent;
+}
+
+.dark .ant-input {
+  color: #ccc !important;
+}
+
+.dark .ant-input::placeholder {
+  color: #aaa !important;
 }

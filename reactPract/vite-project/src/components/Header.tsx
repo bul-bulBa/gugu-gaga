@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import image from '../../public/vite.svg'
 import '../App.css'
 import {NavLink} from 'react-router-dom'
@@ -18,12 +18,24 @@ function Header() {
         localStorage.setItem('theme', newColor)
         document.documentElement.classList.toggle('dark')
         setIsDark(newColor)
-        console.log(document.documentElement.classList.contains('dark'))
     }
+    useEffect(() => {
+        const color = localStorage.getItem('theme')
+        if(color === 'dark') document.documentElement.classList.add('dark')
+
+        if(color === 'dark') {
+            document.body.style.background = 'oklch(12.9% 0.042 264.695)'
+            document.body.style.color = '#ccc'
+        } else {
+            document.body.style.background = '#fff'
+            document.body.style.color = 'black'
+        }
+    }, [isDark])
 
     return (
             <div className='col-start-1 row-start-1 border border-border bg-bg rounded-xl flex justify-between items-center p-2 w-full
-            md:col-start-1 md:col-span-2 md:row-start-1'>
+            md:col-start-1 md:col-span-2 md:row-start-1
+            dark:border-stone-400'>
                 <img className="w-[40px] m-4" src={image} alt="" />
                 <div className='flex gap-5 items-center'>
                     <div onClick={changeTheme}>

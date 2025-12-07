@@ -24,8 +24,8 @@ const Post = (props: propsType) => {
     }
     
     const position = props.post.img?.length === 1 ? 'w-full' : 'w-[49%]'
-    const renderImages = (arr?: fileType[] | null) =>
-    arr?.length
+    const renderImages = (arr?: fileType[] | null) => {
+    return arr?.length
     ? arr.map((file, i) => (
         <div key={i} className={`${position}`}>
           {file.type === 'image/png'
@@ -39,6 +39,7 @@ const Post = (props: propsType) => {
         </div>
       ))
     : null;
+    }
 
 
     const imgArray = props.post.img ? renderImages(props.post.img) : null

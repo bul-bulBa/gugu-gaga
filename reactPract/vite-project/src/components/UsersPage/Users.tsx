@@ -38,7 +38,7 @@ const Users: React.FC = () => {
         <div className='md:col-start-2 md:row-start-2'>
             {state.isFetching && <LoadingComponent/> }
             <div className='flex flex-col justify-between items-center h-full'>
-                <SearchBar/>
+                <SearchBar />
 
                 <div>
                     {state.users.map(e => {

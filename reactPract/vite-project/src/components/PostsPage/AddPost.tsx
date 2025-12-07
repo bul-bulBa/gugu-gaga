@@ -18,17 +18,7 @@ const AddPost = () => {
     const initialValues = { file: null, text: '' } as addPostType
 
     return (
-        <div className='border border-stone-200'>
-            {/* <TextArea 
-            style={{ border: 'none', boxShadow: 'none', outline: 'none' }}
-            className='scrollbar-hide'
-            placeholder="What's happening?" 
-            autoSize 
-            onChange={(e) => setText(e.target.value)}/>
-            {!text 
-            ? <button style={{color: '#a8a29e', borderColor: '#a8a29e'}} >Post</button>
-            : <button onClick={addPost}>Post</button>} */}
-
+        <div className='border border-stone-200 dark:border-stone-700'>
             <Formik
             initialValues={initialValues}
             onSubmit={ (values, {setSubmitting}) => {
@@ -42,7 +32,7 @@ const AddPost = () => {
 
                         <TextArea 
                             style={{ border: 'none', boxShadow: 'none', outline: 'none' }}
-                            className='scrollbar-hide'
+                            className='scrollbar-hide TextArea'
                             placeholder="What's happening?" 
                             autoSize 
                             onChange={(e) => setFieldValue('text', e.target.value)}/>

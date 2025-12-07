@@ -31,7 +31,7 @@ const SearchBar = () => {
         dispatch(getAutoCompNamesThunk(value))
     }, 300)
 
-    
+    // I don't know how to set up a dark theme in these components
     return (
         <div className='w-full grid grid-cols-3'>
 
