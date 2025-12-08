@@ -126,10 +126,8 @@ const DialogsPage = () => {
     
 
     return (
-        <div className='flex gap-[5%] p-10'>
-            <DialogItems />
-
-            <div className='border-r-1'></div>
+        <div className='sm:p-10'>
+            {!userB && <DialogItems />}
 
             <Dialogs />
 

@@ -11,6 +11,7 @@ const initWebSocket = (server) => {
 
         ws.on('connection', (ws, req) => {
             const cookies = req.headers.cookie
+            if(!cookies) return console.log('unauthorized')
             const token = cookies
                 .split('; ')
                 .find(c => c.startsWith('accessToken='))
