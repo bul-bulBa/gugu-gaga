@@ -25,14 +25,14 @@ function AuthModalWindow() {
     const backFunc = () => setPage(prev => ({thisPage: prev?.prevPage, prevPage: undefined}))
 
     return (
-        <div className='flex justify-center items-center'>
+        <div className='flex flex-col justify-center items-center'>
             
             {page?.thisPage === 'login' ? <Login /> : null}
             {page?.thisPage === 'signUp' ? <SignUp /> : null}
             {page?.thisPage === 'inputCode' ? <InputCode /> : null}
 
             {page?.thisPage === undefined  &&   (
-                <div className='bg-gray-200 p-3 rounded'>
+                <div className='border rounded-xl p-3 rounded'>
                     <div className='flex flex-col gap-3'>
                         <span>
                             <button onClick={() => setPage(prev => ({prevPage: prev?.thisPage, thisPage: 'login'}))}>Login</button>
@@ -44,7 +44,7 @@ function AuthModalWindow() {
                 </div>
             )}
 
-            {page?.thisPage !== undefined && <div className='sticky right-3 bottom-3'><button onClick={backFunc}>back</button></div>}
+            {page?.thisPage !== undefined && <div className='m-3'><button onClick={backFunc}>back</button></div>}
         </div>
      )
 }

@@ -3,6 +3,7 @@ import {signUpThunk, selectError} from '../../store/reducers/authInfoSlice'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import ReCAPTCHA from 'react-google-recaptcha'
 import {useAppState, useAppDispatch} from '../../store/StoreConfig'
+import { selectTheme } from '../../store/reducers/rerender'
 
 type initialValuesType = {email: string,name: string, password: string, country: string, city: string, captcha: string}
 
@@ -10,6 +11,7 @@ function SignUp() {
     const ERROR: string | null | undefined = useAppState(selectError)
     const dispatch = useAppDispatch()
     const initialValues: initialValuesType = {email: '',name: '', password: '', country: '', city: '', captcha: ''}
+    const isDark = useAppState(selectTheme)
 
     return (
         <Formik
@@ -44,9 +46,12 @@ function SignUp() {
                     <Field type='text' name='city' placeholder='your city' />
                     <ErrorMessage name='city' component='div' className='text-red-200'/>
                     
+                    {/* key need for trigger to change theme */}
                     <ReCAPTCHA 
+                        key={isDark}
                         sitekey='6LcYNLkrAAAAABQ84800-X6mPGP6vtKu-84bdDD9'
-                        onChange={value => setFieldValue('captcha', value)}/>
+                        onChange={value => setFieldValue('captcha', value)}
+                        theme={isDark === 'dark' ? 'dark' : 'light'}/>
                     <ErrorMessage name='captcha' component='div' className='text-red-200' />
 
                     <button type='submit' disabled={isSubmitting}>

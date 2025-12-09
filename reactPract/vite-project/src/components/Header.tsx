@@ -5,6 +5,7 @@ import {NavLink} from 'react-router-dom'
 import { SunOutlined, MoonOutlined } from '@ant-design/icons'
 import {useAppState, useAppDispatch} from '../store/StoreConfig'
 import {logoutThunk, selectIsAuth, authInfoType} from '../store/reducers/authInfoSlice'
+import { setTheme } from '../store/reducers/rerender'
 
 function Header() {
     const state: boolean = useAppState(selectIsAuth)
@@ -18,6 +19,7 @@ function Header() {
         localStorage.setItem('theme', newColor)
         document.documentElement.classList.toggle('dark')
         setIsDark(newColor)
+        dispatch(setTheme(newColor))
     }
     useEffect(() => {
         const color = localStorage.getItem('theme')

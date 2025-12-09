@@ -1,6 +1,8 @@
 import { Formik, Form, Field } from "formik";
+import { Upload } from "antd";
+import type { GetProp, UploadProps, UploadFile} from 'antd'
 import {selectUser, editThunk, userType} from '../../store/reducers/profilePageSlice'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {useAppState, useAppDispatch} from '../../store/StoreConfig'
 import {deleteThunk} from '../../store/reducers/authInfoSlice'
 
@@ -9,6 +11,15 @@ type initialValuesType = {
     profilePhoto: File | null,
     about: string
 }
+// Доробити новий Input type file
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+const getBase64 = (file: FileType): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
 
 const EditProfile = () => {
     const state: userType = useAppState(selectUser)
@@ -37,7 +48,7 @@ const EditProfile = () => {
             }}
             >
                 {({isSubmitting, setFieldValue}) => (
-                    <Form className="flex flex-col gap-5 p-4">
+                    <Form className="flex flex-col items-center gap-5">
                         <input type="file" name="profilePhoto" onChange={(e) => 
                             setFieldValue('profilePhoto', e.currentTarget.files?.[0] ?? null)} />
 
@@ -46,7 +57,8 @@ const EditProfile = () => {
 
                         <Field  type='text' name='about' placeholder='changeDescription' />
 
-                        <button type="submit" disabled={isSubmitting}>Save changes</button>
+                        <button type="submit" disabled={isSubmitting}
+                        className="w-50" >Save changes</button>
                     </Form>
                 )}
             </Formik>

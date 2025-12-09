@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import {selectError, selectIsAuth} from '../../store/reducers/authInfoSlice'
 import ReCAPTCHA from 'react-google-recaptcha'
 import {useAppState, useAppDispatch} from '../../store/StoreConfig'
+import { selectTheme } from '../../store/reducers/rerender'
 
 type initialValuesType = {password: string, email: string, captcha: string}
 
@@ -11,6 +12,8 @@ function Login() {
     const ERROR = useAppState(selectError)
     const dispatch = useAppDispatch()
     const initialValues: initialValuesType = {password:'', email:'', captcha: ''}
+    const isDark= useAppState(selectTheme)
+    console.log(isDark)
 
     return (
         <div>
@@ -36,9 +39,12 @@ function Login() {
                     <Field type='password' name='password' placeholder='password' />
                     <ErrorMessage name='password' component='div' className='text-red-200' />
                     
+                    {/* key need for trigger to change theme */}
                     <ReCAPTCHA 
+                        key={isDark}
                         sitekey='6LcYNLkrAAAAABQ84800-X6mPGP6vtKu-84bdDD9'
                         onChange={value => setFieldValue('captcha', value)}
+                        theme={isDark === 'dark' ? 'dark' : 'light'}
                     />
                     <ErrorMessage name='captcha' component='div' className='text-red-200' />
 
