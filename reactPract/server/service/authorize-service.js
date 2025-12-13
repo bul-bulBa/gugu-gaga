@@ -15,15 +15,9 @@ class AuthorizeService {
         if(candidate) throw ApiError.BadRequest("Користувач з такою поштою вже існує")
         
         await reCaptchaService.verify(captcha)
-
         const hashPassword = await bcrypt.hash(password, 3) 
 
-        const user = await userModel.create({email, password: hashPassword, location: location, name})
-
-        const userDto = new AuthDto(user)
-        const token = tokenService.generate(user._id)
-
-        return {token, user: userDto}
+        await userModel.create({email, password: hashPassword, location: location, name})
     }
 
     async login(email, password, captcha) {
@@ -33,11 +27,6 @@ class AuthorizeService {
         if(!isPassTrue) throw ApiError.BadRequest("Не правильний email або пароль")
 
         await reCaptchaService.verify(captcha)
-
-        const userDto = new AuthDto(user)
-        const tokens = tokenService.generate(user._id)
-
-        return {tokens, user: userDto}
     }
 
     async deleteAccount(jwt) {

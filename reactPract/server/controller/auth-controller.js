@@ -9,9 +9,8 @@ class AuthController {
             if(!errors.isEmpty()) throw new Error(errors)
             const {email, password, location, name, captcha} = req.body
 
-            const {token, user} = await authorizeService.createAccount(email, password, location, name, captcha)
+            await authorizeService.createAccount(email, password, location, name, captcha)
 
-            // res.cookie('token', token, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             res.json(email)
         } catch (e) {
             return next(e)
@@ -22,8 +21,8 @@ class AuthController {
         try {
             const {email, password, captcha} = req.body
 
-            const {token, user} = await authorizeService.login(email, password, captcha)
-            // res.cookie('token', token, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            await authorizeService.login(email, password, captcha)
+            
             res.json(email)
         } catch (e) {
             return next(e)

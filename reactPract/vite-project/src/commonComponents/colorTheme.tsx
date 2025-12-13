@@ -28,7 +28,7 @@ const ColorTheme = () => {
             <div className="w-5 h-5 bg-app-primary rounded-full" onClick={() => setShow(!show)}>
                 {show && 
                     <div className='flex flex-col gap-5 p-3 bg-white border rounded absolute z-2'>
-                        {colorThemes.map((t, i) => (
+                        {colorThemes.map(t => (
                             <div key={t} onClick={() => {
                                 changeTheme(t)
                                 setShow(false) } } 
