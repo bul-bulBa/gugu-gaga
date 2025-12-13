@@ -6,12 +6,12 @@ module.exports = {
   ],
   theme: {
     extend: { 
-        colors: {
-            bg: 'rgb(var(--bg) / <alpha-value>)',
-            text: 'rgb(var(--text) / <alpha-value>)',
-            border: 'rgb(var(--border) / <alpha-value>)',
-            primary: 'rgb(var(--primary) / <alpha-value>)',
-        },
+      colors: {
+        // Use the CSS var directly — our CSS stores the color as a hex (#rrggbb)
+        // and vendor CSS defines `.bg-primary` so add a unique alias `app-primary` to avoid collisions
+        primary: 'var(--primary-color)',
+        'app-primary': 'var(--primary-color)'
+      },
     },
   },
   plugins: [],

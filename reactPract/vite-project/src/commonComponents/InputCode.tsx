@@ -29,7 +29,9 @@ const InputCode = () => {
                 />
 
                 <Button type='primary' onClick={verifyCodeFunc}>Verify</Button>
-                <Button type='text' onClick={getCodeFunc}>Resend Code</Button>
+                <div className='bg-app-primary rounded opacity-75'>
+                    <Button type='text' onClick={getCodeFunc} style={{color: '#fff', } }>Resend Code</Button>
+                </div>
 
                 <div>{error}</div>
             </div>

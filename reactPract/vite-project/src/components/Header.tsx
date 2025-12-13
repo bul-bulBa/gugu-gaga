@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import image from '../../public/vite.svg'
 import '../App.css'
+import ColorTheme from '../commonComponents/colorTheme'
 import {NavLink} from 'react-router-dom'
 import { SunOutlined, MoonOutlined } from '@ant-design/icons'
 import {useAppState, useAppDispatch} from '../store/StoreConfig'
 import {logoutThunk, selectIsAuth, authInfoType} from '../store/reducers/authInfoSlice'
 import { setTheme } from '../store/reducers/rerender'
+
 
 function Header() {
     const state: boolean = useAppState(selectIsAuth)
@@ -40,6 +42,7 @@ function Header() {
             dark:border-stone-400'>
                 <img className="w-[40px] m-4" src={image} alt="" />
                 <div className='flex gap-5 items-center'>
+                    < ColorTheme />
                     <div onClick={changeTheme}>
                         {isDark === 'dark'
                             ? <MoonOutlined />

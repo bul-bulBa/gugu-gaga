@@ -18,10 +18,10 @@ function DialogItems() {
                     const otherUser = authUserId === p.userAId ? {id: p.userBId, name: pn.userBName } : {id: p.userAId, name: pn.userAName }
 
                     const countOfUnread = d.unread[authUserId] !== 0 
-                    ? <div className='bg-green-400 dark:bg-green-700 rounded-full'>{d.unread[authUserId]}</div>
+                    ? <div className='bg-app-primary rounded-full text-black'>{d.unread[authUserId]}</div>
                     : <span></span>
                     return (
-                        <span className={`m-2 rounded-xl p-3 ${chatterId === otherUser.id && 'bg-blue-50 dark:bg-indigo-500'}`} 
+                        <span className={`m-2 rounded-xl p-3 `} 
                         key={`user - ` + otherUser.id} onClick={() => getMessages(otherUser.id)}>
                             <NavLink to={`/dialogs/${otherUser.id}`} className='flex flex-col items-start'>
                                 <div className=''> <span>{otherUser.name}</span> {countOfUnread} </div>

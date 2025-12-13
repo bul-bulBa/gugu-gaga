@@ -1,6 +1,7 @@
 import { Formik, Form, Field } from "formik";
-import { Upload } from "antd";
+import { Image, Upload } from "antd";
 import type { GetProp, UploadProps, UploadFile} from 'antd'
+import { PlusOutlined } from '@ant-design/icons';
 import {selectUser, editThunk, userType} from '../../store/reducers/profilePageSlice'
 import { useNavigate } from 'react-router-dom'
 import {useAppState, useAppDispatch} from '../../store/StoreConfig'

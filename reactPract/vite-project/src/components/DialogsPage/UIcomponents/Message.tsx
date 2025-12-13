@@ -38,8 +38,8 @@ const Message = ({message, position, date}: propsType) => {
     return (
         <div className={`flex gap-1 m-2 msg  ${position === 'left' ? 'justify-start' : 'justify-end'}`} >
             <Dropdown menu={message.writerId === userId ? menu : { items: []} } trigger={['contextMenu']}>
-                <div className="bg-gray-100 rounded-xl grid grid-rows-[1fr_20px] gap-3 max-w-4/5 min-w-[130px] p-2
-                dark:bg-gray-900">
+                <div className={`bg-gray-100 rounded-xl grid grid-rows-[1fr_20px] gap-3 max-w-4/5 min-w-[130px] p-2
+                dark:bg-gray-900`}>
                     <div className="row-start-1 flex text-left break-all"> {message.text} </div>
                     {message.edited && <span className='text-xs row-start-2 flex justify-end'>edited</span>}
                     <span className="text-xs row-start-2 flex justify-end"> {date} </span>
