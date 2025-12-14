@@ -2,15 +2,18 @@ import { useEffect, useState } from 'react'
 import image from '../../public/vite.svg'
 import '../App.css'
 import ColorTheme from '../commonComponents/colorTheme'
+import Language from '../commonComponents/Language'
 import {NavLink} from 'react-router-dom'
 import { SunOutlined, MoonOutlined } from '@ant-design/icons'
 import {useAppState, useAppDispatch} from '../store/StoreConfig'
 import {logoutThunk, selectIsAuth, authInfoType} from '../store/reducers/authInfoSlice'
 import { setTheme } from '../store/reducers/rerender'
+import { selectAllText } from '../store/reducers/allText'
 
 
 function Header() {
     const state: boolean = useAppState(selectIsAuth)
+    const text = useAppState(selectAllText)
     const dispatch = useAppDispatch()
     // state for rerender when theme was changed
     const [isDark, setIsDark] = useState(() => localStorage.getItem('theme'))
@@ -35,13 +38,14 @@ function Header() {
             document.body.style.color = 'black'
         }
     }, [isDark])
-
+    console.log(text)
     return (
             <div className='col-start-1 row-start-1 border border-border bg-bg rounded-xl flex justify-between items-center p-2 w-full
             md:col-start-1 md:col-span-2 md:row-start-1
             dark:border-stone-400'>
                 <img className="w-[40px] m-4" src={image} alt="" />
                 <div className='flex gap-5 items-center'>
+                    < Language />
                     < ColorTheme />
                     <div onClick={changeTheme}>
                         {isDark === 'dark'
@@ -50,8 +54,8 @@ function Header() {
                         }
                     </div>
                     {!state
-                    ? <span> <NavLink to="/auth"> <button>Log in</button> </NavLink> </span>
-                    : <button onClick={() => dispatch(logoutThunk())}>Log out</button>
+                    ? <span> <NavLink to="/auth"> <button>{text.header.logIn}</button> </NavLink> </span>
+                    : <button onClick={() => dispatch(logoutThunk())}>{text.header.logOut}</button>
                     }
                 </div>
             </div>

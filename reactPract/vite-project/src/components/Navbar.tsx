@@ -1,6 +1,10 @@
 import '../App.css'
 import { NavLink } from "react-router-dom";
+import { useAppState } from '../store/StoreConfig';
+import { selectAllText } from '../store/reducers/allText';
+
 function Navbar() {
+  const text = useAppState(selectAllText)
 
     return (
         <nav className='z-2 fixed bottom-5 left-5 right-5 flex justify-around items-center backdrop-blur p-3
@@ -8,25 +12,25 @@ function Navbar() {
         dark:border-stone-900'>
           <div>
             <NavLink to="/profile">
-              Profile
+              {text.navigation.profile}
             </NavLink>
           </div>
 
           <div>
             <NavLink to="/dialogs">
-              Messages
+              {text.navigation.messages}
             </NavLink>
           </div>
 
           <div>
             <NavLink to='/users'>
-              Users
+              {text.navigation.users}
             </NavLink>
           </div>
 
           <div>
             <NavLink to="/posts">
-              Posts
+              {text.navigation.posts}
             </NavLink>
           </div>
 

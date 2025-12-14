@@ -113,3 +113,10 @@ export const posts = {
         .then((res): postType[] => res.data)
     }
 }
+
+export const language = {
+    getText(lang: string) {
+        return request.get(`/text?language=${lang}`)
+        .then((res) => res.data)
+    }
+}

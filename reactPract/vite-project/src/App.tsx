@@ -8,6 +8,7 @@ import Posts from './components/PostsPage/Posts'
 import InputCode from './commonComponents/InputCode'
 import {useNavigate, Routes, Route} from 'react-router-dom'
 import {loginThunk, selectIsAuth, selectIsFirstLoad, autoLoginThunk} from './store/reducers/authInfoSlice'
+import { getTextThunk, selectAllText } from './store/reducers/allText'
 import AuthModalWindow from './commonComponents/AuthModalWindow'
 import LoadingComponent from './commonComponents/LoadingComponent'
 import {useAppState, useAppDispatch} from './store/StoreConfig' 
@@ -15,16 +16,20 @@ const DialogsPage = lazy(() => import('./components/DialogsPage/DialogsPage'))
 const EditProfile = lazy(() => import('./components/ProfilePage/EditProfile'))
 
 function App() {
+  const [lang, setLang] = useState(localStorage.getItem('language'))
   const isAuth: boolean = useAppState(selectIsAuth)
   const firstLoad: boolean = useAppState(selectIsFirstLoad)
+  const text = useAppState(selectAllText)
   const dispatch = useAppDispatch() 
   const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(autoLoginThunk())
+    if(!lang) dispatch(getTextThunk('en'))
+    else dispatch(getTextThunk(lang))
   }, [])
 
-  if(firstLoad) {
+  if(firstLoad || !text) {
     return <LoadingComponent />
   }
   return (

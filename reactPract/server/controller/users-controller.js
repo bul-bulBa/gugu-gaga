@@ -4,6 +4,7 @@ import ApiError from '../exceptions/api-error.js'
 import filterService from '../service/filter-service.js'
 import tokenService from '../service/token-service.js'
 import authorizeService from '../service/authorize-service.js'
+import { text } from '../models/allText.js'
 
 class UsersController {
     async getUsers(req, res, next) {
@@ -71,6 +72,17 @@ class UsersController {
         try{
             const filteredNames = await filterService.autoComplete(req.params.user)
             res.json(filteredNames)
+        }catch(e) {
+            next(e)
+        }
+    }
+
+    async getText(req, res, next) {
+        try{
+            const { language } = req.query
+
+            const needText = text[language]
+            res.json(needText)
         }catch(e) {
             next(e)
         }

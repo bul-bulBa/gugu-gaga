@@ -31,7 +31,6 @@ router.put('/edit', upload.fields([{name: 'avatar'}, {name: 'profilePhoto'}]), c
 // get user endpoints
 router.get('/usersAutocomplete/:user', usersController.autoComplete) 
 router.get('/users', authMiddleware, usersController.getUsers) // працює на божому слові, мені страшно там шось фіксити
-router.get('/image/:id', usersController.getImage)
 router.get('/profile/:id', usersController.getProfile)
 router.get('/filter', usersController.filter)
 
@@ -43,5 +42,11 @@ router.get('/post', postController.getPosts)
 router.post('/toggleLike', postController.toggleLikes)
 router.post('/reply', postController.replyPost)
 router.post('/replyHistory', postController.replyHistory)
+
+// get image
+router.get('/image/:id', usersController.getImage)
+
+// get text
+router.get('/text', usersController.getText)
 
 export default router
