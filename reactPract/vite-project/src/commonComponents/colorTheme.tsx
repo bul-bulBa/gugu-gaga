@@ -3,6 +3,7 @@ import { useAppDispatch } from '../store/StoreConfig'
 import { setColorTheme } from '../store/reducers/rerender'
 
 export const colorThemes = [ 'green', 'purple', 'red', 'blue', 'orange', 'yellow' ]
+export const colors = []
 
 const ColorTheme = () => {
     const dispatch = useAppDispatch()
@@ -33,7 +34,7 @@ const ColorTheme = () => {
                                 changeTheme(t)
                                 setShow(false) } } 
                                 // якщо писати без зовнішнього ${}, то tailwind не встановить в стилі ці кольори
-                            className={`w-5 h-5 ${`bg-${t}-500`} rounded-full`}></div>
+                            className={`w-5 h-5 rounded-full`} style={{backgroundColor: t}}></div>
                         ))}
                     </div>
                 }
