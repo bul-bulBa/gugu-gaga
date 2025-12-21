@@ -6,23 +6,17 @@ import {selectUser, editThunk, userType} from '../../store/reducers/profilePageS
 import { useNavigate } from 'react-router-dom'
 import {useAppState, useAppDispatch} from '../../store/StoreConfig'
 import {deleteThunk} from '../../store/reducers/authInfoSlice'
+import { selectProfile } from '../../store/reducers/allText'
 
 type initialValuesType = {
     avatar: File | null,
     profilePhoto: File | null,
     about: string
 }
-// Доробити новий Input type file
-type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
-const getBase64 = (file: FileType): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
+
 
 const EditProfile = () => {
+    const text = useAppState(selectProfile)
     const state: userType = useAppState(selectUser)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
@@ -49,17 +43,26 @@ const EditProfile = () => {
             }}
             >
                 {({isSubmitting, setFieldValue}) => (
-                    <Form className="flex flex-col items-center gap-5">
-                        <input type="file" name="profilePhoto" onChange={(e) => 
-                            setFieldValue('profilePhoto', e.currentTarget.files?.[0] ?? null)} />
+                    <Form className="flex flex-col items-center gap-10 p-3">
+                        <div className="flex flex-col">
+                            <span>{text.changeProfilePhoto}</span>
+                            <input type="file" name="profilePhoto" onChange={(e) => 
+                                setFieldValue('profilePhoto', e.currentTarget.files?.[0] ?? null)} />
+                        </div>
 
-                        <input type="file" name="avatar" onChange={(e) => 
-                            setFieldValue('avatar', e.currentTarget.files?.[0] ?? null)}/>
+                        <div className="flex flex-col">
+                            <span>{text.changeAvatar}</span>
+                            <input type="file" name="avatar" onChange={(e) => 
+                                setFieldValue('avatar', e.currentTarget.files?.[0] ?? null)}/>
+                        </div>
 
-                        <Field  type='text' name='about' placeholder='changeDescription' />
+                        <div className="flex flex-col">
+                            <span>{text.changeAbout}</span>
+                            <Field  type='text' name='about' placeholder='changeDescription' />
+                        </div>
 
                         <button type="submit" disabled={isSubmitting}
-                        className="w-50" >Save changes</button>
+                        className="w-50" >{text.save}</button>
                     </Form>
                 )}
             </Formik>
@@ -68,7 +71,7 @@ const EditProfile = () => {
             <button onClick={() => {
                 dispatch(deleteThunk())
                 navigate('/profile')
-            }}>DELETE ACCOUNT</button>
+            }}>{text.deleteAccount}</button>
         </div>
     )
 }

@@ -4,6 +4,7 @@ import { useAppState, useAppDispatch } from '../store/StoreConfig'
 import { AutoComplete, Button, Select } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import {useSearchParams } from 'react-router-dom'
+import { selectUsers } from '../store/reducers/allText'
 
 type funcType = (arg: string) => void
 
@@ -21,6 +22,7 @@ function debounce(func: funcType, delay: number) {
 }
 
 const SearchBar = () => {
+    const text = useAppState(selectUsers)
     const namesArr: string[] = useAppState(selectAutoCompUsers)
     const dispatch = useAppDispatch()
     const [queryParam, setQueryParam] = useSearchParams()
@@ -41,7 +43,7 @@ const SearchBar = () => {
                     options={
                         namesArr.map(e => ({value: e, label: e}) )
                     }
-                    placeholder="find users"
+                    placeholder={text.findUsers}
                     onChange={(value: string) => { 
                         setTermValue(value)
                         if(value.length >= 3) searchFunction(value) } }
@@ -55,7 +57,7 @@ const SearchBar = () => {
 
             <div className='col-start-3 flex justify-end items-center'>
                 <Select
-                    defaultValue="Filter users"
+                    defaultValue={text.filterUsers}
                     style={{ width: 120 }}
                     onChange={(value: string) => {
                         const text = value === 'friends' ? 'true' : ''
@@ -63,8 +65,8 @@ const SearchBar = () => {
                         setQueryParam({term: termValue, friends: text})
                     }}
                     options={[
-                        { value: 'all', label: 'All' },
-                        { value: 'friends', label: 'Friends' }
+                        { value: 'all', label: text.all },
+                        { value: 'friends', label: text.friends }
                     ]}
                 />
             </div>

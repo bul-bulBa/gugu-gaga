@@ -4,16 +4,13 @@ import {useAppState, useAppDispatch} from '../../store/StoreConfig'
 import {addPostThunk, addPostType} from '../../store/reducers/postsPageSlice'
 import { FileImageOutlined} from '@ant-design/icons'
 import { Input } from 'antd';
+import { selectPosts } from '../../store/reducers/allText'
 
 const { TextArea } = Input;
 
 const AddPost = () => {
     const dispatch = useAppDispatch()
-    // const [text, setText] = useState<string>('')
-
-    // const addPost = () => {
-    //     dispatch(addPostThunk(text))
-    // }
+    const text = useAppState(selectPosts)
 
     const initialValues = { file: null, text: '' } as addPostType
 
@@ -33,7 +30,7 @@ const AddPost = () => {
                         <TextArea 
                             style={{ border: 'none', boxShadow: 'none', outline: 'none' }}
                             className='scrollbar-hide TextArea'
-                            placeholder="What's happening?" 
+                            placeholder={text.newPostPlaceholder} 
                             autoSize 
                             onChange={(e) => setFieldValue('text', e.target.value)}/>
 
@@ -49,8 +46,8 @@ const AddPost = () => {
                                 </label>
 
                                 {!values.text
-                                ? <button style={{color: '#a8a29e', borderColor: '#a8a29e'}} >Post</button>
-                                : <button type='submit' disabled={isSubmitting}>Post</button>}
+                                ? <button style={{color: '#a8a29e', borderColor: '#a8a29e'}} >{text.post}</button>
+                                : <button type='submit' disabled={isSubmitting}>{text.post}</button>}
                             </div>
                     </Form>
                 )}

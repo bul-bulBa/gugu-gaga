@@ -1,6 +1,8 @@
 import defaultAvatar from '../../../assets/userPhoto.webp'
 import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
+import { useAppState } from '../../../store/StoreConfig'
+import { selectProfile } from '../../../store/reducers/allText'
 
 type propsType = {
   itIsMe: boolean,
@@ -18,6 +20,7 @@ let statusSpan: React.ReactElement
 let avatarImg
 
 const ProfileDescription: React.FC<propsType> = (props) => {
+    const text = useAppState(selectProfile)
     const navigate = useNavigate()
     const [showInput, setShowInput] = useState<boolean>(false)
     const [status, setStatuts] = useState<string>(props.status)
@@ -30,7 +33,7 @@ const ProfileDescription: React.FC<propsType> = (props) => {
     if(props.itIsMe) {
       statusSpan = showInput 
             ? ( <input value={status} onChange={(e) => setStatuts(e.target.value)} onBlur={() => changeStatus()} autoFocus type="text" />)
-            : (<span  onDoubleClick={() => setShowInput(true)}>{props.status || 'set status'}</span>)   
+            : (<span  onDoubleClick={() => setShowInput(true)}>{props.status || text.setStatus}</span>)   
           
     } else {
       statusSpan = <span>{props.status}</span>
@@ -66,8 +69,8 @@ const ProfileDescription: React.FC<propsType> = (props) => {
         </div>
 
         <div className='flex flex-col gap-1 items-start'>
-          <span>Country:{props.country}</span>
-          <span>City:{props.city}</span>
+          <span>{text.country}: {props.country}</span>
+          <span>{text.city}: {props.city}</span>
         </div>
 
         <div>

@@ -3,8 +3,10 @@ import { useAppDispatch, useAppState } from "../../../store/StoreConfig"
 import Post from '../../PostsPage/Post'
 import { selectUser } from '../../../store/reducers/profilePageSlice'
 import {selectPosts, selectLastId, getPostsThunk} from '../../../store/reducers/postsPageSlice'
+import { selectPosts as selectPostsText } from '../../../store/reducers/allText'
 
 function MyPosts() {
+    const text = useAppState(selectPostsText)
     const dispatch = useAppDispatch()
     const posts = useAppState(selectPosts)
     const lastId = useAppState(selectLastId)
@@ -25,7 +27,7 @@ function MyPosts() {
           <Post post={p} key={p._id}/>
         ))}
 
-        <button onClick={() => getPosts()}>More posts</button>
+        <button onClick={() => getPosts()}>{text.morePosts}</button>
       </div>
     )
 }

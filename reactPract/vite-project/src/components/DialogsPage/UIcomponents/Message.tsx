@@ -7,23 +7,26 @@ import { useAppDispatch, useAppState } from '../../../store/StoreConfig';
 import  { deleteMessage } from '../DialogsPage'
 import type { MenuProps } from 'antd';
 import { Dropdown } from 'antd';
+import { selectMessages } from '../../../store/reducers/allText';
 
-const items: MenuProps['items'] = [
-  {
-    label: 'Edit',
-    key: '1',
-  },
-  {
-    label: 'Delete',
-    key: '2',
-  },
-];
 
 type propsType = {message: dialogsMessageType, position: string, date: string}
 
 const Message = ({message, position, date}: propsType) => {
+    const text = useAppState(selectMessages)
     const userId = useAppState(selectAuthId)
     const dispatch = useAppDispatch()
+
+    const items: MenuProps['items'] = [
+      {
+        label: text.edit,
+        key: '1',
+      },
+      {
+        label: text.delete,
+        key: '2',
+      },
+    ];
 
     const menu = {
         items,
@@ -41,7 +44,7 @@ const Message = ({message, position, date}: propsType) => {
                 <div className={`bg-gray-100 rounded-xl grid grid-rows-[1fr_20px] gap-3 max-w-4/5 min-w-[130px] p-2
                 dark:bg-gray-900`}>
                     <div className="row-start-1 flex text-left break-all"> {message.text} </div>
-                    {message.edited && <span className='text-xs row-start-2 flex justify-end'>edited</span>}
+                    {message.edited && <span className='text-xs row-start-2 flex justify-end'>{text.edited}</span>}
                     <span className="text-xs row-start-2 flex justify-end"> {date} </span>
 
                     {message.read && message.writerId === userId && 

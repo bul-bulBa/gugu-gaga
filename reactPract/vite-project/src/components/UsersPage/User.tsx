@@ -1,6 +1,8 @@
 import defaultUserPhoto from '../../assets/userPhoto.webp'
 import {NavLink} from 'react-router-dom'
 import {userType} from '../../store/reducers/usersPageSlice'
+import { useAppState } from '../../store/StoreConfig'
+import { selectUsers } from '../../store/reducers/allText'
 
 type propsType = {
     followFunc: (id: string)=> void,
@@ -9,6 +11,7 @@ type propsType = {
 }
 
 const User: React.FC<propsType> = ({followed, followFunc, user}) => {
+    const text = useAppState(selectUsers)
 
     return (
         <div className="flex gap-2 items-center" key={user._id}>
@@ -28,8 +31,8 @@ const User: React.FC<propsType> = ({followed, followFunc, user}) => {
         </div>
         
         {!followed
-        ? <button onClick={() => followFunc(user._id)}>Follow</button>
-        : <button onClick={() => followFunc(user._id)}>Unfollow</button>
+        ? <button onClick={() => followFunc(user._id)}>{text.follow}</button>
+        : <button onClick={() => followFunc(user._id)}>{text.unFollow}</button>
         }
         </div>
     )

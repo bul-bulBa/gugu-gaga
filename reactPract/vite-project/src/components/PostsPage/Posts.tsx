@@ -6,8 +6,10 @@ import {getPostsThunk, selectPosts, selectLastId,
 import Post from './Post'
 import AddPost from './AddPost'
 import ReplyPost from './ReplyPost'
+import { selectPosts as selectPostsText } from '../../store/reducers/allText'
 
 const Posts = () => {
+    const text = useAppState(selectPostsText)
     const dispatch = useAppDispatch()
     const posts = useAppState(selectPosts)
     const lastId = useAppState(selectLastId)
@@ -25,7 +27,7 @@ const Posts = () => {
             dispatch(clearPosts())
         }
     }, [])
-
+    console.log(text)
     return (
         <div className='md:col-start-2 md:row-start-2 flex flex-col items-center gap-10 relative dark:bg-dark'>
             {!isHistory && <AddPost />}
@@ -36,7 +38,7 @@ const Posts = () => {
                 ))}
             </div>
 
-            {!isHistory && <button onClick={() => getPosts(lastId)}>More posts</button>}
+            {!isHistory && <button onClick={() => getPosts(lastId)}>{text.morePosts}</button>}
 
             {reply && <ReplyPost closeFunc={setReply} post={reply} />}
         </div>

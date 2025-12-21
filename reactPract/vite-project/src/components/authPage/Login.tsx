@@ -5,10 +5,12 @@ import {selectError, selectIsAuth} from '../../store/reducers/authInfoSlice'
 import ReCAPTCHA from 'react-google-recaptcha'
 import {useAppState, useAppDispatch} from '../../store/StoreConfig'
 import { selectTheme } from '../../store/reducers/rerender'
+import { selectAuthorization } from '../../store/reducers/allText'
 
 type initialValuesType = {password: string, email: string, captcha: string}
 
 function Login() {
+    const text = useAppState(selectAuthorization)
     const ERROR = useAppState(selectError)
     const dispatch = useAppDispatch()
     const initialValues: initialValuesType = {password:'', email:'', captcha: ''}
@@ -22,7 +24,7 @@ function Login() {
             validate={values => {
                 let errors: Record<string, string> = {};
                 Object.entries(values).forEach(([key, value]) => {
-                    if(!value) {errors[key] = `${key} is required`}
+                    if(!value) {errors[key] = `${key} ${text.isRequired}`}
                 })
                 return errors
             }}
@@ -33,10 +35,10 @@ function Login() {
             >
                 {({isSubmitting, setFieldValue}) => (
                 <Form className='border rounded p-3 flex flex-col gap-2'>
-                    <Field type="email" name="email" placeholder="email" />
+                    <Field type="email" name="email" placeholder={text.emailPlaceholder} />
                     <ErrorMessage name='email' component='div' className='text-red-200' />
 
-                    <Field type='password' name='password' placeholder='password' />
+                    <Field type='password' name='password' placeholder={text.passwordPlaceholder} />
                     <ErrorMessage name='password' component='div' className='text-red-200' />
                     
                     {/* key need for trigger to change theme */}
@@ -49,7 +51,7 @@ function Login() {
                     <ErrorMessage name='captcha' component='div' className='text-red-200' />
 
                     <button type='submit' disabled={isSubmitting}>
-                        Submit
+                        {text.submit}
                     </button>
 
                     {ERROR && <div className='text-red-300'>{ERROR}</div>}

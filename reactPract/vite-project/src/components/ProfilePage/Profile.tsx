@@ -11,9 +11,10 @@ import {selectAuth, authInfoType} from '../../store/reducers/authInfoSlice'
 import {useAppState, useAppDispatch} from '../../store/StoreConfig'
 import {clearPosts} from '../../store/reducers/postsPageSlice'
 import { setNewDialogId } from '../../store/reducers/dialogsPageSlice'
+import { selectProfile } from '../../store/reducers/allText'; 
 
 function Profile() {
-  // get some info
+  const text = useAppState(selectProfile)
   const state: userType = useAppState(selectUser)
   const isFetching: boolean = useAppState(selectFetching)
   const itIsMe: boolean = useAppState(selectItIsMe)
@@ -60,7 +61,7 @@ function Profile() {
               changeStatus={changeStatus}/>
             <MyPosts />
 
-            {itIsMe && <button className='sticky bottom-0 ' onClick={() => navigate('/edit')}>Edit</button>}
+            {itIsMe && <button className='sticky bottom-0 ' onClick={() => navigate('/edit')}>{text.edit}</button>}
             {!itIsMe && <button onClick={makeNewDialogFunc} className='sticky bottom-0'><MessageOutlined /></button>}
           </div>
     )
