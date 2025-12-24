@@ -24,9 +24,9 @@ function App() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(autoLoginThunk())
     if(!lang) dispatch(getTextThunk('en'))
     else dispatch(getTextThunk(lang))
+    dispatch(autoLoginThunk())
   }, [])
 
   if(firstLoad || !text) {
