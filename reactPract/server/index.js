@@ -23,7 +23,7 @@ const PORT = process.env.PORT
 app.use(express.json())
 app.use(cookieParcer())
 app.use(cors({
-    origin: 'https://bul-bulba.github.io/',
+    origin: 'https://bul-bulba.github.io',
     credentials: true
 }))
 app.use('/api', router)
