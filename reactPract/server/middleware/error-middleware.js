@@ -6,5 +6,5 @@ export default function(err, res) {
         .json({message: err.message, errors: err.errors})
     }
 
-    return res.status(500).json({message: "Непередбачувана помилка", err})
+    return res.status(500).json({message: "Непередбачувана помилка", errors: err.errors ?? []})
 }
