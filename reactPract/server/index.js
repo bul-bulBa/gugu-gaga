@@ -17,12 +17,12 @@ client.on('error', err => console.log('Redis Client Error', err));
 await client.connect();
 
 const app = express()
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT
 
 app.use(express.json())
 app.use(cookieParcer())
 app.use(cors({
-    origin: 'http://localhost:5173',   
+    origin: 'https://bul-bulba.github.io/gugu-gaga/',
     credentials: true
 }))
 app.use('/api', router)
