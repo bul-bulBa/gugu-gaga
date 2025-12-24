@@ -10,8 +10,8 @@ import http from 'http'
 import { createClient } from 'redis';
 import wsService from './service/ws-service.js'
 
-// export const client = createClient({ url: 'redis://127.0.0.1:6379' });
-export const client = createClient({ url: process.env.REDIS_URL})
+export const client = createClient({ url: 'redis://127.0.0.1:6379' });
+// export const client = createClient({ url: process.env.REDIS_URL})
 
 client.on('error', err => console.log('Redis Client Error', err));
 
@@ -23,7 +23,7 @@ const PORT = process.env.PORT
 app.use(express.json())
 app.use(cookieParcer())
 app.use(cors({
-    origin: 'https://bul-bulba.github.io',
+    origin: 'http://localhost:5173',
     credentials: true
 }))
 app.use('/api', router)

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { authorize} from './api'
 
-export const PORT = 'https://gugu-gaga.onrender.com/api'
+export const PORT = 'http://localhost:5000/api'
 
 export const request = axios.create({
     baseURL: PORT,
