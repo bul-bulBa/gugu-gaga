@@ -10,7 +10,8 @@ import http from 'http'
 import { createClient } from 'redis';
 import wsService from './service/ws-service.js'
 
-export const client = createClient({ url: 'redis://127.0.0.1:6379' });
+// export const client = createClient({ url: 'redis://127.0.0.1:6379' });
+export const client = createClient({ url: process.env.REDIS_URL})
 
 client.on('error', err => console.log('Redis Client Error', err));
 
