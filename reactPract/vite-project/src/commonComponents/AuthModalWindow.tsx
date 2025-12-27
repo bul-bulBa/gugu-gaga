@@ -7,9 +7,7 @@ import {selectIsAuth} from '../store/reducers/authInfoSlice'
 import {useAppState} from '../store/StoreConfig' 
 import { selectAuthorization } from '../store/reducers/allText'
 
-type pageType = {
-    thisPage: 'login' | 'signUp' | 'inputCode' | undefined,
-    prevPage: 'login' | 'signUp' | 'inputCode' | undefined }
+export type pageType = 'login' | 'signUp' | 'inputCode' | undefined
 
 function AuthModalWindow() {
     const text = useAppState(selectAuthorization)
@@ -19,21 +17,22 @@ function AuthModalWindow() {
 
     const [page, setPage] = useState<pageType>()
 
-    useEffect(() => { if(email) setPage(prev => ({prevPage: prev?.thisPage, thisPage: 'inputCode'})) }, [email])
+    useEffect(() => { if(email) setPage( 'inputCode') }, [email])
     useEffect(() => {
         if(isAuth) navigate('/profile')
     }, [isAuth])
 
-    const backFunc = () => setPage(prev => ({thisPage: prev?.prevPage, prevPage: undefined}))
+    const backFunc = () => setPage('signUp')
 
     return (
         <div className='flex flex-col justify-center items-center'>
             
-            {page?.thisPage === 'login' ? <Login /> : null}
-            {page?.thisPage === 'signUp' ? <SignUp /> : null}
-            {page?.thisPage === 'inputCode' ? <InputCode /> : null}
+            {page === 'login' ? <Login setPage={setPage} /> : null}
+            {page === 'signUp' ? <SignUp setPage={setPage} /> : null}
+            {page === 'inputCode' ? <InputCode /> : null}
+            {page === undefined ? <SignUp setPage={setPage} /> : null}
 
-            {page?.thisPage === undefined  &&   (
+            {/* {page === undefined  &&   (
                 <div className='border rounded-xl p-3 rounded'>
                     <div className='flex flex-col gap-3'>
                         <span>
@@ -44,9 +43,9 @@ function AuthModalWindow() {
                         </span>
                     </div>
                 </div>
-            )}
+            )} */}
 
-            {page?.thisPage !== undefined && <div className='m-3'><button onClick={backFunc}>{text.back}</button></div>}
+            {page === 'inputCode' && <div className='m-3'><button onClick={backFunc}>{text.back}</button></div>}
         </div>
      )
 }

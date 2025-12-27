@@ -31,9 +31,7 @@ const InputCode = () => {
                 />
 
                 <Button type='primary' onClick={verifyCodeFunc}>{text.verify}</Button>
-                <div className='bg-app-primary rounded opacity-75'>
-                    <Button type='text' onClick={getCodeFunc} style={{color: '#fff', } }>{text.resendCode}</Button>
-                </div>
+                <button onClick={getCodeFunc}>{text.resendCode}</button>
 
                 <div>{error}</div>
             </div>

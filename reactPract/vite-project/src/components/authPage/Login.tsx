@@ -1,3 +1,4 @@
+import type { pageType } from '../../commonComponents/AuthModalWindow'
 import {loginThunk} from '../../store/reducers/authInfoSlice'
 import { useState, useEffect } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -8,14 +9,14 @@ import { selectTheme } from '../../store/reducers/rerender'
 import { selectAuthorization } from '../../store/reducers/allText'
 
 type initialValuesType = {password: string, email: string, captcha: string}
+type propsType = {setPage: React.Dispatch<React.SetStateAction<pageType | undefined>> }
 
-function Login() {
+function Login({ setPage }: propsType) {
     const text = useAppState(selectAuthorization)
     const ERROR = useAppState(selectError)
     const dispatch = useAppDispatch()
     const initialValues: initialValuesType = {password:'', email:'', captcha: ''}
     const isDark= useAppState(selectTheme)
-    console.log(isDark)
 
     return (
         <div>
@@ -35,6 +36,9 @@ function Login() {
             >
                 {({isSubmitting, setFieldValue}) => (
                 <Form className='border rounded p-3 flex flex-col gap-2'>
+
+                    <div className='text-xl'>{text.logIn}</div>
+
                     <Field type="email" name="email" placeholder={text.emailPlaceholder} />
                     <ErrorMessage name='email' component='div' className='text-red-200' />
 
@@ -55,6 +59,8 @@ function Login() {
                     </button>
 
                     {ERROR && <div className='text-red-300'>{ERROR}</div>}
+
+                    <button onClick={() => setPage('signUp')}>{text.switchToSignUp}</button>
                 </Form>
                 )}
             </Formik>

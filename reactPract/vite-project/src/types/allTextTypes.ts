@@ -20,6 +20,8 @@ type allTextType = {
         countryPlaceholder: string,
         cityPlaceholder: string,
         isRequired: string,
+        switchToLogin: string,
+        switchToSignUp: string,
         submit: string,
         verifyTitle: string,
         verify: string,

@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+import type { pageType } from '../../commonComponents/AuthModalWindow'
 import {signUpThunk, selectError} from '../../store/reducers/authInfoSlice'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import ReCAPTCHA from 'react-google-recaptcha'
@@ -7,8 +8,9 @@ import { selectTheme } from '../../store/reducers/rerender'
 import { selectAuthorization } from '../../store/reducers/allText'
 
 type initialValuesType = {email: string,name: string, password: string, country: string, city: string, captcha: string}
+type propsType = {setPage: React.Dispatch<React.SetStateAction<pageType | undefined>> }
 
-function SignUp() {
+function SignUp({setPage}: propsType) {
     const text = useAppState(selectAuthorization)
     const ERROR: string | null | undefined = useAppState(selectError)
     const dispatch = useAppDispatch()
@@ -33,6 +35,9 @@ function SignUp() {
             >
                 {({isSubmitting, setFieldValue}) => (
                     <Form className='border rounded p-3 flex flex-col gap-2'>
+
+                    <div className='text-xl'>{text.signUp}</div>
+
                     <Field type='email' name='email' placeholder={text.emailPlaceholder} />
                     <ErrorMessage name='email' component='div' className='text-red-200'/>
 
@@ -61,6 +66,8 @@ function SignUp() {
                     </button>
 
                     {ERROR && <div className='text-red-300'>{ERROR}</div>}
+
+                    <button onClick={() => setPage('login')}>{text.switchToLogin}</button>
                 </Form>
                 )}
         </Formik>
