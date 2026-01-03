@@ -26,7 +26,11 @@ export const text = {
             verifyTitle: 'Verify your account',
             verify: 'Verify',
             resendCode: 'Resend Code',
-            back: 'back'
+            back: 'back',
+            loginError: 'Invalid email or password',
+            signUpError: 'This email address is already in use',
+            verifyAccountError: 'Invalid code',
+            somethingWentWrong: 'Something went wrong :('
         },
         profile: {
             country: 'country',
@@ -89,7 +93,11 @@ export const text = {
             verifyTitle: 'Підтвердіть свій акаунт',
             verify: 'Підтвердити',
             resendCode: 'Надіслати новий',
-            back: 'назад'
+            back: 'назад',
+            loginError: 'Неправильна пошта або пароль',
+            signUpError: 'Ця пошта вже використовується',
+            verifyAccountError: 'Неправильний код',
+            somethingWentWrong: 'Щось йде не так :('
         },
         profile: {
             country: 'країна',

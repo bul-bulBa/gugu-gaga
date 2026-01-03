@@ -130,6 +130,7 @@ const authInfoSlice = createSlice({
             state.isFetching = false
             state.firstLoad = false
             state.error = action.error.message
+            console.log(action.error.message)
         })
 
         // autoLogin

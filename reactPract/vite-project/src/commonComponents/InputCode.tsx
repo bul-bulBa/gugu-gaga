@@ -33,7 +33,9 @@ const InputCode = () => {
                 <Button type='primary' onClick={verifyCodeFunc}>{text.verify}</Button>
                 <button onClick={getCodeFunc}>{text.resendCode}</button>
 
-                <div>{error}</div>
+                {error === 'Request failed with status code 400' && <div className='text-red-300'>{text.verifyAccountError}</div>}
+                    {error !== 'Request failed with status code 400'
+                    && error && <div className='text-red-300'>{text.somethingWentWrong}</div>}
             </div>
         </div>
     )

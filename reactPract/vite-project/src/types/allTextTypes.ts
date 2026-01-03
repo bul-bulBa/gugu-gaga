@@ -26,7 +26,11 @@ type allTextType = {
         verifyTitle: string,
         verify: string,
         resendCode: string,
-        back: string
+        back: string,
+        loginError: string,
+        signUpError: string,
+        verifyAccountError: string,
+        somethingWentWrong: string,
     },
     profile: {
         country: string,

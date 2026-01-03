@@ -65,7 +65,9 @@ function SignUp({setPage}: propsType) {
                         {text.submit}
                     </button>
 
-                    {ERROR && <div className='text-red-300'>{ERROR}</div>}
+                    {ERROR === 'Request failed with status code 400' && <div className='text-red-300'>{text.signUpError}</div>}
+                    {ERROR !== 'Request failed with status code 400'
+                    && ERROR && <div className='text-red-300'>{text.somethingWentWrong}</div>}
 
                     <button onClick={() => setPage('login')}>{text.switchToLogin}</button>
                 </Form>

@@ -27,7 +27,7 @@ const Posts = () => {
             dispatch(clearPosts())
         }
     }, [])
-    console.log(text)
+    
     return (
         <div className='md:col-start-2 md:row-start-2 flex flex-col items-center gap-10 relative dark:bg-dark'>
             {!isHistory && <AddPost />}
