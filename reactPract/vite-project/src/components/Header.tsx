@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import image from '../../public/vite.svg'
-import '../App.css'
 import ColorTheme from '../commonComponents/colorTheme'
 import Language from '../commonComponents/Language'
 import {NavLink} from 'react-router-dom'
@@ -30,17 +29,10 @@ function Header() {
         const color = localStorage.getItem('theme')
         if(color === 'dark') document.documentElement.classList.add('dark')
 
-        if(color === 'dark') {
-            document.body.style.background = 'oklch(12.9% 0.042 264.695)'
-            document.body.style.color = '#ccc'
-        } else {
-            document.body.style.background = '#fff'
-            document.body.style.color = 'black'
-        }
     }, [isDark])
 
     return (
-            <div className='col-start-1 row-start-1 border border-border bg-bg rounded-xl flex justify-between items-center p-2 w-full
+            <div className='col-start-1 row-start-1 border rounded-xl flex justify-between items-center p-2 w-full
             md:col-start-1 md:col-span-2 md:row-start-1
             dark:border-stone-400'>
                 <img className="w-[40px] m-4" src={image} alt="" />

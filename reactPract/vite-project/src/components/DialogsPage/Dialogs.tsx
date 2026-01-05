@@ -1,5 +1,4 @@
 import {useState} from 'react'
-import '../../App.css'
 import { LeftOutlined } from '@ant-design/icons'
 import Discussion from './UIcomponents/Discussion'
 import AddMessage from './UIcomponents/AddMessage'

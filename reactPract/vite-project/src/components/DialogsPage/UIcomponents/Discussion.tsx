@@ -1,4 +1,3 @@
-import '../../../App.css'
 import { useRef, useEffect, useState } from 'react'
 import {dialogsMessageType, selectChatter, selectDialogs, exitFromDialog} from '../../../store/reducers/dialogsPageSlice'
 import {useAppState, useAppDispatch} from '../../../store/StoreConfig'

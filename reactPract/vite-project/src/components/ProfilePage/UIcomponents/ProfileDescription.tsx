@@ -42,7 +42,7 @@ const ProfileDescription: React.FC<propsType> = (props) => {
     return (
       <div className='relative'>
         <div>
-          <img className="h-[200px] w-[100%] rounded-xl" 
+          <img className="h-[200px] w-full rounded-xl" 
           src={!props.profilePhoto
           ? "https://euc.yorku.ca/wp-content/uploads/2020/08/main-1.jpg" 
           : props.profilePhoto
@@ -53,7 +53,7 @@ const ProfileDescription: React.FC<propsType> = (props) => {
         <div className="p-4 flex justify start items-center gap-10">
 
             <span>
-              <img className="rounded-full w-[150px] h-[150px] " 
+              <img className="rounded-full sm:w-[150px] w-[50px] aspect-square object-cover " 
               src={props.avatar == ''
                 ? defaultAvatar
                 : props.avatar

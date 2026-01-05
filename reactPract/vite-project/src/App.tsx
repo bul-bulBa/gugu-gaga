@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from 'react'
-import './App.css'
+import './index.css'
 import Header from "./components/Header"
 import Navbar from './components/Navbar'
 import Profile from './components/ProfilePage/Profile'
@@ -33,7 +33,8 @@ function App() {
     return <LoadingComponent />
   }
   return (
-      <div className='grid grid-cols-[1fr] grid-rows-[70px_80vh] gap-[10px] pb-10  md:grid-cols-[130px_1fr] md:grid-rows-[70px_80vh] '>
+      <div className='grid grid-cols-[1fr] grid-rows-[70px_80vh] gap-[10px] pb-10  md:grid-cols-[130px_1fr] md:grid-rows-[70px_80vh] 
+      w-full sm:w-[80wv]'>
         <Header />
         <Navbar />
         

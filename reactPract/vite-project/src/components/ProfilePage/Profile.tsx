@@ -61,7 +61,7 @@ function Profile() {
               changeStatus={changeStatus}/>
             <MyPosts />
 
-            {itIsMe && <button className='sticky bottom-0 ' onClick={() => navigate('/edit')}>{text.edit}</button>}
+            {itIsMe && <button className='sticky bottom-20 sm:bottom-5 ' onClick={() => navigate('/edit')}>{text.edit}</button>}
             {!itIsMe && <button onClick={makeNewDialogFunc} className='sticky bottom-0'><MessageOutlined /></button>}
           </div>
     )

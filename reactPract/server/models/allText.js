@@ -46,7 +46,7 @@ export const text = {
         posts: {
             post: 'Post',
             newPostPlaceholder: 'What`s happening?',
-            morePosts: 'More posts'
+            morePosts: 'loading more posts'
         },
         users: {
             follow: 'Follow',
@@ -113,7 +113,7 @@ export const text = {
         posts: {
             post: 'Створити',
             newPostPlaceholder: 'Що нового?',
-            morePosts: 'Більше постів'
+            morePosts: 'завантаження інших публікацій'
         },
         users: {
             follow: 'Підписатись',

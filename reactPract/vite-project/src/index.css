@@ -1,11 +1,172 @@
 
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root { --primary-color: #0d6efd; }
+:root.dark { --primary-color: #8CB2E8; }
+.blue { --primary-color: #0d6efd; }
+.dark.blue { --primary-color: #8CB2E8; }
+.green { --primary-color: #7CCF00; }
+.dark.green { --primary-color: #D8FA99; }
+.purple { --primary-color: #6f42c1; }
+.dark.purple { --primary-color: #b89bf3; }
+.red { --primary-color: #dc3545; }
+.dark.red { --primary-color: #f7a1a1; }
+.orange { --primary-color: #FF8904; }
+.dark.orange { --primary-color: #FFB86A; }
+.yellow { --primary-color: #FDC700; }
+.dark.yellow { --primary-color: #FFF085; }
+
+:root {
+  --background: #fff;
+  --foreground: #000;
+  --border: #e7e5e4;
+}
+
+.dark {
+  --background: #020618;
+  --foreground: #ccc;
+  --border: #1c1917;
+}
+
+* {
+  border-color: var(--border);
+}
+
 body {
   margin: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
 }
+
+a {
+  color: #000;
+}
+
+a:hover {
+  color: #555;
+  font-weight: 300;
+}
+
+a.active {
+  color: #000;
+  font-weight: 700;
+}
+
+.dark a {
+  color: #ccc;
+}
+.dark a:hover {
+  color: #fff;
+  font-weight: 300; 
+}
+.dark a:active {
+  color: #ccc; 
+  font-weight: 700; 
+}
+
+#root {
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.scrollbar-hide {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+.scrollbar-hide::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, and Opera */
+    }
+
+.msg.left {
+  align-self: flex-start;
+}
+
+.msg.right {
+  align-self: flex-end
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+button {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.disabled {
+  background-color: transparent;
+  color: #bbb;
+  border: 1px solid #bbb;
+  pointer-events: none
+}
+
+.dark .disabled {
+  background-color: transparent;
+  color: #444;
+  border: 1px solid #666;
+  pointer-events: none
+}
+
+.warning {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.activePaginationButton {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.header {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  border: 1px solid #444;
+  outline: 2px solid #a52a52ff;
+  outline-offset: 1px;
+  -moz-outline-radius: 30px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+}
+
+.dark .TextArea {
+  background-color: transparent;
+}
+
+.dark .ant-input {
+  color: #ccc !important;
+}
+
+.dark .ant-input::placeholder {
+  color: #aaa !important;
+}
+
+input::placeholder { color: #555}
+.dark input::placeholder { color : #aaa }
+
+/* fallback override in case vendor CSS declares .bg-primary with !important */
+.bg-app-primary { background-color: var(--primary-color) !important; }
+
+
 
 
 h1 {

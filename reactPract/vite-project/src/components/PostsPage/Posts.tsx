@@ -1,4 +1,5 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef} from 'react'
+import { Spin } from 'antd'
 import {useAppState, useAppDispatch} from '../../store/StoreConfig'
 import {getPostsThunk, selectPosts, selectLastId, 
     clearPosts, deletePostThunk, postType,
@@ -15,10 +16,31 @@ const Posts = () => {
     const lastId = useAppState(selectLastId)
     const isHistory = useAppState(selectIsHistory)
     const [reply, setReply] = useState<postType>()
-
+    const ref = useRef<HTMLDivElement | null>(null)
+    
+    const lastIdRef = useRef<string | undefined>('')
+    useEffect(() => { lastIdRef.current = lastId }, [lastId])
+    
     const getPosts = (lastId: string | undefined) => {
         dispatch(getPostsThunk({lastId, userId: undefined}))
     }
+    
+
+    useEffect(() => {
+        if(!ref.current || !lastIdRef.current) return
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if(entry.isIntersecting) {
+                    getPosts(lastIdRef.current)
+                }
+            }, { threshold: 1}
+        )
+
+        observer.observe(ref.current)
+
+        return () => observer.disconnect()
+    }, [getPosts])
 
     useEffect(() => {
         getPosts('')
@@ -29,7 +51,7 @@ const Posts = () => {
     }, [])
     
     return (
-        <div className='md:col-start-2 md:row-start-2 flex flex-col items-center gap-10 relative dark:bg-dark'>
+        <div className='md:col-start-2 md:row-start-2 flex flex-col items-center gap-10 relative'>
             {!isHistory && <AddPost />}
 
             <div className='flex flex-col items-center gap-10'>
@@ -38,8 +60,9 @@ const Posts = () => {
                 ))}
             </div>
 
-            {!isHistory && <button onClick={() => getPosts(lastId)}>{text.morePosts}</button>}
-
+            <div ref={ref} ></div>
+            <div className='m-[5px]'>{text.morePosts} <Spin /></div>
+            {/* {!isHistory && <button onClick={() => getPosts(lastId)}>{text.morePosts}</button>} */}
             {reply && <ReplyPost closeFunc={setReply} post={reply} />}
         </div>
     )
