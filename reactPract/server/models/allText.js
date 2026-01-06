@@ -57,6 +57,7 @@ export const text = {
             friends: 'Friends'
         },
         messages: {
+            newDialog: 'To start a new dialog, you need to go to the other person`s profile and click on the comment icon',
             send: 'Send',
             save: 'Save',
             newMessagePlaceholder: 'What`s happening?',
@@ -124,6 +125,7 @@ export const text = {
             friends: 'Друзі'
         },
         messages: {
+            newDialog: 'Щоб розпочати новий діалог, ви повинні перейти до профілю іншої людини і натиснути на іконку коментаря',
             send: 'Надіслати',
             save: 'Зберегти',
             newMessagePlaceholder: 'Що сталося?',

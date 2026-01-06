@@ -57,6 +57,7 @@ type allTextType = {
         friends: string
     },
     messages: {
+        newDialog: string,
         send: string,
         save: string,
         newMessagePlaceholder: string,

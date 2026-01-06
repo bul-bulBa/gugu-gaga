@@ -5,6 +5,7 @@ import {setMessage, addMessage, setDialogs, setChatter,
     selectChatter, removeMessage, changeMessage,
     updateDialog, updateUnreadMessages, selectMakeNewDialog,
     makeNewDialog,  } from '../../store/reducers/dialogsPageSlice'
+import { selectMessages } from '../../store/reducers/allText'
 import Dialogs from "./Dialogs"
 import DialogItems from "./DialogItems"
 
@@ -21,6 +22,7 @@ const DialogsPage = () => {
     const {_id: userB} = useAppState(selectChatter)
     const heFollowed = useAppState(selectHeFollowed)
     const makeNewDialogId = useAppState(selectMakeNewDialog)
+    const text = useAppState(selectMessages)
 
     function connect() {
         socket.current = new WebSocket('ws://localhost:5000')
@@ -127,6 +129,7 @@ const DialogsPage = () => {
 
     return (
         <div className='sm:p-10'>
+            <div className='text-lg'>{text.newDialog}</div>
             {!userB && <DialogItems />}
 
             <Dialogs />

@@ -3,6 +3,7 @@ import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import { useAppState } from '../../../store/StoreConfig'
 import { selectProfile } from '../../../store/reducers/allText'
+import { urlSlice } from '../../../lib/urlSlice'
 
 type propsType = {
   itIsMe: boolean,
@@ -45,7 +46,7 @@ const ProfileDescription: React.FC<propsType> = (props) => {
           <img className="h-[200px] w-full rounded-xl" 
           src={!props.profilePhoto
           ? "https://euc.yorku.ca/wp-content/uploads/2020/08/main-1.jpg" 
-          : props.profilePhoto
+          : urlSlice(props.profilePhoto)
           }
           alt="Nema Fotochki" />
         </div>
@@ -56,7 +57,7 @@ const ProfileDescription: React.FC<propsType> = (props) => {
               <img className="rounded-full sm:w-[150px] w-[50px] aspect-square object-cover " 
               src={props.avatar == ''
                 ? defaultAvatar
-                : props.avatar
+                : urlSlice(props.avatar)
               }
               alt="Nema Fotochki" />
               {avatarImg}

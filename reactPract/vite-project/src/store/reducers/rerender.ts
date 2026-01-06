@@ -7,7 +7,7 @@ type ColorTheme = typeof colorThemes[number];
 const rerender = createSlice({
     name: 'rerender',
     initialState: { 
-        theme: '' as 'dark' | 'light' | '', 
+        theme: 'light' as 'dark' | 'light', 
         colorTheme: '' as ColorTheme
     },
     reducers: {

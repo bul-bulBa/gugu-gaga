@@ -30,7 +30,7 @@ const InputCode = () => {
                     inputMode="numeric"
                 />
 
-                <Button type='primary' onClick={verifyCodeFunc}>{text.verify}</Button>
+                <button onClick={verifyCodeFunc}>{text.verify}</button>
                 <button onClick={getCodeFunc}>{text.resendCode}</button>
 
                 {error === 'Request failed with status code 400' && <div className='text-red-300'>{text.verifyAccountError}</div>}

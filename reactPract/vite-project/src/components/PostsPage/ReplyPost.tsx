@@ -32,7 +32,7 @@ const ReplyPost = ({post, closeFunc}: propsType) => {
             </div>
 
             <div className="grid grid-cols[10px_1fr] grid-rows[10px_200px_100px] p-3 w-[220px]">
-                <Post post={post} />
+                <Post post={post} blockHistory={true} />
             </div>
             
             <TextArea 

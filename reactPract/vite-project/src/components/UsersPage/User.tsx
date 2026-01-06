@@ -3,6 +3,7 @@ import {NavLink} from 'react-router-dom'
 import {userType} from '../../store/reducers/usersPageSlice'
 import { useAppState } from '../../store/StoreConfig'
 import { selectUsers } from '../../store/reducers/allText'
+import { urlSlice } from '../../lib/urlSlice'
 
 type propsType = {
     followFunc: (id: string)=> void,
@@ -17,7 +18,7 @@ const User: React.FC<propsType> = ({followed, followFunc, user}) => {
         <div className="flex gap-2 items-center" key={user._id}>
         <NavLink to={'/profile/' + user._id}>
             <img className="rounded-full w-[50px] aspect-square object-cover" src={
-                user.avatar !== '' ? user.avatar : defaultUserPhoto
+                user.avatar !== '' ? urlSlice(user.avatar) : defaultUserPhoto
             } alt="NemaImg" /> 
         </NavLink>
 

@@ -5,11 +5,13 @@ import { useAppDispatch, useAppState } from "../../store/StoreConfig"
 import { postType, deletePostThunk, toggleLikeThunk, 
     fileType, replyHistoryThunk, selectIsHistory, setHistory } from "../../store/reducers/postsPageSlice"
 import {selectAuthId} from '../../store/reducers/authInfoSlice'
-
+import { HistoryOutlined } from '@ant-design/icons'
+import { urlSlice } from '../../lib/urlSlice'
 
 type propsType = {
     post: postType,
-    replyFunc?: React.Dispatch<React.SetStateAction<postType | undefined>>
+    replyFunc?: React.Dispatch<React.SetStateAction<postType | undefined>>,
+    blockHistory: boolean
 }
 
 const Post = (props: propsType) => {
@@ -31,11 +33,11 @@ const Post = (props: propsType) => {
         <div key={i} className={`${position}`}>
           {file.type === 'image/png' || file.type === 'image/gif'
           ? <Image
-            src={file.url}
+            src={urlSlice(file.url)}
             className="rounded-xl"
             style={{ width: "100%", maxWidth: '100%', height: "auto", display: "block" }}
           />
-          : <video src={file.url} controls/>
+          : <video src={urlSlice(file.url)} controls/>
           }
         </div>
       ))
@@ -52,7 +54,7 @@ const Post = (props: propsType) => {
             <div className="flex justify-start items-center gap-2">
                 {!props.post.user.avatar
                 ? <img src={defaultAvatar} alt="avatar"  className="w-10 h-10 rounded-full"/>
-                : <img src={props.post.user.avatar} alt="avatar"  className="w-10 h-10 rounded-full"/>}
+                : <img src={urlSlice(props.post.user.avatar)} alt="avatar"  className="w-10 h-10 rounded-full"/>}
                 <p className="">{props.post.user.name}</p>
             </div>
 
@@ -61,15 +63,17 @@ const Post = (props: propsType) => {
 
             {/* REPLIED POST */}
             {props.post.repliedPost && Object.keys(props.post.repliedPost || {}).length > 0 && 
-                <div className='flex flex-col gap-3 border-l-1 m-2 p-2' onClick={() => dispatch(replyHistoryThunk(props.post._id))}>
+                <div className='flex flex-col gap-3 border-l-1 m-2 p-2'>
                     <div className="flex justify-start">
                         {!props.post.repliedPost.avatar
                         ? <img src={defaultAvatar} alt="avatar"  className="w-7 h-7 rounded-full"/>
-                        : <img src={props.post.repliedPost.avatar} alt="avatar"  className="w-7 h-7 rounded-full"/>}
+                        : <img src={urlSlice(props.post.repliedPost.avatar)} alt="avatar"  className="w-7 h-7 rounded-full"/>}
                         <p className="">{props.post.repliedPost.name}</p>
                     </div>
                     <div className="flex text-start break-all whitespace-pre-wrap">{props.post.repliedPost.text}</div>
                     <div className='flex flex-wrap gap-2'>{repliedImgArray}</div>
+                    {!props.blockHistory &&
+                    <div className='flex justify-start' onClick={() => dispatch(replyHistoryThunk(props.post._id))}><HistoryOutlined /></div>}
                 </div>}
 
             {/* REACTION */}
