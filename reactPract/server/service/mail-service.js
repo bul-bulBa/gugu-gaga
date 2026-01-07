@@ -32,7 +32,7 @@ class MailService {
 
     async sendVerificationCode(to, code) {
         await this.resend.emails.send({
-            from: 'Auth <onboarding@resend.dev>',
+            from: 'onboarding@resend.dev',
             to,
             subject: "Verification account " + process.env.API_URL,
             html: `<p>Verification code: <b>${code}</b></p>`
