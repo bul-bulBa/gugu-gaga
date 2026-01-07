@@ -48,7 +48,7 @@ function Login({ setPage }: propsType) {
                     {/* key need for trigger to change theme */}
                     <ReCAPTCHA 
                         key={isDark}
-                        sitekey='6LcYNLkrAAAAABQ84800-X6mPGP6vtKu-84bdDD9'
+                        sitekey='6Lex7TUsAAAAAFwBq56klR8fIzI8QEv11dNYGYwo'
                         onChange={value => setFieldValue('captcha', value)}
                         theme={isDark === 'dark' ? 'dark' : 'light'}
                     />
