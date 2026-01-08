@@ -27,14 +27,14 @@ class MailService {
     // }
 
     constructor() {
-        this.resend = new Resend('re_dBCw9oRA_7d3SUiD7Yb1jsMS9TigWmz3g')
+        this.resend = new Resend('re_96zX1U4v_2CNb5QRfV4PgRabEwiqUuXMq')
     }
 
     async sendVerificationCode(to, code) {
         await this.resend.emails.send({
-            from: 'onboarding@resend.dev',
+            from: 'support@gugugaga.work',
             to,
-            subject: "Verification account " + process.env.API_URL,
+            subject: "Verification code for your account",
             html: `<p>Verification code: <b>${code}</b></p>`
         })
     }
