@@ -77,8 +77,8 @@ class AuthController {
             const {email, code} = req.body
 
             const {tokens, user} = await authorizeService.confirmVerification(email, code)
-            res.cookie('accessToken', tokens.accessToken, {maxAge: 30 * 60 * 1000, httpOnly: true})
-            res.cookie('refreshToken', tokens.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            res.cookie('accessToken', tokens.accessToken, {maxAge: 30 * 60 * 1000, httpOnly: true, secure: true})
+            res.cookie('refreshToken', tokens.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, secure: true})
             res.json(user)
         }catch(e) {
             next(e)
@@ -91,8 +91,8 @@ class AuthController {
             const {refreshToken} = req.cookies
             const userData = await authorizeService.refresh(refreshToken) 
             
-            res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
-            res.cookie('refreshToken', userData.refreshToken, {maxAge: 1 * 24 * 60 * 60 * 1000})
+            res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000, httpOnly: true, secure: true})
+            res.cookie('refreshToken', userData.refreshToken, {maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, secure: true})
             res.json({message: 'ok'})
         }catch(e) {
             next(e)

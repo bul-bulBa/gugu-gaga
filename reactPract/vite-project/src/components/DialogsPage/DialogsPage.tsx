@@ -25,7 +25,7 @@ const DialogsPage = () => {
     const text = useAppState(selectMessages)
 
     function connect() {
-        socket.current = new WebSocket('wss://gugu-gaga.onrender.com')
+        socket.current = new WebSocket('wss://api.gugugaga.work')
 
         socket.current.onopen = () => {
             if(makeNewDialogId) {

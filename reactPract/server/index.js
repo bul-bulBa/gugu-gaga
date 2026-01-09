@@ -23,7 +23,7 @@ const PORT = process.env.PORT
 app.use(express.json())
 app.use(cookieParcer())
 app.use(cors({
-    origin: 'https://bul-bulba.github.io',
+    origin: 'https://gugugaga.work',
     credentials: true
 }))
 app.use('/api', router)
@@ -36,7 +36,7 @@ wsService.setServer(ws)
 const start = async () => {
     try {
         await mongoose.connect(process.env.DB_URI)
-        server.listen(PORT, () => console.log(`server started on: http://localhost:${PORT}`))
+        server.listen(PORT, () => console.log(`server started on: https://api.gugugaga.work`))
     } catch(e) {
         console.log("SERVER ERROR", e, " END SERVER ERROR")
     }
