@@ -56,7 +56,7 @@ function SignUp({setPage}: propsType) {
                     {/* key need for trigger to change theme */}
                     <ReCAPTCHA 
                         key={isDark}
-                        sitekey='6Lex7TUsAAAAAFwBq56klR8fIzI8QEv11dNYGYwo'
+                        sitekey='6LdcekUsAAAAAIvyy9rIgKEgaj1z6DzdpX1Z2QTV'
                         onChange={value => setFieldValue('captcha', value)}
                         theme={isDark === 'dark' ? 'dark' : 'light'}/>
                     <ErrorMessage name='captcha' component='div' className='text-red-200' />
