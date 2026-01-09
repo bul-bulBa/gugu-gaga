@@ -22,7 +22,7 @@ const PORT = process.env.PORT
 
 app.use(express.json())
 app.use(cookieParcer())
-app.use('*', cors({
+app.options('*', cors({
     origin: 'https://gugugaga.work',
     credentials: true
 }))
