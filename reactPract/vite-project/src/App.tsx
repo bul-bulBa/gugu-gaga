@@ -14,7 +14,6 @@ import LoadingComponent from './commonComponents/LoadingComponent'
 import { useAppState, useAppDispatch } from './store/StoreConfig'
 import { ConfigProvider, theme } from 'antd'
 import { selectTheme } from './store/reducers/rerender'
-import { themes } from './store/config'
 const DialogsPage = lazy(() => import('./components/DialogsPage/DialogsPage'))
 const EditProfile = lazy(() => import('./components/ProfilePage/EditProfile'))
 
@@ -37,10 +36,10 @@ function App() {
     return <LoadingComponent />
   }
   return (
-    <div className='grid grid-cols-[1fr] grid-rows-[70px_1fr_50px] md:gap-[10px] 
+    <div className='grid grid-cols-[1fr] grid-rows-[70px_1fr_50px] md:gap-[10px]
     md:grid-cols-[130px_1fr] md:grid-rows-[70px_80vh] md:p-10
-      min-w-full h-[100vh] sm:min-w-[80vw]'>
-      <ConfigProvider theme={ themes[stateTheme] }>
+      min-w-[100vw] h-[100vh] sm:min-w-[80vw]'>
+      <ConfigProvider theme={{ algorithm: stateTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm}}>
         <Header />
         <Navbar />
 

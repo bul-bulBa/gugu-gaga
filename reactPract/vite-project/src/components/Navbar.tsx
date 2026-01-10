@@ -6,7 +6,7 @@ function Navbar() {
   const text = useAppState(selectNavigation)
 
     return (
-        <nav className='row-start-3 flex justify-between items-center p-3 border-t-1
+        <nav className='row-start-3 flex justify-between items-center p-3 border-t-1 z-2
         md:static md:col-start-1 md:row-start-2 md:rounded-xl md:flex-col md:items-start md:justify-start md:gap-2 md:border'>
           <div>
             <NavLink to="/profile">

@@ -15,12 +15,12 @@ const Dialogs = () => {
     const id: number = stringId ? +stringId : 0
 
     return (
-        <div className='w-full md:p-10'>
+        <div className='w-full h-full min-h-0'>
             {state && chatter._id
                 ? (
-                <div className='grid grid-cols[20px_1fr] grid-rows[20px_1fr]'>
+                <div className='grid grid-cols-[10px_1fr] grid-rows-[10px_1fr] h-full min-h-0'>
                     <div className='col-start-1 row-start-1' onClick={() => dispatch(setChatter(''))}><LeftOutlined /></div>
-                    <div className='flex flex-col justify-between w-full col-start-2 row-start-1 row-span-2'>
+                    <div className='flex flex-col justify-between w-full col-start-2 row-start-1 row-span-2 min-h-0 h-full'>
                         <Discussion />
                         <AddMessage />
                     </div>

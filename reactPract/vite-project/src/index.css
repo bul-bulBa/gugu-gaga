@@ -32,8 +32,8 @@
 
 * {
   border-color: var(--border);
-  background-color: var(--background);
-  color: var(--foreground);
+  /* background-color: var(--background);
+  color: var(--foreground); */
 }
 
 body {
@@ -43,6 +43,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   overflow: hidden;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 .scroll-area {

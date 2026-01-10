@@ -65,7 +65,7 @@ const Discussion = () => {
     }, [lastIndex])
 
   return (
-    <div ref={containerRef} className='flex flex-col gap-[10%] h-[70vh] sm:h-[60vh] overflow-y-auto scrollbar-hide w-full'>
+    <div ref={containerRef} className='flex-1 flex flex-col gap-[10px] min-h-0 overflow-y-auto scrollbar-hide w-full'>
 
       {state.map((m, i) => {
         const time = new Date(m.updatedAt).toTimeString().slice(0, 5)

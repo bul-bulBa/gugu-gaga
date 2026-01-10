@@ -31,13 +31,13 @@ const Post = (props: propsType) => {
     return arr?.length
     ? arr.map((file, i) => (
         <div key={i} className={`${position}`}>
-          {file.type === 'image/png' || file.type === 'image/gif'
+          {file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/jpeg' || file.type === 'avif'
           ? <Image
             src={urlSlice(file.url)}
             className="rounded-xl"
-            style={{ width: "100%", maxWidth: '100%', height: "auto", display: "block" }}
+            style={{ width: "100%", maxWidth: '100%', height: "auto", maxHeight: '30vh', display: "block" }}
           />
-          : <video src={urlSlice(file.url)} controls/>
+          : <video src={urlSlice(file.url)} controls style={{maxHeight: '30vh'}}/>
           }
         </div>
       ))
@@ -49,7 +49,7 @@ const Post = (props: propsType) => {
     const repliedImgArray = props.post.repliedPost ? renderImages(props.post.repliedPost.img) : null
 
     return (
-        <div className="flex flex-col gap-3 p-3 w-[70%]">
+        <div className="flex flex-col gap-3 p-3 md:max-w-[50vw]">
             {/* POST */}
             <div className="flex justify-start items-center gap-2">
                 {!props.post.user.avatar

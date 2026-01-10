@@ -128,8 +128,8 @@ const DialogsPage = () => {
     
 
     return (
-        <div className='sm:p-10'>
-            <div className='text-lg'>{text.newDialog}</div>
+        <div className='sm:p-10 h-full min-h-0'>
+            {!userB && <div className='text-lg'>{text.newDialog}</div>}
             {!userB && <DialogItems />}
 
             <Dialogs />
