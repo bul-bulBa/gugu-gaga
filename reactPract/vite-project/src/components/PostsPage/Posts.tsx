@@ -36,7 +36,7 @@ const Posts = () => {
         <div className='md:col-start-2 md:row-start-2 flex flex-col items-center gap-10 relative scroll-area'>
             {!isHistory ? <AddPost /> : <div>History of replies</div>}
 
-            <div className='flex flex-col items-center gap-10'>
+            <div className='flex flex-col items-left gap-10'>
                 {posts.map(p => (
                     <Post post={p} key={p._id} replyFunc={setReply} blockHistory={false} />
                 ))}
