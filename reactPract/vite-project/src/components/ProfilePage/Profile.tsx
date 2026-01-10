@@ -53,7 +53,7 @@ function Profile() {
 
   
     return (
-          <div className='md:col-start-2 md:row-start-2 p-3 relative'>
+          <div className='md:col-start-2 md:row-start-2 p-3 relative scroll-area'>
             {isFetching && <LoadingComponent/>}
             <ProfileDescription itIsMe={itIsMe} name={state.name} about={state.about} 
               avatar={state.avatar} profilePhoto={state.profilePhoto} status={state.status} 
@@ -61,8 +61,8 @@ function Profile() {
               changeStatus={changeStatus}/>
             <MyPosts />
 
-            {itIsMe && <button className='sticky bottom-20 sm:bottom-5 ' onClick={() => navigate('/edit')}>{text.edit}</button>}
-            {!itIsMe && <button onClick={makeNewDialogFunc} className='sticky bottom-10'><MessageOutlined /></button>}
+            {itIsMe && <button className='sticky bottom-2 ' onClick={() => navigate('/edit')}>{text.edit}</button>}
+            {!itIsMe && <button onClick={makeNewDialogFunc} className='sticky bottom-2'><MessageOutlined /></button>}
           </div>
     )
 }

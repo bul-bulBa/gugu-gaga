@@ -32,9 +32,8 @@ function Header() {
     }, [isDark])
 
     return (
-            <div className='col-start-1 row-start-1 border rounded-xl flex justify-between items-center p-2 w-full
-            md:col-start-1 md:col-span-2 md:row-start-1
-            dark:border-stone-400'>
+            <div className='col-start-1 row-start-1 border-b-1 flex justify-between items-center p-2 w-full
+            md:col-start-1 md:col-span-2 md:row-start-1 md:border md:rounded-xl '>
                 <img className="w-[40px] m-4" src={image} alt="" />
                 <div className='flex gap-5 items-center'>
                     < Language />

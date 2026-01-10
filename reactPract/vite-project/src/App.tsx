@@ -37,8 +37,9 @@ function App() {
     return <LoadingComponent />
   }
   return (
-    <div className='grid grid-cols-[1fr] grid-rows-[70px_80vh] gap-[10px] pb-10  md:grid-cols-[130px_1fr] md:grid-rows-[70px_80vh] 
-      min-w-full sm:min-w-[80vw]'>
+    <div className='grid grid-cols-[1fr] grid-rows-[70px_1fr_50px] md:gap-[10px] 
+    md:grid-cols-[130px_1fr] md:grid-rows-[70px_80vh] md:p-10
+      min-w-full h-[100vh] sm:min-w-[80vw]'>
       <ConfigProvider theme={ themes[stateTheme] }>
         <Header />
         <Navbar />
