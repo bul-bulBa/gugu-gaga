@@ -10,7 +10,7 @@ function DialogItems() {
     const authUserId = useAppState(selectAuthId)
 
     return (
-            <div className='flex flex-col gap-3 items-start'>
+            <div className='flex flex-col gap-3 items-start overflow-y-auto'>
             {
                 state.map(d => {
                     const p = d.participants

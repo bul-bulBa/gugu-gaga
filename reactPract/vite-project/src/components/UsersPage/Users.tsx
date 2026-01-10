@@ -36,7 +36,7 @@ const Users: React.FC = () => {
     }, [queryParam]);
 
     return (
-        <div className='md:col-start-2 md:row-start-2'>
+        <div className='md:col-start-2 md:row-start-2 scroll-area'>
             {state.isFetching && <LoadingComponent/> }
             <div className='flex flex-col justify-between items-center h-full'>
                 <SearchBar />

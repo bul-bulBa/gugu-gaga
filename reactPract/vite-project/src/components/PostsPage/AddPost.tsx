@@ -18,20 +18,23 @@ const AddPost = () => {
         <div className='border border-stone-200 dark:border-stone-700'>
             <Formik
             initialValues={initialValues}
-            onSubmit={ (values, {setSubmitting}) => {
+            onSubmit={ (values, {setSubmitting, setFieldValue}) => {
                 if(!values.text.trim()) return 
                 dispatch(addPostThunk(values))
                 setSubmitting(false)
+                setFieldValue('file', [])
+                setFieldValue('text', '')
             }}
             >
                 {({values, isSubmitting, setFieldValue}) => (
                     <Form>
 
-                        <TextArea 
+                        <TextArea
                             style={{ border: 'none', boxShadow: 'none', outline: 'none' }}
                             className='scrollbar-hide TextArea'
                             placeholder={text.newPostPlaceholder} 
                             autoSize 
+                            value={values.text}
                             onChange={(e) => setFieldValue('text', e.target.value)}/>
 
                             <div className='flex justify-between items-center p-3'>
