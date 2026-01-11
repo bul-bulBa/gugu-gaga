@@ -35,6 +35,9 @@ function App() {
   if (firstLoad || !text) {
     return <LoadingComponent />
   }
+
+  console.log("TEXT ", text)
+  
   return (
     <div className='grid grid-cols-[1fr] grid-rows-[70px_1fr_50px] md:gap-[10px]
     md:grid-cols-[130px_1fr] md:grid-rows-[70px_80vh] md:p-10

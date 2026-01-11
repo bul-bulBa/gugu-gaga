@@ -19,43 +19,49 @@ class wsService {
 
         let dialog = await dialogModel.findOne({
             $or: [
-                {"participants.userAId": userAId, "participants.userBId": userBId},
-                {"participants.userAId": userBId, "participants.userBId": userAId}
+                { "participants.userAId": userAId, "participants.userBId": userBId },
+                { "participants.userAId": userBId, "participants.userBId": userAId }
             ]
         })
 
-        if(!dialog) {
+        if (!dialog) {
             dialog = await dialogModel.create(
-            {participants: {userAId, userBId}, 
-            participantsNames: {userAName: userA.name, userBName: userB.name}}) 
+                {
+                    participants: { userAId, userBId },
+                    participantsNames: { userAName: userA.name, userBName: userB.name }
+                })
         }
     }
 
     async getMessages(user1, user2) {
         return await messageModel.find({
             $or: [
-                { writerId: user1, readerId: user2},
-                { writerId: user2, readerId: user1}
+                { writerId: user1, readerId: user2 },
+                { writerId: user2, readerId: user1 }
             ]
         })
     }
 
     async addMessage(writerId, readerId, text) {
-        const message = await messageModel.create({readerId, writerId, text})
+        const message = await messageModel.create({ readerId, writerId, text })
         return message
     }
 
     async changeLastMessageNewText(writerId, readerId, text) {
         const dialog = await dialogModel.findOne({
             $or: [
-                {"participants.userAId": writerId, "participants.userBId": readerId},
-                {"participants.userAId": readerId, "participants.userBId": writerId}
+                { "participants.userAId": writerId, "participants.userBId": readerId },
+                { "participants.userAId": readerId, "participants.userBId": writerId }
             ]
         })
-        if(dialog) {
-            dialog.lastMessage = text 
+        if (dialog) {
+            dialog.lastMessage = text
+
             const current = dialog.unread.get(readerId)
-            dialog.unread.set(readerId, current + 1)
+
+            if (!current) dialog.unread.set(readerId, 1)
+            else dialog.unread.set(readerId, current + 1)
+
             await dialog.save()
         }
         return dialog
@@ -64,18 +70,18 @@ class wsService {
     async onRead(writerId, readerId) {
 
         // messages in frontend change read state without state of updated messages in db
-        await messageModel.updateMany( { writerId, readerId, read: false },
-          { $set: { read: true } } )
+        await messageModel.updateMany({ writerId, readerId, read: false },
+            { $set: { read: true } })
 
         const dialog = await dialogModel.findOneAndUpdate(
-          {
-            $or: [
-              { "participants.userAId": writerId, "participants.userBId": readerId },
-              { "participants.userAId": readerId, "participants.userBId": writerId }
-            ]
-          },
-          { $set: { [`unread.${readerId}`]: 0 } },
-          { new: true }
+            {
+                $or: [
+                    { "participants.userAId": writerId, "participants.userBId": readerId },
+                    { "participants.userAId": readerId, "participants.userBId": writerId }
+                ]
+            },
+            { $set: { [`unread.${readerId}`]: 0 } },
+            { new: true }
         )
         return dialog
     }
@@ -83,56 +89,59 @@ class wsService {
     async getUsers(userId) {
         return await dialogModel.find({
             $or: [
-                { "participants.userAId": userId},
-                { "participants.userBId": userId} 
+                { "participants.userAId": userId },
+                { "participants.userBId": userId }
             ]
         })
     }
 
-    async editMessage(messageId, newText) { 
-        const message = await messageModel.findByIdAndUpdate( messageId, { $set: { text: newText, edited: true}}, { new: true} )
+    async editMessage(messageId, newText) {
+        const message = await messageModel.findByIdAndUpdate(messageId, { $set: { text: newText, edited: true } }, { new: true })
 
         const dialog = await this.changeLastMessage(message.writerId, message.readerId)
-        return {message, dialog}
+        return { message, dialog }
     }
 
     async deleteMessage(messageId, writerId, readerId) {
-
+        const message = await messageModel.findById(messageId)
         await messageModel.findByIdAndDelete(messageId)
 
-        const dialog = await this.changeLastMessage(writerId, readerId)
+        let dialog = await this.changeLastMessage(writerId, readerId)
+
+        if (!message.read) {
+            dialog = await dialogModel.findOneAndUpdate(
+                {
+                    $or: [
+                        { "participants.userAId": writerId, "participants.userBId": readerId },
+                        { "participants.userAId": readerId, "participants.userBId": writerId }
+                    ]
+                },
+                { $inc: { [`unread.${readerId}`]: -1 } },
+                { new: true }
+            )
+        }
+
         return dialog
     }
 
     async changeLastMessage(writerId, readerId) {
-        let lastMessage = await messageModel.findOne({ 
+        let lastMessage = await messageModel.findOne({
             $or: [
-                {writerId, readerId},
-                {readerId: writerId, writerId: readerId}
+                { writerId, readerId },
+                { readerId: writerId, writerId: readerId }
             ]
-         }, {}, { sort: { _id: -1} })
-        if(!lastMessage) lastMessage = {text: ''}
-        
+        }, {}, { sort: { _id: -1 } })
+        if (!lastMessage) lastMessage = { text: '' }
+
         const dialog = await dialogModel.findOneAndUpdate({
             $or: [
-              { "participants.userAId": writerId, "participants.userBId": readerId },
-              { "participants.userAId": readerId, "participants.userBId": writerId }
+                { "participants.userAId": writerId, "participants.userBId": readerId },
+                { "participants.userAId": readerId, "participants.userBId": writerId }
             ]
-        }, { $set: { lastMessage: lastMessage.text}}, { new: true})
+        }, { $set: { lastMessage: lastMessage.text } }, { new: true })
 
         return dialog
     }
-
-    // async getId(ws, req) {
-    //     const cookies = req.headers.cookie
-    //     if(!cookies) return ws.close() 
-
-    //     const parcedCookies = cookie.parse(cookies)
-    //     const token = parcedCookies.accessToken
-    //     if(!token) return ws.close()
-
-    //     return {id} = tokenService.validateAccessToken(token)
-    // }
 }
 
 export default new wsService 

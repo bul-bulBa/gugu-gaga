@@ -78,7 +78,7 @@ const Post = (props: propsType) => {
 
             {/* REACTION */}
             {!isHistory &&
-                <div className='flex justify-around md:justify-start md:gap-5'>
+                <div className='flex justify-start gap-5'>
                     {props.replyFunc && <div className='col-start-1 row-start-3'
                     onClick={() => {
                         dispatch(setHistory(true))

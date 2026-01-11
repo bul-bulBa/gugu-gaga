@@ -1,12 +1,11 @@
 import jwt from 'jsonwebtoken'
 import ApiError from '../exceptions/api-error.js'
 import TokenModel from '../models/token-model.js'
-import tokenModel from '../models/token-model.js'
 
 class TokenService {
     generate(id) {
         const accessToken = jwt.sign({id}, process.env.JWT_ACCESS_SECRET, {expiresIn: '30m'})
-        const refreshToken = jwt.sign({id}, process.env.JWT_REFRESH_SECRET, {expiresIn: '1d'})
+        const refreshToken = jwt.sign({id}, process.env.JWT_REFRESH_SECRET, {expiresIn: '30d'})
         console.log(accessToken)
         return {refreshToken, accessToken}
     }

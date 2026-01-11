@@ -1,25 +1,26 @@
-import {useState} from 'react'
 import { useAppDispatch, useAppState } from '../../../store/StoreConfig';
 import { setValue, setEditMessage, getValue, getEditMessage} from '../../../store/reducers/addMessageSlice'
 import { selectMessages } from '../../../store/reducers/allText';
-import { newMessage, editMessage } from '../DialogsPage' 
+import { apiWS } from '../../../api/apiWS';
+import { useGetUsers } from '../../../lib/useGetUsers';
 import { Input } from 'antd';
 
 const { TextArea } = Input;
 
 const AddMessage = () => {
     const text = useAppState(selectMessages)
+    const { userA, userB } = useGetUsers()
     const value = useAppState(getValue)
     const editMessageId = useAppState(getEditMessage)
     const dispatch = useAppDispatch()
 
     const addMessageFunc = () => {
-        newMessage(value)
+        apiWS.newMessage(value, userA, userB)
         dispatch(setValue(''))
     }
 
     const editMessageFunc = () => {
-        editMessage(editMessageId, value)
+        apiWS.editMessage(editMessageId, value, userB)
         dispatch(setEditMessage(''))
         dispatch(setValue(''))
     }

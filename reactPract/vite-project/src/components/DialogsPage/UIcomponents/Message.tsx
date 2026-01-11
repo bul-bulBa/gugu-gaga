@@ -1,20 +1,18 @@
-import userPhoto from '../../../assets/userPhoto.webp'
 import { CheckOutlined } from '@ant-design/icons';
 import {dialogsMessageType} from '../../../store/reducers/dialogsPageSlice'
-import { selectAuthId } from '../../../store/reducers/authInfoSlice';
 import { setEditMessage, setValue } from '../../../store/reducers/addMessageSlice';
 import { useAppDispatch, useAppState } from '../../../store/StoreConfig';
-import  { deleteMessage } from '../DialogsPage'
 import type { MenuProps } from 'antd';
 import { Dropdown } from 'antd';
 import { selectMessages } from '../../../store/reducers/allText';
-
+import { apiWS } from '../../../api/apiWS';
+import { useGetUsers } from '../../../lib/useGetUsers';
 
 type propsType = {message: dialogsMessageType, position: string, date: string}
 
 const Message = ({message, position, date}: propsType) => {
     const text = useAppState(selectMessages)
-    const userId = useAppState(selectAuthId)
+    const { userA, userB } = useGetUsers()
     const dispatch = useAppDispatch()
 
     const items: MenuProps['items'] = [
@@ -35,19 +33,19 @@ const Message = ({message, position, date}: propsType) => {
                 dispatch(setEditMessage(message._id))
                 dispatch(setValue(message.text))
             }
-            if(info.key === '2') deleteMessage(message._id)
+            if(info.key === '2') apiWS.deleteMessage(message._id, userA, userB)
         }
     }
     return (
         <div className={`flex gap-1 m-2 msg  ${position === 'left' ? 'justify-start' : 'justify-end'}`} >
-            <Dropdown menu={message.writerId === userId ? menu : { items: []} } trigger={['contextMenu']}>
+            <Dropdown menu={message.writerId === userA ? menu : { items: []} } trigger={['contextMenu']}>
                 <div className={`bg-gray-200 rounded-xl grid grid-rows-[1fr_20px] gap-3 max-w-4/5 min-w-[130px] p-2
                 dark:bg-gray-900`}> 
                     <div className="row-start-1 flex text-left break-all"> {message.text} </div>
                     {message.edited && <span className='text-xs row-start-2 flex justify-end'>{text.edited}</span>}
                     <span className="text-xs row-start-2 flex justify-end"> {date} </span>
 
-                    {message.read && message.writerId === userId && 
+                    {message.read && message.writerId === userA && 
                     <span className='row-start-2 flex justify-end '><CheckOutlined /></span>}
                 </div>
             </Dropdown>
