@@ -32,11 +32,9 @@ function App() {
     dispatch(autoLoginThunk())
   }, [])
 
-  if (firstLoad || !text) {
+  if (firstLoad || !text || Object.entries(text).length === 0) {
     return <LoadingComponent />
   }
-
-  console.log("TEXT ", text)
   
   return (
     <div className='grid grid-cols-[1fr] grid-rows-[70px_1fr_50px] md:gap-[10px]
