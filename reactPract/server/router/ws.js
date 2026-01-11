@@ -43,9 +43,11 @@ const initWebSocket = (server) => {
                     break
                     case 'addMessage': {
                         const {writerId, readerId, text} = message.payload
+
                         const newMessage = await wsService.addMessage(writerId, readerId, text)
                         const changedDialog = await wsService.changeLastMessageNewText(writerId, readerId, text)
                         const res = JSON.stringify({ type: 'addMessage', payload: {message: newMessage, dialog: changedDialog} })
+
                         ws.send(res)
                         const received = clients.get(readerId)
                         if(received) received.send(res)

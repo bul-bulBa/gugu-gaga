@@ -1,23 +1,20 @@
 import { useRef, useEffect, useState } from 'react'
 import {dialogsMessageType, selectChatter, selectDialogs, exitFromDialog} from '../../../store/reducers/dialogsPageSlice'
 import {useAppState, useAppDispatch} from '../../../store/StoreConfig'
-import {selectAuthId} from '../../../store/reducers/authInfoSlice'
-import {selectUser, } from '../../../store/reducers/profilePageSlice'
-import { onRead } from '../DialogsPage'
 import Message from './Message'
+import { apiWS } from '../../../api/apiWS'
+import { useGetUsers } from '../../../lib/useGetUsers'
 
 type propsType = {state: Array<dialogsMessageType>}
 
 const Discussion = () => {
-    // const {name, avatar} = useAppState(selectChatter)
+    const {userA, userB} = useGetUsers()
     const dispatch = useAppDispatch()
     const state = useAppState(selectDialogs)
-    const user = useAppState(selectUser)
-    const id = useAppState(selectAuthId)
     const lastMessageRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     
-    const reverseLastIndex = [...state].reverse().findIndex(m => m.readerId === id)
+    const reverseLastIndex = [...state].reverse().findIndex(m => m.readerId === userA)
     const lastIndex = reverseLastIndex === -1 ? -1 : state.length - 1 - reverseLastIndex
 
     const handleAutoScroll = () => {
@@ -37,8 +34,6 @@ const Discussion = () => {
 
     useEffect(() =>  handleAutoScroll() , [state])
     
-    // console.log(state.map(m => m.read))
-    // debugger
     useEffect(() => {
       const rootEl = containerRef.current
       const observer = new IntersectionObserver(
@@ -47,7 +42,7 @@ const Discussion = () => {
             // debugger
             if (entry.isIntersecting && !state[lastIndex].read) {
               // console.log('MESSAGE IS READ', state[lastIndex].read, state[lastIndex])
-              onRead()
+              apiWS.onRead(userA, userB)
               observer.disconnect()
             }
           })
@@ -69,7 +64,7 @@ const Discussion = () => {
 
       {state.map((m, i) => {
         const time = new Date(m.updatedAt).toTimeString().slice(0, 5)
-        const message = m.writerId === id
+        const message = m.writerId === userA
         ? <Message key={m._id} position={'right'} message={m} date={time} />
         : <Message key={m._id} position={'left'} message={m} date={time}/>
         return <div ref={i === lastIndex ? lastMessageRef : null} key={m._id}>{message}</div>
